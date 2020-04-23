@@ -14,24 +14,23 @@ export interface UserInfo{
 }
 
 // action
-export const setLogin = (isLogin: boolean,token: string) => ({
+export const setLogin = (isLogin: boolean, token: string) => ({
   type: SET_LOGIN,
   payload: {
     isLogin,
-    token
-  }
+    token,
+  },
 });
 
 export const setDarkmode = (darkmode: boolean) => ({
-  type : SET_DARK_MODE,
-  payload : darkmode
-})
+  type: SET_DARK_MODE,
+  payload: darkmode,
+});
 
 export const setUserInfo = (userInfo: UserInfo) => ({
-  type : SET_USER_INFO,
-  payload : userInfo
-})
-
+  type: SET_USER_INFO,
+  payload: userInfo,
+});
 
 
 type UserAction =
@@ -47,22 +46,21 @@ type UserState = {
 };
 
 
-
 const initialState: UserState = {
   userInfo: null,
   isLogin: false,
   token: null,
-  darkmode: false
+  darkmode: false,
 };
 
 function userSetter(state: UserState = initialState, action: UserAction) {
   switch (action.type) {
     case SET_LOGIN:
-      return { ...state , isLogin: action.payload.isLogin, token: action.payload.token };
+      return { ...state, isLogin: action.payload.isLogin, token: action.payload.token };
     case SET_DARK_MODE:
       return { ...state, darkmode: action.payload };
     case SET_USER_INFO:
-      return { ...state, userInfo : action.payload };
+      return { ...state, userInfo: action.payload };
     default:
       return state;
   }
