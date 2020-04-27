@@ -1,11 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  Switch,
-  Route,
-  Redirect,
-  BrowserRouter as Router,
-} from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { RootState } from './store/modules';
 import { setDarkmode } from './store/modules/userLogin';
 import UserJoin from './components/UserJoin/UserJoin';
@@ -16,11 +11,10 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   dispatch(setDarkmode(true));
   return (
-    <Router>
-      <div className="App">
-        <Switch>
-          <Route exact path="/userJoinPage" component={UserJoin} />
-          {/* <Route
+    <div className="App">
+      <Switch>
+        <Route exact path="/userJoinPage" component={UserJoin} />
+        {/* <Route
             path="/user"
             render={() => {
               if (!isLogin) {
@@ -29,10 +23,9 @@ const App: React.FC = () => {
               return <Theplace />;
             }}
           /> */}
-          <Route path="/" render={() => <Redirect to="/user" />} />
-        </Switch>
-      </div>
-    </Router>
+        <Route path="/" render={() => <Redirect to="/user" />} />
+      </Switch>
+    </div>
   );
 };
 
