@@ -1,17 +1,9 @@
+import { User } from './interfaces';
 // types
 
 const SET_LOGIN = 'SET_LOGIN' as const;
 const SET_DARK_MODE = 'SET_DARK_MODE' as const;
-const SET_USER_INFO = 'SET_USER_INFO' as const;
-
-export interface UserInfo{
-  firstname: string;
-  lastname: string;
-  username: string;
-  email: string;
-  darkmode: boolean;
-  avatar: string;
-}
+const SET_USER = 'SET_USER' as const;
 
 // action
 export const setLogin = (isLogin: boolean, token: string) => ({
@@ -27,27 +19,27 @@ export const setDarkmode = (darkmode: boolean) => ({
   payload: darkmode,
 });
 
-export const setUserInfo = (userInfo: UserInfo) => ({
-  type: SET_USER_INFO,
-  payload: userInfo,
+export const setUser = (user: User) => ({
+  type: SET_USER,
+  payload: user,
 });
 
 
 type UserAction =
   | ReturnType<typeof setLogin>
   | ReturnType<typeof setDarkmode>
-  | ReturnType<typeof setUserInfo>;
+  | ReturnType<typeof setUser>;
 
 type UserState = {
-  userInfo:UserInfo | null;
+  user:User | null;
   isLogin:boolean;
   token:string | null;
-  darkmode:boolean;
+  darkmode : boolean;
 };
 
 
 const initialState: UserState = {
-  userInfo: null,
+  user: null,
   isLogin: false,
   token: null,
   darkmode: false,
@@ -59,8 +51,8 @@ function userSetter(state: UserState = initialState, action: UserAction) {
       return { ...state, isLogin: action.payload.isLogin, token: action.payload.token };
     case SET_DARK_MODE:
       return { ...state, darkmode: action.payload };
-    case SET_USER_INFO:
-      return { ...state, userInfo: action.payload };
+    case SET_USER:
+      return { ...state, user: action.payload };
     default:
       return state;
   }
