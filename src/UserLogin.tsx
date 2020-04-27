@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -43,7 +43,7 @@ const UserLogin: React.FC = () => {
     password: '',
   });
 
-  const changeUser = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const changeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...form, [e.target.id]: e.target.value });
   };
 
@@ -101,7 +101,6 @@ const UserLogin: React.FC = () => {
         </div>
       </Container>
     </div>
-
   );
 };
 
