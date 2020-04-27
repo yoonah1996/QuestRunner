@@ -3,21 +3,22 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { RootState } from './store/modules';
 import { actions } from './store/modules/userLogin';
+import UserLogin from './UserLogin';
 // 라우팅
 // Islogin
 const App: React.FC = () => {
-  const isLogin = useSelector((state: RootState) => state.commons.isLogin);
-  const dispatch = useDispatch();
-  dispatch(actions.setDarkmode({ darkmode: true }));
+  // const isLogin = useSelector((state: RootState) => state.commons.isLogin);
+  // const dispatch = useDispatch();
+  // dispatch(actions.setDarkmode({ darkmode: true }));
   return (
     <div className="App">
-      {/* <Switch>
+      <Switch>
         <Route
           exact
           path="/userLoginPage"
-          render={() => <SignIn/>}
+          render={() => <UserLogin />}
         />
-        <Route
+        {/* <Route
           exact
           path="/userJoinPage"
           render={() => <UserJoin/>}
@@ -30,9 +31,9 @@ const App: React.FC = () => {
             }
             return <Theplace />;
           }}
-        />
-        <Route path="/" render={() => <Redirect to="/user" />} />
-      </Switch> */}
+        /> */}
+        <Route path="/" render={() => <Redirect to="/userLoginPage" />} />
+      </Switch>
     </div>
   );
 };
