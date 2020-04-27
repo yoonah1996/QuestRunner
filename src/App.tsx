@@ -2,20 +2,20 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { RootState } from './store/modules';
-import { setDarkmode } from './store/modules/userLogin';
+import { actions } from './store/modules/userLogin';
 // 라우팅
 // Islogin
 const App: React.FC = () => {
-  const isLogin = useSelector((state: RootState) => state.userSetter.isLogin);
+  const isLogin = useSelector((state: RootState) => state.commons.isLogin);
   const dispatch = useDispatch();
-  dispatch(setDarkmode(true));
+  dispatch(actions.setDarkmode({ darkmode: true }));
   return (
     <div className="App">
-      <Switch>
+      {/* <Switch>
         <Route
           exact
           path="/userLoginPage"
-          render={() => <UserLogin/>}
+          render={() => <SignIn/>}
         />
         <Route
           exact
@@ -32,7 +32,7 @@ const App: React.FC = () => {
           }}
         />
         <Route path="/" render={() => <Redirect to="/user" />} />
-      </Switch>
+      </Switch> */}
     </div>
   );
 };
