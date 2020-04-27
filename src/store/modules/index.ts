@@ -1,8 +1,9 @@
-import { combineReducers } from 'redux';
-import userSetter from './userLogin';
+/* eslint-disable no-param-reassign */
+import { combineReducers } from '@reduxjs/toolkit';
+import { commonSlice } from './userLogin';
 
 const rootReducer = combineReducers({
-  userSetter,
+  commons: commonSlice.reducer,
 });
 
 export default rootReducer;

@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import rootReducer from './store/modules';
 
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware()));
+const store = configureStore({
+  reducer: rootReducer,
+});
 ReactDOM.render(
   <Router>
     <Provider store={store}>
