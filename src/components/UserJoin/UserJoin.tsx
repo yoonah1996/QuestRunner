@@ -12,7 +12,9 @@ import Container from '@material-ui/core/Container';
 import { RouteComponentProps } from 'react-router-dom';
 import axios from 'axios';
 import ValidText from './ValidText';
-import { emailRegex, initToUpper } from '../../utils';
+import { emailRegex, initToUpper, serverHttp } from '../../utils';
+
+axios.defaults.withCredentials = true;
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -192,25 +194,35 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   // axios type을 어떤식으로 해야하지?
 
   interface Response {
-    response: number;
+    message: string;
   }
 
   const onSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
-    const res = await axios.post<Response>('url', {
+    if (
+      !isvalid.emailValid ||
+      !isvalid.passwordValid ||
+      !isvalid.password2Valid
+    ) {
+      return null;
+    }
+    const res = await axios.post<Response>(`${serverHttp}/user`, {
       email,
       password,
       username,
     });
-    console.log(res.data.response);
-    const resNumber = res.data.response;
-    if (resNumber === 200) {
-      push('/userLoginPage');
-      console.log('successfully added');
-    } else if (resNumber === 302) {
-      console.log('user already exists');
-    } else {
-      console.log('innternal error');
+    console.log(res.data.message);
+    const resMessage = res.data.message;
+    switch (resMessage) {
+      case 'successfully added':
+        console.log('successfully added');
+        break;
+      case 'user already exists':
+        console.log('user already exists');
+        break;
+      default:
+        console.log('error occured, please try again');
+        break;
     }
     // console.log(email, password, username);
     // TODO : send request
