@@ -3,26 +3,23 @@
 import {
   createAction, createSlice, PayloadAction,
 } from '@reduxjs/toolkit';
-import { User } from './interfaces';
+import { User } from '../common/interfaces';
 
 type UserState = {
   user:User | null;
   isLogin:boolean;
   token:string | null;
-  darkmode : boolean;
 };
 
 const initialState: UserState = {
   user: null,
   isLogin: false,
   token: null,
-  darkmode: false,
 };
 
-const actionPrefix = 'COMMON';
+const actionPrefix = 'LOGIN';
 
 const setLogin = createAction<object>(`${actionPrefix}/login`);
-const setDarkmode = createAction<object>(`${actionPrefix}/darkmode`);
 const setUser = createAction<object>(`${actionPrefix}user`);
 
 const reducers = {
@@ -30,22 +27,18 @@ const reducers = {
     state.isLogin = isLogin;
     state.token = token;
   },
-  darkmode: (state : UserState, { payload: { darkmode } }:PayloadAction<UserState>) => {
-    state.darkmode = darkmode;
-  },
   user: (state : UserState, { payload: { user } }:PayloadAction<UserState>) => {
     state.user = user;
   },
 };
 
-export const commonSlice = createSlice({
+export const userLoginSlice = createSlice({
   reducers,
   initialState,
   name: actionPrefix,
 });
 
-export const actions = {
+export const userLoginActions = {
   setLogin,
-  setDarkmode,
   setUser,
 };

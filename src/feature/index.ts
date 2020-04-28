@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { combineReducers } from '@reduxjs/toolkit';
-import { commonSlice } from './userLogin';
+import { userLoginSlice } from './usersignin/userlogin';
 
 const rootReducer = combineReducers({
-  commons: commonSlice.reducer,
+  userLogin: userLoginSlice.reducer,
 });
 
 export default rootReducer;

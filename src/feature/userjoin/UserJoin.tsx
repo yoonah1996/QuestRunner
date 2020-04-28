@@ -9,10 +9,12 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+// eslint-disable-next-line no-unused-vars
 import { RouteComponentProps } from 'react-router-dom';
 import axios from 'axios';
 import ValidText from './ValidText';
-import { emailRegex, initToUpper, serverHttp } from '../../utils';
+import { emailRegex, initToUpper, serverHttp } from '../common/utils';
+import Image from '../../img/penmon.jpg';
 
 axios.defaults.withCredentials = true;
 
@@ -38,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100vw',
     height: '100vh',
     backgroundImage:
-      'url(https://cdn.discordapp.com/attachments/696555730949373952/702072403374899260/penmon___trwyn_du___lighthouse_milky_way_galaxy_night_sky-wallpaper-1920x1080.jpg)',
+      `url(${Image})`,
     backgroundPosition: 'center center',
     display: 'flex',
     justifyContent: 'center',
