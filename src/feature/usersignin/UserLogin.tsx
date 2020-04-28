@@ -7,11 +7,12 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+// eslint-disable-next-line no-unused-vars
 import { RouteComponentProps } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import Image from './penmon.jpg';
-import { RootState } from './store/modules';
-import { actions } from './store/modules/userLogin';
+import Image from '../../img/penmon.jpg';
+import { RootState } from '..';
+import { userLoginActions } from './userlogin';
 
 const axios = require('axios');
 // const httpRes = axios.create({
