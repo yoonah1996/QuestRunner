@@ -5,6 +5,7 @@ import { RootState } from './store/modules';
 import { actions } from './store/modules/userLogin';
 import UserLogin from './UserLogin';
 import UserJoin from './components/UserJoin/UserJoin';
+
 // 라우팅
 // Islogin
 const App: React.FC = () => {
@@ -12,10 +13,10 @@ const App: React.FC = () => {
   // const dispatch = useDispatch();
   // dispatch(actions.setDarkmode({ darkmode: true }));
   return (
-    <div className="App">
-      <Switch>
-        <Route exact path="/userJoinPage" component={UserJoin} />
-        {/* <Route
+    <Switch>
+      <Route exact path="/userJoinPage" component={UserJoin} />
+      <Route exact path="/userLoginPage" component={UserLogin} />
+      {/* <Route
             path="/user"
             render={() => {
               if (!isLogin) {
@@ -24,9 +25,8 @@ const App: React.FC = () => {
               return <Theplace />;
             }}
           /> */}
-        <Route path="/" render={() => <Redirect to="/user" />} />
-      </Switch>
-    </div>
+      <Route path="/" render={() => <Redirect to="/userLoginPage" />} />
+    </Switch>
   );
 };
 
