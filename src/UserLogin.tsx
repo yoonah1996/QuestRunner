@@ -1,16 +1,25 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { RouteComponentProps } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-// import Image from './penmon.jpg';
+import Image from './penmon.jpg';
 import { RootState } from './store/modules';
 import { actions } from './store/modules/userLogin';
+
+const axios = require('axios');
+// const httpRes = axios.create({
+//   baseURL: 'http://61.75.4.217/userinfo',
+//   header: {
+
+//   }
+// })
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -19,22 +28,30 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255,255,255,0.5)',
     width: '100%',
     height: '100%',
     padding: '10%',
   },
   drawerPaper: {
-    // backgroundSize: 'cover',
-    // backgroundImage: `url(${Image})`,
+    width: '100vw',
+    height: '100vh',
+    backgroundSize: 'cover',
+    backgroundImage: `url(${Image})`,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
+  signUp: {
+    marginTop: '10px',
+  },
+  signUpButton: {
+    color: 'rgba(70,70,70,0.9)',
+  },
 }));
 
-const UserLogin: React.FC = () => {
+const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   // const dispatch = useDispatch();
   // dispatch(actions.setLogin({ isLogin: true, token:  }));
   const classes = useStyles();
@@ -47,6 +64,10 @@ const UserLogin: React.FC = () => {
     setValues({ ...form, [e.target.id]: e.target.value });
   };
 
+  const submitClick = (e: React.FormEvent<Element>) => {
+    console.log(form);
+  };
+
   return (
     <div className={classes.drawerPaper}>
       <Container component="main" maxWidth="xs">
@@ -55,7 +76,7 @@ const UserLogin: React.FC = () => {
           <Typography component="h1" variant="h5">
             Quest Runner
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate onSubmit={submitClick}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -82,19 +103,26 @@ const UserLogin: React.FC = () => {
               fullWidth
               variant="contained"
               // color="text.disabled"
-              className="loginBt"
-              onClick={() => {
-                console.log(form.email, form.password);
+              onClick={async () => {
+                axios.post('http://61.75.4.217/userinfo', {
+                  body: form,
+                })
+                  .then((response: string) => {
+                    console.log(response);
+                  })
+                  .catch((error: string) => {
+                    console.log(error);
+                  });
               }}
             >
               Sign In
             </Button>
-            <Grid container>
+            <Grid className={classes.signUp} container>
               <Grid item xs />
               <Grid item>
-                {/* <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link> */}
+                <Button className={classes.signUpButton} onClick={() => { push('/userJoinPage'); }}>
+                  Don't have an account? Sign Up
+                </Button>
               </Grid>
             </Grid>
           </form>
