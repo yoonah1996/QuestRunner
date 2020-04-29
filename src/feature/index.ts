@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { combineReducers } from '@reduxjs/toolkit';
-import { userLoginSlice } from './usersignin/userlogin';
+import { userLoginSlice } from './usersignin/userloginService';
 
 const rootReducer = combineReducers({
   userLogin: userLoginSlice.reducer,
