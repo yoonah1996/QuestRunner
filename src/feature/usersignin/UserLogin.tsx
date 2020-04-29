@@ -10,17 +10,12 @@ import Container from '@material-ui/core/Container';
 // eslint-disable-next-line no-unused-vars
 import { RouteComponentProps } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
 import Image from '../../img/penmon.jpg';
 import { RootState } from '..';
 import { userLoginActions } from './userloginService';
-import axios from 'axios';
-
-// const httpRes = axios.create({
-//   baseURL: 'http://61.75.4.217/userinfo',
-//   header: {
-
-//   }
-// })
+import { emailRegex, serverHttp } from '../common/utils';
+import ValidText from '../userjoin/ValidText';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -53,20 +48,74 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
-  // const dispatch = useDispatch();
-  // dispatch(actions.setLogin({ isLogin: true, token:  }));
+  const dispatch = useDispatch();
   const classes = useStyles();
   const [form, setValues] = useState({
     email: '',
     password: '',
   });
+  const [error, setError] = useState({
+    emailError: '',
+    clickError: '',
+  });
 
   const changeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...form, [e.target.id]: e.target.value });
+    const isValidEmail = emailRegex.test(form.email);
+    if (!isValidEmail) {
+      setError({
+        ...error,
+        emailError: 'email is not valid',
+      });
+    } else {
+      setError({
+        ...error,
+        emailError: '',
+      });
+    }
   };
 
+  // interface Tokens {
+  //   accessToken: string;
+  //   refreshToken: string;
+  // }
+
+  // interface Datas {
+  //   data: Tokens | null
+  // }
+
   const submitClick = (e: React.FormEvent<Element>) => {
-    console.log(form);
+    e.preventDefault();
+    // eslint-disable-next-line no-empty
+    if (form.email.length === 0 || form.password.length === 0 || error.emailError.length !== 0) {
+      setError({
+        ...error,
+        clickError: 'please fill this form',
+      });
+    } else {
+      axios
+        .post(`${serverHttp}/userlogin`, {
+          email: form.email,
+          password: form.password,
+        })
+        .then((response) => {
+          const state: number = response.status;
+          switch (state) {
+            case 200:
+              console.log(response);
+              dispatch(userLoginActions.setLogin({ isLogin: true, token: response.data }));
+              break;
+            default:
+              break;
+          }
+        })
+        .catch((err) => {
+          setError({
+            ...error,
+            clickError: 'please fill this form',
+          });
+        });
+    }
   };
 
   return (
@@ -78,17 +127,19 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
             Quest Runner
           </Typography>
           <form className={classes.form} noValidate onSubmit={submitClick}>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              // autoComplete="email"
-              autoFocus
-              onChange={changeUser}
-            />
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="off"
+                onChange={changeUser}
+              />
+              <ValidText error={error.emailError} />
+            </Grid>
             <TextField
               variant="outlined"
               margin="normal"
@@ -100,26 +151,14 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
               onChange={changeUser}
             />
             <Button
-              // type="submit"
+              type="submit"
               fullWidth
               variant="contained"
-              // color="text.disabled"
-              onClick={() => {
-                axios
-                  .post<any>('http://61.75.4.217:3000/userinfo', {
-                    email: form.email,
-                    password: form.password,
-                  })
-                  .then((response: any) => {
-                    console.log(response);
-                    //200
-                    // 메인페이지로 간다.
-                    // token을 store에 저장한다.
-                  });
-              }}
+            // color="text.disabled"
             >
               Sign In
             </Button>
+            <ValidText error={error.clickError} />
             <Grid className={classes.signUp} container>
               <Grid item xs />
               <Grid item>
