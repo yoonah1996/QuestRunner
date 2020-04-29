@@ -7,10 +7,8 @@ import {
   TextField,
   Grid,
   Typography,
-  Fade,
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { ArrowBackIos } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
@@ -201,6 +199,18 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         break;
     }
   };
+  const validAlert = (message: string) => {
+    setError({
+      ...error,
+      requiredError: message,
+    });
+    setTimeout(() => {
+      setError({
+        ...error,
+        requiredError: '',
+      });
+    }, 3000);
+  };
   interface Response {
     message: string;
   }
@@ -212,162 +222,122 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
       !isvalid.passwordValid ||
       !isvalid.password2Valid
     ) {
-      setError({
-        ...error,
-        requiredError: 'please fill this form',
-      });
-      setTimeout(() => {
-        setError({
-          ...error,
-          requiredError: '',
-        });
-      }, 3000);
+      validAlert('please fill this form');
       return null;
     }
     try {
-      const res = await axios.post<Response>(`${serverHttp}/user`, {
+      await axios.post<Response>(`${serverHttp}/user`, {
         email,
         password,
         username,
       });
-      const resMessage = res.data.message;
-      switch (resMessage) {
-        case 'successfully added':
-          push('/userLoginPage');
-          break;
-        case 'user already exists':
-          setError({
-            ...error,
-            requiredError: 'user already exists!',
-          });
-          setTimeout(() => {
-            setError({
-              ...error,
-              requiredError: '',
-            });
-          }, 3000);
-          break;
-        default:
-          setError({
-            ...error,
-            requiredError: 'user already exists!',
-          });
-          setTimeout(() => {
-            setError({
-              ...error,
-              requiredError: 'error occured, please try again',
-            });
-          }, 3000);
-          break;
-      }
+      push('/userLoginPage');
       // eslint-disable-next-line no-shadow
     } catch (error) {
-      console.log(error);
+      const {
+        response: {
+          data: { message },
+        },
+      } = error;
+      validAlert(message);
     }
-    // console.log(email, password, username);
-    // TODO : send request
-    // 200 => rediect to sign in
-    // 400 => userid duplicate or else
-    // 500 => internal error try again
   };
 
   const classes = useStyles();
   return (
     <div className={classes.bg}>
-      <Fade in>
-        <Container className={classes.container} component="main" maxWidth="xs">
-          <CssBaseline />
-          <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign up
-            </Typography>
-            <form className={classes.form} noValidate onSubmit={onSubmit}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="off"
-                    onChange={onChange}
-                  />
-                  {!isvalid.emailValid ? (
-                    <ValidText error={error.emailError} />
-                  ) : null}
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="username"
-                    label="username"
-                    name="uarname"
-                    autoComplete="off"
-                    onChange={onChange}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    onChange={onChange}
-                  />
-                  {!isvalid.passwordValid ? (
-                    <ValidText error={error.passwordError} />
-                  ) : null}
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    name="password2"
-                    label="Confirm Password"
-                    type="password"
-                    id="password2"
-                    autoComplete="confirm-password"
-                    onChange={checkValidate}
-                  />
-                  {!isvalid.password2Valid ? (
-                    <ValidText error={error.confirmPassrowdError} />
-                  ) : null}
-                </Grid>
+      <Container className={classes.container} component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <form className={classes.form} noValidate onSubmit={onSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="off"
+                  onChange={onChange}
+                />
+                {!isvalid.emailValid ? (
+                  <ValidText error={error.emailError} />
+                ) : null}
               </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Sign Up
-              </Button>
-            </form>
-            <ValidText error={error.requiredError} />
-          </div>
-          <Button
-            className={classes.signInButton}
-            onClick={() => {
-              push('/userLoginPage');
-            }}
-          >
-            go to SignIn
-          </Button>
-        </Container>
-      </Fade>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="username"
+                  label="username"
+                  name="uarname"
+                  autoComplete="off"
+                  onChange={onChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  onChange={onChange}
+                />
+                {!isvalid.passwordValid ? (
+                  <ValidText error={error.passwordError} />
+                ) : null}
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password2"
+                  label="Confirm Password"
+                  type="password"
+                  id="password2"
+                  autoComplete="confirm-password"
+                  onChange={checkValidate}
+                />
+                {!isvalid.password2Valid ? (
+                  <ValidText error={error.confirmPassrowdError} />
+                ) : null}
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign Up
+            </Button>
+          </form>
+          <ValidText error={error.requiredError} />
+        </div>
+        <Button
+          className={classes.signInButton}
+          onClick={() => {
+            push('/userLoginPage');
+          }}
+        >
+          go to SignIn
+        </Button>
+      </Container>
     </div>
   );
 };
