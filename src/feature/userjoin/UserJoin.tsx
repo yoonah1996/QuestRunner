@@ -230,6 +230,7 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         password,
         username,
       });
+      console.log(res);
       const resMessage = res.data.message;
       switch (resMessage) {
         case 'successfully added':
@@ -299,7 +300,7 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
                   />
                   {!isvalid.emailValid ? (
                     <ValidText error={error.emailError} />
-                  ) : null}
+                  ) : true}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField

@@ -94,7 +94,7 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
       });
     } else {
       axios
-        .post(`${serverHttp}/userlogin`, {
+        .post(`${serverHttp}/userinfo`, {
           email: form.email,
           password: form.password,
         })
