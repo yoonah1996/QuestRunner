@@ -13,8 +13,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import Image from '../../img/penmon.jpg';
 import { RootState } from '..';
 import { userLoginActions } from './userloginService';
+import axios from 'axios';
 
-const axios = require('axios');
 // const httpRes = axios.create({
 //   baseURL: 'http://61.75.4.217/userinfo',
 //   header: {
@@ -104,16 +104,17 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
               fullWidth
               variant="contained"
               // color="text.disabled"
-              onClick={async () => {
+              onClick={() => {
                 axios
-                  .post('http://61.75.4.217/userinfo', {
-                    body: form,
+                  .post<any>('http://61.75.4.217:3000/userinfo', {
+                    email: form.email,
+                    password: form.password,
                   })
-                  .then((response: string) => {
+                  .then((response: any) => {
                     console.log(response);
-                  })
-                  .catch((error: string) => {
-                    console.log(error);
+                    //200
+                    // 메인페이지로 간다.
+                    // token을 store에 저장한다.
                   });
               }}
             >
