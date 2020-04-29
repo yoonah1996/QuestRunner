@@ -65,6 +65,9 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     setValues({ ...form, [e.target.id]: e.target.value });
   };
 
+  interface User {
+   }
+
   const submitClick = (e: React.FormEvent<Element>) => {
     console.log(form);
   };
@@ -108,10 +111,10 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
                 axios.post('http://61.75.4.217/userinfo', {
                   body: form,
                 })
-                  .then((response: string) => {
+                  .then((response: any) => {
                     console.log(response);
                   })
-                  .catch((error: string) => {
+                  .catch((error: any) => {
                     console.log(error);
                   });
               }}
