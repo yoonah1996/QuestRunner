@@ -5,6 +5,7 @@ import { RootState } from './feature';
 import { userLoginActions } from './feature/usersignin/userloginService';
 import UserLogin from './feature/usersignin/UserLogin';
 import UserJoin from './feature/userjoin/UserJoin';
+import MainPage from './feature/mainpage/MainPage';
 
 // 라우팅
 // Islogin
@@ -16,6 +17,7 @@ const App: React.FC = () => {
     <Switch>
       <Route exact path="/userJoinPage" component={UserJoin} />
       <Route exact path="/userLoginPage" component={UserLogin} />
+      <Route exact path="/mainPage" component={MainPage} />
       {/* <Route
             path="/user"
             render={() => {
