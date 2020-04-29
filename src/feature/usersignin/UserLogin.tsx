@@ -104,15 +104,15 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
               fullWidth
               variant="contained"
               // color="text.disabled"
-              onClick={async () => {
+              onClick={() => {
                 axios
-                  .post('http://61.75.4.217/userinfo', {
+                  .post('http://61.75.4.217:3000/userinfo', {
                     body: form,
                   })
-                  .then((response: string) => {
+                  .then((response: any) => {
                     console.log(response);
                   })
-                  .catch((error: string) => {
+                  .catch((error: any) => {
                     console.log(error);
                   });
               }}
@@ -120,8 +120,8 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
               Sign In
             </Button>
             <Grid className={classes.signUp} container>
-              <Grid item xs />
-              <Grid item>
+              {/* <Grid item xs /> */}
+              {/* <Grid item> */}
                 <Button
                   className={classes.signUpButton}
                   onClick={() => {
