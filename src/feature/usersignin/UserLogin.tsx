@@ -12,7 +12,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Image from '../../img/penmon.jpg';
 import { RootState } from '..';
-import { userLoginActions } from './userlogin';
+import { userLoginActions } from './userloginService';
 
 const axios = require('axios');
 // const httpRes = axios.create({
@@ -105,9 +105,10 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
               variant="contained"
               // color="text.disabled"
               onClick={async () => {
-                axios.post('http://61.75.4.217/userinfo', {
-                  body: form,
-                })
+                axios
+                  .post('http://61.75.4.217/userinfo', {
+                    body: form,
+                  })
                   .then((response: string) => {
                     console.log(response);
                   })
@@ -121,7 +122,12 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
             <Grid className={classes.signUp} container>
               <Grid item xs />
               <Grid item>
-                <Button className={classes.signUpButton} onClick={() => { push('/userJoinPage'); }}>
+                <Button
+                  className={classes.signUpButton}
+                  onClick={() => {
+                    push('/userJoinPage');
+                  }}
+                >
                   Don't have an account? Sign Up
                 </Button>
               </Grid>
