@@ -6,6 +6,7 @@ import { userLoginActions } from './feature/usersignin/userloginService';
 import UserLogin from './feature/usersignin/UserLogin';
 import UserJoin from './feature/userjoin/UserJoin';
 import MainPage from './feature/mainpage/MainPage';
+import Store from './feature/store/Store';
 
 // 라우팅
 // Islogin
@@ -18,6 +19,7 @@ const App: React.FC = () => {
       <Route exact path="/userJoinPage" component={UserJoin} />
       <Route exact path="/userLoginPage" component={UserLogin} />
       <Route exact path="/mainPage" component={MainPage} />
+      <Route exact path="/store" component={Store} />
       {/* <Route
             path="/user"
             render={() => {
@@ -27,7 +29,8 @@ const App: React.FC = () => {
               return <Theplace />;
             }}
           /> */}
-      <Route path="/" render={() => <Redirect to="/userLoginPage" />} />
+      {/* <Route path="/" render={() => <Redirect to="/userLoginPage" />} /> */}
+      <Route path="/" render={() => <Redirect to="/store" />} />
     </Switch>
   );
 };
