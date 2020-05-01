@@ -94,7 +94,7 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
       });
     } else {
       axios
-        .post(`${serverHttp}/userinfo`, {
+        .post(`${serverHttp}/userinfo`, {    //userlogin
           email: form.email,
           password: form.password,
         })
@@ -103,7 +103,7 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
           switch (state) {
             case 200:
               console.log(response);
-              dispatch(userLoginActions.setLogin({ isLogin: true, token: response.data }));
+              dispatch(userLoginActions.setLogin({ isLogin: true, token: response.data })); //  token 저장
               break;
             default:
               break;
