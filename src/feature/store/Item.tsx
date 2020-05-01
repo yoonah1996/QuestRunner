@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 /* eslint-disable func-names */
 /* eslint-disable react/no-find-dom-node */
@@ -18,9 +19,10 @@ import {
 
 interface Item {
   feature: string;
-  id: number;
+  _id: string;
   image: string;
   price: number;
+  item_name: string;
 }
 
 interface IProp {
@@ -72,9 +74,6 @@ const Item: React.FC<IProp> = ({ item, category }) => {
   const [open, setOpen] = useState(false);
   const [modalStyle] = useState(getModalStyle);
   const [target, setTarget] = useState<string | null>('');
-  useEffect(function (this: any) {
-    const node = ReactDOM.findDOMNode(this);
-  });
   const handleOpen = (targetItem: string | null) => {
     setTarget(targetItem);
     setOpen(true);
@@ -103,12 +102,12 @@ const Item: React.FC<IProp> = ({ item, category }) => {
         <CardActionArea onClick={onClick}>
           <CardMedia
             className={classes.media}
-            image={item.image}
+            image="/static/images/cards/paella.jpg"
             // title="Contemplative Reptile"
           />
           <CardContent>
             <Typography variant="body2" color="textSecondary" component="p">
-              {item.feature}
+              {item.item_name}
             </Typography>
           </CardContent>
         </CardActionArea>
