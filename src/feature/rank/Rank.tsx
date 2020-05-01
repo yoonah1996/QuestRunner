@@ -36,7 +36,7 @@ const Rank: React.FC<RouteComponentProps> = () => {
   const [value, setValue] = React.useState('recents');
 
   const handleChange = (event: string) => {
-    console.log(event);
+    console.log(document.getElementsByClassName("MuiBottomNavigationAction-label Mui-selected"));
     setValue(event);
   };
   return (
@@ -51,7 +51,7 @@ const Rank: React.FC<RouteComponentProps> = () => {
           </Typography>
           <div>
             <BottomNavigation value={value} className={classes.menuroot}>
-              <BottomNavigationAction label="My Lank" value="recents" onMouseOver={() => { handleChange('recents'); }} onFocus={() => {console.log("hi"); }} icon={<EmojiEvents className={classes.menucolor} />} className={classes.menucolor} />
+              <BottomNavigationAction label="My Lank" value="recents" onMouseOver={() => { handleChange('recents'); }} onFocus={() => {console.log("hi"); }} icon={<EmojiEvents className={classes.menucolor} />} />
               <BottomNavigationAction label="Back" value="favorites" onMouseOver={() => { handleChange('favorites'); }} onFocus={() => {console.log("hi"); }} icon={<NavigateBefore className={classes.menucolor} />} className={classes.menucolor} />
             </BottomNavigation>
           </div>
