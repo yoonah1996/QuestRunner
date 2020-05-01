@@ -215,6 +215,7 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     message: string;
   }
 
+  // eslint-disable-next-line consistent-return
   const onSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
     if (

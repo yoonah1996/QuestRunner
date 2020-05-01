@@ -6,6 +6,7 @@ import { userLoginActions } from './feature/usersignin/userloginService';
 import UserLogin from './feature/usersignin/UserLogin';
 import UserJoin from './feature/userjoin/UserJoin';
 import MainPage from './feature/mainpage/MainPage';
+import Store from './feature/store/Store';
 import Rank from './feature/rank/Rank';
 
 // 라우팅
@@ -19,6 +20,7 @@ const App: React.FC = () => {
       <Route exact path="/userJoinPage" component={UserJoin} />
       <Route exact path="/userLoginPage" component={UserLogin} />
       <Route exact path="/mainPage" component={MainPage} />
+      <Route exact path="/store" component={Store} />
       <Route exact path="/rank" component={Rank} />
       {/* <Route
             path="/user"
@@ -29,7 +31,8 @@ const App: React.FC = () => {
               return <Theplace />;
             }}
           /> */}
-      <Route path="/" render={() => <Redirect to="/userLoginPage" />} />
+      {/* <Route path="/" render={() => <Redirect to="/userLoginPage" />} /> */}
+      <Route path="/" render={() => <Redirect to="/store" />} />
     </Switch>
   );
 };
