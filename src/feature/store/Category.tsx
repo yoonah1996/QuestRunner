@@ -6,7 +6,7 @@ interface IProp {
   name: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   main: {},
 }));
 

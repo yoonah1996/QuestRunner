@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable camelcase */
 /* eslint-disable react/prop-types */
 import React from 'react';
@@ -10,14 +11,14 @@ interface IItem {
   image: string;
   price: number;
   item_name: string;
-}
-
-interface IProp {
-  items: Array<IItem>;
   category: string;
 }
-
-const useStyles = makeStyles((theme) => ({
+interface IProp {
+  items: Array<IItem>;
+  myActiveItem: string | boolean;
+  myItem: Array<string>;
+}
+const useStyles = makeStyles(() => ({
   main: {
     width: '100%',
     display: 'flex',
@@ -25,14 +26,17 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
 }));
-
-const ItemList: React.FC<IProp> = ({ items, category }) => {
+const ItemList: React.FC<IProp> = ({ items, myActiveItem, myItem }) => {
   const classes = useStyles();
-  // grid를 쓰자.
-  const itemList = items.map((item) => (
-    // eslint-disable-next-line no-underscore-dangle
-    <Item key={item._id} item={item} category={category} />
-  ));
+  const itemList = items.map((item) => {
+    if (item.item_name === myActiveItem) {
+      return <Item key={item._id} item={item} state="active" />;
+    }
+    if (myItem.includes(item.item_name)) {
+      return <Item key={item._id} item={item} state="purchased" />;
+    }
+    return <Item key={item._id} item={item} state="purchasable" />;
+  });
   return <div className={classes.main}>{itemList}</div>;
 };
 export default ItemList;
