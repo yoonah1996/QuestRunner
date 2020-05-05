@@ -22,17 +22,6 @@ const App: React.FC = () => {
       <Route exact path="/mainPage" component={MainPage} />
       <Route exact path="/store" component={Store} />
       <Route exact path="/rank" component={Rank} />
-      {/* <Route
-            path="/user"
-            render={() => {
-              if (!isLogin) {
-                return <Redirect to="/userLoginPage" />;
-              }
-              return <Theplace />;
-            }}
-          /> */}
-      {/* <Route path="/" render={() => <Redirect to="/userLoginPage" />} /> */}
-      <Route path="/" render={() => <Redirect to="/store" />} />
     </Switch>
   );
 };

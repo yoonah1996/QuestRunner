@@ -3,16 +3,33 @@ import { makeStyles } from '@material-ui/core';
 import axios from 'axios';
 import ItemList from './ItemList';
 import Category from './Category';
+// import { RootState } from '..';
 import { serverHttp } from '../common/utils';
+// import { useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme) => ({
+const myItem = {
+  user: {
+    active: {
+      experiencebar: 'yellow',
+      background: 'default',
+      darkmode: false,
+    },
+  },
+  items: {
+    experiencebar: ['yellow', 'blue'],
+    background: ['mountains'],
+    // darkmode: [],
+  },
+};
+
+const useStyles = makeStyles(() => ({
   main: {
     width: '100%',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    border: '1px solid black',
   },
   hr: {
     width: '50%',
@@ -20,16 +37,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Store = () => {
+  // const user = useSelector((state: RootState) => state.userLogin.user);
+  // console.log(user);
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
     background: [],
     experienceBar: [],
+    // darkmode: [],
   });
-  // api가 완료되면 useEffect를 사용하여 불러올것!
   const getStoreItems = async () => {
     try {
       const storeItems = await axios.get(`${serverHttp}/items/storeItems`);
+      // 다크모드도 와야함
       const {
         data: { background, experienceBar },
       } = storeItems;
@@ -37,8 +57,8 @@ const Store = () => {
         background,
         experienceBar,
       });
-    } catch {
-      console.log('error');
+    } catch (error) {
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -49,17 +69,29 @@ const Store = () => {
   return (
     <>
       {loading ? (
-        <div>Loading...</div>
+        <div className={classes.main}>Loading...</div>
       ) : (
         <div className={classes.main}>
           <Category name="background" />
-          <ItemList items={data.background} category="background" />
+          <ItemList
+            items={data.background}
+            myActiveItem={myItem.user.active.background}
+            myItem={myItem.items.background}
+          />
           <hr className={classes.hr} />
           <Category name="experienceBar" />
-          <ItemList items={data.experienceBar} category="experienceBar" />
+          <ItemList
+            items={data.experienceBar}
+            myActiveItem={myItem.user.active.experiencebar}
+            myItem={myItem.items.experiencebar}
+          />
           <hr className={classes.hr} />
-          {/* <Category name="darkmode" />
-      <ItemList items={dummyData.darkmode} category="darkmode" /> */}
+          {/* <Category name="darkmode" /> */}
+          {/* <ItemList
+            items={data.darkmode}
+            myActiveItem={myItem.user.active.darkmode}
+            myItem={myItem.items.darkmode}
+          /> */}
         </div>
       )}
     </>
