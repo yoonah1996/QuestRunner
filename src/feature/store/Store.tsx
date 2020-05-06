@@ -1,35 +1,36 @@
+/* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import axios from 'axios';
 import ItemList from './ItemList';
 import Category from './Category';
-// import { RootState } from '..';
+import { RootState } from '..';
 import { serverHttp } from '../common/utils';
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const myItem = {
   user: {
     active: {
-      experiencebar: 'yellow',
+      exp_bar: 'yellow',
       background: 'default',
       darkmode: false,
     },
   },
   items: {
-    experiencebar: ['yellow', 'blue'],
-    background: ['mountains'],
-    // darkmode: [],
+    exp_bar: ['yellow', 'blue'],
+    background: ['mountains', 'riverside'],
+    darkmode: ['darkmode'],
   },
 };
 
 const useStyles = makeStyles(() => ({
   main: {
     width: '100%',
-    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    overflowY: 'scroll',
   },
   hr: {
     width: '50%',
@@ -37,25 +38,27 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Store = () => {
-  // const user = useSelector((state: RootState) => state.userLogin.user);
-  // console.log(user);
+  const user = useSelector((state: RootState) => state.userLogin.user);
+  const store = useSelector((state: RootState) => state.store);
+  console.log(store);
+  console.log(user);
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
     background: [],
-    experienceBar: [],
-    // darkmode: [],
+    exp_bar: [],
+    darkmode: [],
   });
   const getStoreItems = async () => {
     try {
       const storeItems = await axios.get(`${serverHttp}/items/storeItems`);
-      // 다크모드도 와야함
       const {
-        data: { background, experienceBar },
+        data: { background, exp_bar, darkmode },
       } = storeItems;
       setData({
         background,
-        experienceBar,
+        exp_bar,
+        darkmode,
       });
     } catch (error) {
       console.log(error);
@@ -81,17 +84,17 @@ const Store = () => {
           <hr className={classes.hr} />
           <Category name="experienceBar" />
           <ItemList
-            items={data.experienceBar}
-            myActiveItem={myItem.user.active.experiencebar}
-            myItem={myItem.items.experiencebar}
+            items={data.exp_bar}
+            myActiveItem={myItem.user.active.exp_bar}
+            myItem={myItem.items.exp_bar}
           />
           <hr className={classes.hr} />
-          {/* <Category name="darkmode" /> */}
-          {/* <ItemList
+          <Category name="darkmode" />
+          <ItemList
             items={data.darkmode}
             myActiveItem={myItem.user.active.darkmode}
             myItem={myItem.items.darkmode}
-          /> */}
+          />
         </div>
       )}
     </>

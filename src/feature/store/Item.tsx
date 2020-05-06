@@ -19,7 +19,6 @@ import axios from 'axios';
 import { serverHttp } from '../common/utils';
 
 interface Item {
-  feature: string;
   _id: string;
   image: string;
   price: number;
@@ -76,7 +75,7 @@ const getModalStyle = () => {
 };
 // dummyData
 const userCredit = {
-  credit: 500,
+  credit: 50000,
 };
 
 const Item: React.FC<IProp> = ({ item, state }) => {
@@ -107,7 +106,7 @@ const Item: React.FC<IProp> = ({ item, state }) => {
         },
         headers: {
           Authorization:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZWFkODQxOTAxYmE0NjI3MjM3YTkzM2UiLCJpYXQiOjE1ODg1NzI3NzEsImV4cCI6MTU4ODU3NjM3MX0.FI8XlocjsolWFuv4BFWt-2dMHklntJqPzRf9-agoGbk',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZWFkODQxOTAxYmE0NjI3MjM3YTkzM2UiLCJpYXQiOjE1ODg3MzY3MTksImV4cCI6MTU4ODc0MDMxOX0.CJACwmgsu8HjUUbHslnxasYnyGlEK8YgzhO9OUkCUVc',
         },
       });
     } catch (error) {
@@ -139,12 +138,14 @@ const Item: React.FC<IProp> = ({ item, state }) => {
         },
         headers: {
           Authorization:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZWFkODQxOTAxYmE0NjI3MjM3YTkzM2UiLCJpYXQiOjE1ODg1NzI3NzEsImV4cCI6MTU4ODU3NjM3MX0.FI8XlocjsolWFuv4BFWt-2dMHklntJqPzRf9-agoGbk',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZWFkODQxOTAxYmE0NjI3MjM3YTkzM2UiLCJpYXQiOjE1ODg3MzY3MTksImV4cCI6MTU4ODc0MDMxOX0.CJACwmgsu8HjUUbHslnxasYnyGlEK8YgzhO9OUkCUVc',
         },
       });
     } catch (error) {
       // error component로 랜더?
       console.error(error);
+    } finally {
+      setIsAdapt(false);
     }
   };
   const adaptItem = () => {
