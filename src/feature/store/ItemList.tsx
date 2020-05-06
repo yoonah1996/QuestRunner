@@ -2,11 +2,10 @@
 /* eslint-disable camelcase */
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Grid } from '@material-ui/core';
 import Item from './Item';
 
 interface IItem {
-  feature: string;
   _id: string;
   image: string;
   price: number;
@@ -19,6 +18,9 @@ interface IProp {
   myItem: Array<string>;
 }
 const useStyles = makeStyles(() => ({
+  root: {
+    flexGrow: 1,
+  },
   main: {
     width: '100%',
     display: 'flex',
@@ -30,13 +32,33 @@ const ItemList: React.FC<IProp> = ({ items, myActiveItem, myItem }) => {
   const classes = useStyles();
   const itemList = items.map((item) => {
     if (item.item_name === myActiveItem) {
-      return <Item key={item._id} item={item} state="active" />;
+      return (
+        <Grid key={item._id} item>
+          <Item key={item._id} item={item} state="active" />
+        </Grid>
+      );
     }
     if (myItem.includes(item.item_name)) {
-      return <Item key={item._id} item={item} state="purchased" />;
+      return (
+        <Grid key={item._id} item>
+          <Item key={item._id} item={item} state="purchased" />
+        </Grid>
+      );
     }
-    return <Item key={item._id} item={item} state="purchasable" />;
+    return (
+      <Grid key={item._id} item>
+        <Item key={item._id} item={item} state="purchasable" />
+      </Grid>
+    );
   });
-  return <div className={classes.main}>{itemList}</div>;
+  return (
+    <Grid container className={classes.root} spacing={2}>
+      <Grid item xs={12}>
+        <Grid container justify="center" spacing={2}>
+          {itemList}
+        </Grid>
+      </Grid>
+    </Grid>
+  );
 };
 export default ItemList;
