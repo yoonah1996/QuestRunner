@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
@@ -14,6 +15,7 @@ import axios from 'axios';
 import Image from '../../img/penmon.jpg';
 import { RootState } from '..';
 import { userLoginActions } from './userloginService';
+import { storeActions } from '../store/storeService';
 import { emailRegex, serverHttp } from '../common/utils';
 import ValidText from '../userjoin/ValidText';
 
@@ -94,28 +96,26 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
       });
     } else {
       axios
-        .post(`${serverHttp}/userlogin`, {    //userlogin
+        .post(`${serverHttp}/userlogin`, {
           email: form.email,
           password: form.password,
         })
         .then((response) => {
-          const state: number = response.status;
-          switch (state) {
-            case 200:
-              console.log(response);
-              dispatch(userLoginActions.setLogin({ isLogin: true, accessToken: response.data.accessToken, refreshToken: response.data.refreshToken })); //  token 저장
-              push('/mainPage');
-              break;
-            default:
-              break;
-          }
+          dispatch(userLoginActions.setLogin({ isLogin: true, accessToken: response.data.accessToken, refreshToken: response.data.refreshToken }));
+          return response.data;
         })
+        .then((token) => {
+          axios.get(`${serverHttp}/userinfo`, {
+            headers: {
+              Authorization:
+                token.accessToken,
+            },
+          })
+            .then((response) => dispatch(userLoginActions.setUser({ user: response.data })));
+        })
+        .then(() => axios.get(`${serverHttp}/items/storeItems`).then((response) => dispatch(storeActions.setStore({ background: response.data.background, exp_bar: response.data.exp_bar, darkmode: response.data.darkmode }))))
+        .then(() => push('/mainPage'))
         .catch((err) => {
-          console.log(err);
-          setError({
-            ...error,
-            clickError: 'please fill this form',
-          });
         });
     }
   };

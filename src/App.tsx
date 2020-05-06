@@ -19,20 +19,27 @@ const App: React.FC = () => {
     <Switch>
       <Route exact path="/userJoinPage" component={UserJoin} />
       <Route exact path="/userLoginPage" component={UserLogin} />
-      <Route exact path="/mainPage" component={MainPage} />
+      <Route
+        exact
+        path="/mainPage"
+        render={() => {
+          if (!isLogin) {
+            return <Redirect to="/userLoginPage" />;
+          }
+          return <MainPage />;
+        }}
+      />
       <Route exact path="/store" component={Store} />
       <Route exact path="/rank" component={Rank} />
-      {/* <Route
-            path="/user"
-            render={() => {
-              if (!isLogin) {
-                return <Redirect to="/userLoginPage" />;
-              }
-              return <Theplace />;
-            }}
-          /> */}
-      {/* <Route path="/" render={() => <Redirect to="/userLoginPage" />} /> */}
-      <Route path="/" render={() => <Redirect to="/rank" />} />
+      <Route
+        path="/"
+        render={() => {
+          if (!isLogin) {
+            return <Redirect to="/userLoginPage" />;
+          }
+          return <MainPage />;
+        }}
+      />
     </Switch>
   );
 };
