@@ -120,7 +120,6 @@ export default function MediaCard() {
               type="text"
               fullWidth
             />
-            <ImageUpload />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
