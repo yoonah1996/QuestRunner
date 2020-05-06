@@ -12,10 +12,12 @@ import Menu from '@material-ui/core/Menu';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
+import { useDispatch } from 'react-redux';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
+import { navActions } from './navService';
 import Image from '../../img/zolla.png';
 import MyInfo from './MyInfo';
 
@@ -48,6 +50,7 @@ type Anchor = 'right';
 
 export default function MenuAppBar() {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [navbarText, setNavbarText] = React.useState<string | null>('MainPage');
@@ -65,6 +68,7 @@ export default function MenuAppBar() {
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setNavbarText(event.currentTarget.textContent);
+    dispatch(navActions.setComponent({ navComponent: event.currentTarget.textContent }));
   };
 
   const toggleDrawer = (anchor: Anchor, open: boolean) => (
@@ -98,17 +102,17 @@ export default function MenuAppBar() {
             {navbarText}
           </Typography>
           <div className={classes.menuButton}>
-            <Button variant="outlined" color="inherit" href="#contained-buttons" onClick={handleMenuClick}>
-              QuestList
+            <Button variant="outlined" color="inherit" onClick={handleMenuClick}>
+              QUESTLIST
             </Button>
-            <Button variant="outlined" color="inherit" href="#contained-buttons" onClick={handleMenuClick}>
-              Achievement
+            <Button variant="outlined" color="inherit" onClick={handleMenuClick}>
+              ACHIEVEMENT
             </Button>
-            <Button variant="outlined" color="inherit" href="#contained-buttons" onClick={handleMenuClick}>
-              Rank
+            <Button variant="outlined" color="inherit" onClick={handleMenuClick}>
+              RANK
             </Button>
-            <Button variant="outlined" color="inherit" href="#contained-buttons" onClick={handleMenuClick}>
-              Store
+            <Button variant="outlined" color="inherit" onClick={handleMenuClick}>
+              STORE
             </Button>
             <IconButton
               aria-label="account of current user"

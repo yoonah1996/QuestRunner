@@ -113,7 +113,7 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
           })
             .then((response) => dispatch(userLoginActions.setUser({ user: response.data })));
         })
-        .then(() => axios.get(`${serverHttp}/items/storeItems`).then((response) => dispatch(storeActions.setStore(response.data))))
+        .then(() => axios.get(`${serverHttp}/items/storeItems`).then((response) => dispatch(storeActions.setStore({ background: response.data.background, exp_bar: response.data.exp_bar, darkmode: response.data.darkmode }))))
         .then(() => push('/mainPage'))
         .catch((err) => {
 

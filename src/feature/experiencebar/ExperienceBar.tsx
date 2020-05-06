@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   margin: {
     margin: theme.spacing(0),
+    zIndex: 3,
   },
   progressLabel: {
     position: 'absolute',

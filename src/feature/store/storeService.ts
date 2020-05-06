@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
 import {
@@ -17,8 +19,10 @@ const actionPrefix = 'STORE';
 const setStore = createAction<object>(`${actionPrefix}/loadStore`);
 
 const reducers = {
-  loadStore: (state : Store, payload : PayloadAction<Store>) => {
-    state = payload.payload;
+  loadStore: (state : Store, { payload: { background, exp_bar, darkmode } } : PayloadAction<Store>) => {
+    state.background = background;
+    state.exp_bar = exp_bar;
+    state.darkmode = darkmode;
   },
 };
 
