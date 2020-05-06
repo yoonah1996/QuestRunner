@@ -94,7 +94,7 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
       });
     } else {
       axios
-        .post(`${serverHttp}/userinfo`, {    //userlogin
+        .post(`${serverHttp}/userlogin`, {    //userlogin
           email: form.email,
           password: form.password,
         })
@@ -103,13 +103,15 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
           switch (state) {
             case 200:
               console.log(response);
-              dispatch(userLoginActions.setLogin({ isLogin: true, token: response.data })); //  token 저장
+              dispatch(userLoginActions.setLogin({ isLogin: true, accessToken: response.data.accessToken, refreshToken: response.data.refreshToken })); //  token 저장
+              push('/mainPage');
               break;
             default:
               break;
           }
         })
         .catch((err) => {
+          console.log(err);
           setError({
             ...error,
             clickError: 'please fill this form',

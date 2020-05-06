@@ -32,7 +32,7 @@ const App: React.FC = () => {
             }}
           /> */}
       {/* <Route path="/" render={() => <Redirect to="/userLoginPage" />} /> */}
-      <Route path="/" render={() => <Redirect to="/store" />} />
+      <Route path="/" render={() => <Redirect to="/rank" />} />
     </Switch>
   );
 };

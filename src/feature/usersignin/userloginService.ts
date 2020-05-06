@@ -8,13 +8,15 @@ import { User } from '../common/interfaces';
 type UserState = {
   user:User | null;
   isLogin:boolean;
-  token:string | null;
+  accessToken:string | null;
+  refreshToken:string | null;
 };
 
 const initialState: UserState = {
   user: null,
   isLogin: false,
-  token: null,
+  accessToken: null,
+  refreshToken: null,
 };
 
 const actionPrefix = 'LOGIN';
@@ -23,9 +25,10 @@ const setLogin = createAction<object>(`${actionPrefix}/login`);
 const setUser = createAction<object>(`${actionPrefix}user`);
 
 const reducers = {
-  login: (state : UserState, { payload: { isLogin, token } } : PayloadAction<UserState>) => {
+  login: (state : UserState, { payload: { isLogin, accessToken, refreshToken } } : PayloadAction<UserState>) => {
     state.isLogin = isLogin;
-    state.token = token;
+    state.accessToken = accessToken;
+    state.refreshToken = refreshToken;
   },
   user: (state : UserState, { payload: { user } }:PayloadAction<UserState>) => {
     state.user = user;
