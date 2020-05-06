@@ -39,6 +39,7 @@ const MainPage: React.FC = () => {
         direction="column"
         justify="flex-end"
         alignItems="stretch"
+        style={{ height: 20, width: '100%', position: 'relative' }}
       >
         <ExBarAvatar />
         <ExperienceBar />
