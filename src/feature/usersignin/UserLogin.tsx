@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
@@ -14,6 +15,7 @@ import axios from 'axios';
 import Image from '../../img/penmon.jpg';
 import { RootState } from '..';
 import { userLoginActions } from './userloginService';
+import { storeActions } from '../store/storeService';
 import { emailRegex, serverHttp } from '../common/utils';
 import ValidText from '../userjoin/ValidText';
 
@@ -94,26 +96,27 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
       });
     } else {
       axios
-        .post(`${serverHttp}/userinfo`, {    //userlogin
+        .post(`${serverHttp}/userlogin`, {
           email: form.email,
           password: form.password,
         })
         .then((response) => {
-          const state: number = response.status;
-          switch (state) {
-            case 200:
-              console.log(response);
-              dispatch(userLoginActions.setLogin({ isLogin: true, token: response.data })); //  token 저장
-              break;
-            default:
-              break;
-          }
+          dispatch(userLoginActions.setLogin({ isLogin: true, token: response.data }));
+          return response.data;
         })
+        .then((token) => {
+          axios.get(`${serverHttp}/userinfo`, {
+            headers: {
+              Authorization:
+                token.accessToken,
+            },
+          })
+            .then((response) => dispatch(userLoginActions.setUser({ user: response.data })));
+        })
+        .then(() => axios.get(`${serverHttp}/items/storeItems`).then((response) => dispatch(storeActions.setStore(response.data))))
+        .then(() => push('/mainPage'))
         .catch((err) => {
-          setError({
-            ...error,
-            clickError: 'please fill this form',
-          });
+
         });
     }
   };

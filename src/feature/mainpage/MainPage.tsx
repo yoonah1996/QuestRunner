@@ -3,7 +3,6 @@ import { Grid } from '@material-ui/core';
 import {
   Theme, createStyles, makeStyles, useTheme,
 } from '@material-ui/core/styles';
-import { RouteComponentProps } from 'react-router-dom';
 import NavBar from '../navbar/NavBar';
 import ExBarAvatar from '../experiencebar/ExBarAvatar';
 import ExperienceBar from '../experiencebar/ExperienceBar';
@@ -17,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 
-const MainPage: React.FC<RouteComponentProps> = () => {
+const MainPage: React.FC = () => {
   const classes = useStyles();
   return (
     <Grid

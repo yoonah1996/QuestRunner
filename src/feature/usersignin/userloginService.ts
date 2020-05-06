@@ -20,7 +20,7 @@ const initialState: UserState = {
 const actionPrefix = 'LOGIN';
 
 const setLogin = createAction<object>(`${actionPrefix}/login`);
-const setUser = createAction<object>(`${actionPrefix}user`);
+const setUser = createAction<object>(`${actionPrefix}/user`);
 
 const reducers = {
   login: (state : UserState, { payload: { isLogin, token } } : PayloadAction<UserState>) => {

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 export interface QuestItem {
     UUID: number;
     createdAt: Date;
@@ -9,43 +10,48 @@ export interface QuestItem {
 }
 
 export interface Active {
-    experiencebar: number;
-    background: number;
-    darkmode: boolean;
+    experiencebar: StoreItem;
+    background: StoreItem;
+    darkmode: StoreItem;
 }
 
 export interface User {
-    UUID: number;
+    _id: string;
     username: string;
-    password: string;
     email: string;
+    password: string;
+    created_at: Date;
+    __v: number;
     profilePic: string;
     motto: string;
     active: Active;
-    experience:number;
-    credit: number;
+    experience: number;
+    credits: number;
     quests: Array<QuestItem>;
+    todolist: Array<QuestItem>;
+    items: Items;
 }
 
 
-export interface StoreItem{
-    UUID : number;
-    name : string;
-    price : number;
+export interface StoreItem {
+    _id: string;
+    item_name: string;
+    category: string;
+    image: string;
+    created_at: Date;
+    price: number;
+    __v: number;
 }
 
-export interface Items{
-    experiencebar : Array<StoreItem>;
-    background : Array<StoreItem>;
+export interface Items {
+    exp_bar: Array<StoreItem>;
+    background: Array<StoreItem>;
+    darkmode: Array<StoreItem>;
 }
 
-export interface UserCollection {
-    user :User;
-    todolist : Array<QuestItem>;
-    items : Items;
-}
 
 export interface Store {
-    background : Array<StoreItem>;
-    experienceBar : Array<StoreItem>;
+    background: Array<StoreItem>;
+    exp_bar: Array<StoreItem>;
+    darkmode: Array<StoreItem>;
 }
