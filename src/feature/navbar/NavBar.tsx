@@ -103,7 +103,7 @@ export default function MenuAppBar() {
           </Typography>
           <div className={classes.menuButton}>
             <Button variant="outlined" color="inherit" onClick={handleMenuClick}>
-              QUESTLIST
+              QUEST
             </Button>
             <Button variant="outlined" color="inherit" onClick={handleMenuClick}>
               ACHIEVEMENT

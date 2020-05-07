@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
 export interface QuestItem {
   UUID: number;
-  createdAt: Date;
+  created_at: string;
   title: string;
   contents: string;
-  dueDate: Date;
+  due_date: string;
   checked: boolean;
   completed: boolean;
 }
@@ -20,7 +20,7 @@ export interface User {
   username: string;
   email: string;
   password: string;
-  created_at: Date;
+  created_at: string;
   __v: number;
   profilePic: string;
   motto: string;
@@ -37,7 +37,7 @@ export interface StoreItem {
   item_name: string;
   category: string;
   image: string;
-  created_at: Date;
+  created_at: string;
   price: number;
   __v: number;
 }
