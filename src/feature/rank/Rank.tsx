@@ -3,7 +3,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Box, Button, Grid, AppBar, Toolbar, Typography, Modal, Paper, BottomNavigationAction, BottomNavigation } from '@material-ui/core';
+import {
+  Box, Button, Grid, AppBar, Toolbar, Typography, Modal, Paper, BottomNavigationAction, BottomNavigation,
+} from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { RouteComponentProps } from 'react-router';
 import { NavigateBefore, EmojiEvents } from '@material-ui/icons';
@@ -149,7 +151,10 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   const [value, setValue] = React.useState('');
   const [three, setThree] = React.useState([]);
   const [seven, setSeven] = React.useState([]);
-  const [myrank, setMyrank] = React.useState('');
+  const [myrank, setMyrank] = React.useState({
+    username: '',
+    rank: '',
+  });
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
@@ -169,7 +174,7 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     }).then((res) => res.data).catch((err) => err);
     console.log(Ranks);
     setThree(Ranks.slice(0, 3));
-    setSeven(Ranks.slice(3));
+    setSeven(Ranks.slice(3, 7));
   };
 
   useEffect(() => {
@@ -184,11 +189,12 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     const myRanks = await axios.get(`${serverHttp}/myRank`, {
       headers: {
         Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZWFkODQxOTAxYmE0NjI3MjM3YTkzM2UiLCJpYXQiOjE1ODg3MzY3MTksImV4cCI6MTU4ODc0MDMxOX0.CJACwmgsu8HjUUbHslnxasYnyGlEK8YgzhO9OUkCUVc',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZWFkODQxOTAxYmE0NjI3MjM3YTkzM2UiLCJpYXQiOjE1ODg4NTMzMTQsImV4cCI6MTU4ODg1NjkxNH0.qesxCME5ZTyRspWyGPpmI1yEJVJej_c4kwKy24ZUvfw',
       },
     }).then((res) => res.data).catch((err) => err);
     setOpen(true);
     console.log(myRanks);
+    setMyrank(myRanks);
   };
 
   const handleClose = () => {
@@ -246,14 +252,20 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         <div style={modalStyle} className={rankClasses.paper}>
           <img className={classes.image} src={goodImg} alt="" />
           <p />
-          <div>---님의 랭킹은</div>
-          <div>---위 입니다</div>
+          {console.log(myrank)}
+          <div>
+            {myrank.username}
+            님의 랭킹은
+          </div>
+          <div>
+            {myrank.rank + 1}
+            위 입니다
+          </div>
           <p />
           <Button variant="outlined" className={classes.buttoncolor} onClick={handleClose}>닫기</Button>
         </div>
       </Modal>
     </div>
-
   );
 };
 

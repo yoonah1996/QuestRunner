@@ -77,15 +77,6 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     }
   };
 
-  // interface Tokens {
-  //   accessToken: string;
-  //   refreshToken: string;
-  // }
-
-  // interface Datas {
-  //   data: Tokens | null
-  // }
-
   const submitClick = (e: React.FormEvent<Element>) => {
     e.preventDefault();
     // eslint-disable-next-line no-empty
