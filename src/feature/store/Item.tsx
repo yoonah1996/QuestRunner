@@ -1,3 +1,5 @@
+/* eslint-disable key-spacing */
+/* eslint-disable no-shadow */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable camelcase */
@@ -16,14 +18,17 @@ import {
   Button,
 } from '@material-ui/core';
 import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '..';
 import { serverHttp } from '../common/utils';
+import { userLoginActions } from '../usersignin/userloginService';
 
 interface Item {
   _id: string;
   image: string;
   price: number;
   item_name: string;
-  category: string;
+  category: any;
 }
 interface IProp {
   item: Item;
@@ -73,10 +78,6 @@ const getModalStyle = () => {
     transform: `translate(-${top}%, -${left}%)`,
   };
 };
-// dummyData
-const userCredit = {
-  credit: 50000,
-};
 
 const Item: React.FC<IProp> = ({ item, state }) => {
   const classes = useStyles();
@@ -85,6 +86,9 @@ const Item: React.FC<IProp> = ({ item, state }) => {
   const [target, setTarget] = useState<string | null>('');
   const [isCreditEnough, setIsCreditEnough] = useState(false);
   const [isAdapt, setIsAdapt] = useState(false);
+  const token = useSelector((state: RootState) => state.userLogin.accessToken);
+  const user = useSelector((state: RootState) => state.userLogin.user);
+  const dispatch = useDispatch();
   const handleOpen = (targetItem: string | null) => {
     setTarget(targetItem);
     setOpen(true);
@@ -105,10 +109,21 @@ const Item: React.FC<IProp> = ({ item, state }) => {
           id: item._id,
         },
         headers: {
-          Authorization:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZWFkODQxOTAxYmE0NjI3MjM3YTkzM2UiLCJpYXQiOjE1ODg3MzY3MTksImV4cCI6MTU4ODc0MDMxOX0.CJACwmgsu8HjUUbHslnxasYnyGlEK8YgzhO9OUkCUVc',
+          Authorization: token,
         },
       });
+      // TODO : redux store update
+      dispatch(
+        userLoginActions.setUser({
+          user: {
+            ...user,
+            items: {
+              ...user?.items,
+              [item.category]: [...user?.items[item.category], item],
+            },
+          },
+        }),
+      );
     } catch (error) {
       // error component로 랜더?
       console.error(error);
@@ -119,7 +134,7 @@ const Item: React.FC<IProp> = ({ item, state }) => {
       currentTarget: { id },
     } = e;
     if (id === 'purchase') {
-      if (item.price > userCredit.credit) {
+      if (item.price > user!.credits) {
         setIsCreditEnough(true);
         setTimeout(() => {
           setIsCreditEnough(false);
@@ -137,10 +152,21 @@ const Item: React.FC<IProp> = ({ item, state }) => {
           id: item._id,
         },
         headers: {
-          Authorization:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZWFkODQxOTAxYmE0NjI3MjM3YTkzM2UiLCJpYXQiOjE1ODg3MzY3MTksImV4cCI6MTU4ODc0MDMxOX0.CJACwmgsu8HjUUbHslnxasYnyGlEK8YgzhO9OUkCUVc',
+          Authorization: token,
         },
       });
+      // TODO : redux store update
+      dispatch(
+        userLoginActions.setUser({
+          user: {
+            ...user,
+            active: {
+              ...user?.active,
+              [item.category]: item,
+            },
+          },
+        }),
+      );
     } catch (error) {
       // error component로 랜더?
       console.error(error);
