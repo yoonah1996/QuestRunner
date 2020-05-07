@@ -1,12 +1,14 @@
+/* eslint-disable no-shadow */
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { useSelector } from 'react-redux';
 import ItemList from './ItemList';
 import Category from './Category';
 import { RootState } from '..';
 import { serverHttp } from '../common/utils';
-import { useSelector } from 'react-redux';
+import { StoreItem } from '../common/interfaces';
 
 const myItem = {
   user: {
@@ -30,7 +32,6 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    overflowY: 'scroll',
   },
   hr: {
     width: '50%',
@@ -40,26 +41,33 @@ const useStyles = makeStyles(() => ({
 const Store = () => {
   const user = useSelector((state: RootState) => state.userLogin.user);
   const store = useSelector((state: RootState) => state.store);
-  console.log(store);
-  console.log(user);
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
-    background: [],
-    exp_bar: [],
-    darkmode: [],
+    background: [] as StoreItem[] | undefined,
+    exp_bar: [] as StoreItem[] | undefined,
+    darkmode: [] as StoreItem[] | undefined,
   });
   const getStoreItems = async () => {
     try {
-      const storeItems = await axios.get(`${serverHttp}/items/storeItems`);
-      const {
-        data: { background, exp_bar, darkmode },
-      } = storeItems;
-      setData({
-        background,
-        exp_bar,
-        darkmode,
-      });
+      const { background, exp_bar, darkmode } = store;
+      if (background.length > 0 && darkmode.length > 0 && exp_bar.length > 0) {
+        setData({
+          background,
+          exp_bar,
+          darkmode,
+        });
+      } else {
+        const storeItems = await axios.get(`${serverHttp}/items/storeItems`);
+        const {
+          data: { background, exp_bar, darkmode },
+        } = storeItems;
+        setData({
+          background,
+          exp_bar,
+          darkmode,
+        });
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -78,22 +86,22 @@ const Store = () => {
           <Category name="background" />
           <ItemList
             items={data.background}
-            myActiveItem={myItem.user.active.background}
-            myItem={myItem.items.background}
+            myActiveItem={user?.active.background}
+            myItem={user?.items.background}
           />
           <hr className={classes.hr} />
           <Category name="experienceBar" />
           <ItemList
             items={data.exp_bar}
-            myActiveItem={myItem.user.active.exp_bar}
-            myItem={myItem.items.exp_bar}
+            myActiveItem={user?.active.exp_bar}
+            myItem={user?.items.exp_bar}
           />
           <hr className={classes.hr} />
           <Category name="darkmode" />
           <ItemList
             items={data.darkmode}
-            myActiveItem={myItem.user.active.darkmode}
-            myItem={myItem.items.darkmode}
+            myActiveItem={user?.active.darkmode}
+            myItem={user?.items.darkmode}
           />
         </div>
       )}

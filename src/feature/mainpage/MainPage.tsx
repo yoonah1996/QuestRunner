@@ -10,6 +10,7 @@ import ExBarAvatar from '../experiencebar/ExBarAvatar';
 import ExperienceBar from '../experiencebar/ExperienceBar';
 import Image from '../../img/rgana.jpg';
 import Store from '../store/Store';
+import Quest from '../quest/Quest';
 
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -33,12 +34,15 @@ const MainPage: React.FC = () => {
       <NavBar />
       {selectedComponent === 'STORE' &&
         <Store />}
+      {selectedComponent === 'QUEST' &&
+        <Quest />}
       <Grid
         className={classes.bg}
         container
         direction="column"
         justify="flex-end"
         alignItems="stretch"
+        style={{ height: 20, width: '100%', position: 'relative' }}
       >
         <ExBarAvatar />
         <ExperienceBar />

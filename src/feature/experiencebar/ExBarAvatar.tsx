@@ -9,17 +9,6 @@ import RunnerB from '../../img/runnerB.gif';
 
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
-  root: {
-    display: 'flex',
-  },
-  cover: {
-    bgcolor: 'grey.700',
-    color: 'white',
-    p: 1,
-    position: 'absolute',
-    top: 700,
-    left: '0%',
-  },
   image: {
     height: 'auto',
     width: 200,
@@ -32,10 +21,12 @@ export default function MediaControlCard() {
 
   return (
     <Box
-      className={classes.cover}
+      position="absolute"
+      top={-250}
+      left="0%"
+      alignItems="flex-end"
     >
       <img className={classes.image} src={RunnerA} alt="" />
     </Box>
-
   );
 }

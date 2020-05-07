@@ -4,18 +4,19 @@
 import React from 'react';
 import { makeStyles, Grid } from '@material-ui/core';
 import Item from './Item';
+import { StoreItem } from '../common/interfaces';
 
-interface IItem {
-  _id: string;
-  image: string;
-  price: number;
-  item_name: string;
-  category: string;
-}
+// interface IItem {
+//   _id: string;
+//   image: string;
+//   price: number;
+//   item_name: string;
+//   category: string;
+// }
 interface IProp {
-  items: Array<IItem>;
-  myActiveItem: string | boolean;
-  myItem: Array<string>;
+  items: Array<StoreItem> | undefined;
+  myActiveItem: StoreItem | undefined;
+  myItem: StoreItem[] | undefined;
 }
 const useStyles = makeStyles(() => ({
   root: {
@@ -30,15 +31,15 @@ const useStyles = makeStyles(() => ({
 }));
 const ItemList: React.FC<IProp> = ({ items, myActiveItem, myItem }) => {
   const classes = useStyles();
-  const itemList = items.map((item) => {
-    if (item.item_name === myActiveItem) {
+  const itemList = items?.map((item) => {
+    if (item.item_name === myActiveItem?.item_name) {
       return (
         <Grid key={item._id} item>
           <Item key={item._id} item={item} state="active" />
         </Grid>
       );
     }
-    if (myItem.includes(item.item_name)) {
+    if (myItem?.map((mitem) => mitem.item_name).includes(item.item_name)) {
       return (
         <Grid key={item._id} item>
           <Item key={item._id} item={item} state="purchased" />
