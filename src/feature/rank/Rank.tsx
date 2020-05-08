@@ -1,24 +1,24 @@
+/* eslint-disable jsx-a11y/mouse-events-have-key-events */
 /* eslint-disable max-len */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
 import {
-  Button, Grid, AppBar, Toolbar, IconButton, Typography, Menu, MenuItem, Paper,
+  Box, Button, Grid, AppBar, Toolbar, Typography, Modal, Paper, BottomNavigationAction, BottomNavigation,
 } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import { RouteComponentProps } from 'react-router';
-import MenuIcon from '@material-ui/icons/Menu';
-import NavigateBefore from '@material-ui/icons/NavigateBefore';
-import EmojiEvents from '@material-ui/icons/EmojiEvents';
+import { useSelector } from 'react-redux';
+import { NavigateBefore, EmojiEvents } from '@material-ui/icons';
 import axios from 'axios';
+import { RootState } from '..';
 import { serverHttp } from '../common/utils';
 import TopThree from './TopThree';
 import Topseven from './Topseven';
 import crown from '../../img/crown.png';
-
+import goodImg from '../../img/good.png';
+import one from '../../img/one.png';
+import two from '../../img/two.png';
+import three from '../../img/three.png';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -26,9 +26,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
   },
   menuroot: {
     width: 140,
@@ -41,9 +38,20 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
       color: 'white',
     },
   },
+  buttoncolor: {
+    backgroundColor: 'rgba(255,255,255,0)',
+    color: 'white',
+  },
+  image: {
+    height: 'auto',
+    width: 150,
+    display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
 }));
 
-const threeStyles = makeStyles((theme: Theme) => ({
+const rankStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
     position: 'relative',
@@ -53,7 +61,11 @@ const threeStyles = makeStyles((theme: Theme) => ({
     height: 640,
     width: 250,
     position: 'relative',
-    backgroundColor: '#ffff00',
+    backgroundColor: '#ffc400',
+    backgroundImage: `url(${one})`,
+    backgroundSize: '100px 100px',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center 320px',
     '& div': {
       backgroundColor: 'white',
     },
@@ -66,17 +78,25 @@ const threeStyles = makeStyles((theme: Theme) => ({
     width: 250,
     position: 'relative',
     top: '180px',
-    backgroundColor: '#9e9e9e',
+    backgroundColor: '#ffc400',
+    backgroundImage: `url(${two})`,
+    backgroundSize: '100px 100px',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center 320px',
     '& div': {
       backgroundColor: 'white',
     },
   },
   paper2: {
-    height: 400,
+    height: 450,
     width: 250,
     position: 'relative',
-    top: '300px',
-    backgroundColor: '#8d6e63',
+    top: '250px',
+    backgroundImage: `url(${three})`,
+    backgroundSize: '100px 100px',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center 320px',
+    backgroundColor: '#ffc400',
     '& div': {
       backgroundColor: 'white',
     },
@@ -96,17 +116,49 @@ const threeStyles = makeStyles((theme: Theme) => ({
     position: 'fixed',
     bottom: '5px',
     width: '100%',
-    backgroundColor: 'white',
     flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  paper: {
+    position: 'absolute',
+    width: 300,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    textAlign: 'center',
   },
 }));
 
+const getModalStyle = () => {
+  const top = 50;
+  const left = 50;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+    outline: 'none',
+    backgroundColor: 'black',
+    color: 'white',
+  };
+};
+
 const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   const classes = useStyles();
-  const threeClasses = threeStyles();
+  const rankClasses = rankStyles();
   const [value, setValue] = React.useState('');
   const [three, setThree] = React.useState([]);
   const [seven, setSeven] = React.useState([]);
+  const [myrank, setMyrank] = React.useState({
+    username: '',
+    rank: '',
+  });
+  const [modalStyle] = React.useState(getModalStyle);
+  const [open, setOpen] = React.useState(false);
+  const token = useSelector((state: RootState) => state.userLogin.accessToken);
 
   interface threetype {
     profilePic: string;
@@ -122,8 +174,9 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         top: '7',
       },
     }).then((res) => res.data).catch((err) => err);
+    console.log(Ranks);
     setThree(Ranks.slice(0, 3));
-    setSeven(Ranks.slice(3));
+    setSeven(Ranks.slice(3, 7));
   };
 
   useEffect(() => {
@@ -133,53 +186,88 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   const handleChange = (event: string) => {
     setValue(event);
   };
+
+  const handleOpen = async () => {
+    console.log(token);
+    const myRanks = await axios.get(`${serverHttp}/myRank`, {
+      headers: {
+        Authorization: token,
+      },
+    }).then((res) => res.data).catch((err) => err);
+    setOpen(true);
+    console.log(myRanks);
+    setMyrank(myRanks);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6" className={classes.root}>
             Top 7 List
           </Typography>
           <Box color="text.primary">
             <BottomNavigation value={value} className={classes.menuroot}>
-              <BottomNavigationAction label="My Rank" value="myrank" onMouseOver={() => { handleChange('myrank'); }} onFocus={() => { console.log('마이랭크'); }} icon={<EmojiEvents className={classes.menucolor} />} className={classes.menucolor} />
-              <BottomNavigationAction label="Back" value="back" onMouseOver={() => { handleChange('back'); }} onFocus={() => { push('/mainPage'); }} icon={<NavigateBefore className={classes.menucolor} />} className={classes.menucolor} />
+              <BottomNavigationAction label="My Rank" value="myrank" onMouseOver={() => { handleChange('myrank'); }} onClick={handleOpen} icon={<EmojiEvents className={classes.menucolor} />} className={classes.menucolor} />
+              <BottomNavigationAction label="Back" value="back" onMouseOver={() => { handleChange('back'); }} onClick={() => { push('/mainPage'); }} icon={<NavigateBefore className={classes.menucolor} />} className={classes.menucolor} />
             </BottomNavigation>
           </Box>
         </Toolbar>
       </AppBar>
-      <Grid container className={threeClasses.root} spacing={2}>
+      <Grid container className={rankClasses.root} spacing={2}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={7}>
             <Grid item>
-              <div className={threeClasses.paper1}>
+              <div className={rankClasses.paper1}>
                 <TopThree {...three[1]} />
               </div>
             </Grid>
             <Grid item>
-              <img className={threeClasses.crownImg} src={crown} alt="" />
-              <div className={threeClasses.paper0}>
+              <img className={rankClasses.crownImg} src={crown} alt="" />
+              <div className={rankClasses.paper0}>
                 <TopThree {...three[0]} />
               </div>
             </Grid>
             <Grid item>
-              <div className={threeClasses.paper2}>
+              <div className={rankClasses.paper2}>
                 <TopThree {...three[2]} />
               </div>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-      {/* <AppBar position="static"><Toolbar /></AppBar> */}
-      <Alert icon={false} variant="outlined" severity="warning" className={threeClasses.seven}>
-        <Grid container spacing={3}>
-          {seven.map((el) => (
-            <Topseven {...el} />
-          ))}
-        </Grid>
-      </Alert>
+      <div className={rankClasses.seven}>
+        {/* <Grid container spacing={3}> */}
+        {seven.map((el, ind) => (
+          <Topseven rankInfo={el} rank={ind} />
+        ))}
+        {/* </Grid> */}
+      </div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+      >
+        <div style={modalStyle} className={rankClasses.paper}>
+          <img className={classes.image} src={goodImg} alt="" />
+          <p />
+          {console.log(myrank)}
+          <div>
+            {myrank.username}
+            님의 랭킹은
+          </div>
+          <div>
+            {myrank.rank + 1}
+            위 입니다
+          </div>
+          <p />
+          <Button variant="outlined" className={classes.buttoncolor} onClick={handleClose}>닫기</Button>
+        </div>
+      </Modal>
     </div>
-
   );
 };
 
