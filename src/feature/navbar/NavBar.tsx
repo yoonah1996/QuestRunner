@@ -21,6 +21,9 @@ import { navActions } from './navService';
 import Image from '../../img/zolla.png';
 import MyInfo from './MyInfo';
 
+import { RootState } from '..';
+import { userLoginActions } from '../usersignin/userloginService';
+
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -64,6 +67,11 @@ export default function MenuAppBar() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleSignOut = () => {
+    dispatch(userLoginActions.setUser({ user: null }));
+    dispatch(userLoginActions.setLogin({ isLogin: false, accessToken: null, refreshToken: null }));
   };
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -146,7 +154,7 @@ export default function MenuAppBar() {
                   </Drawer>
                 </div>
               ))}
-              <MenuItem onClick={handleClose}>Sign Out</MenuItem>
+              <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
             </Menu>
           </div>
         </Toolbar>
