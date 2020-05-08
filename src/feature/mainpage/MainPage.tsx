@@ -1,7 +1,11 @@
+/* eslint-disable implicit-arrow-linebreak */
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import {
-  Theme, createStyles, makeStyles, useTheme,
+  Theme,
+  createStyles,
+  makeStyles,
+  useTheme,
 } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 import { RootState } from '../index';
@@ -11,17 +15,20 @@ import ExperienceBar from '../experiencebar/ExperienceBar';
 import Image from '../../img/rgana.jpg';
 import Store from '../store/Store';
 import Quest from '../quest/Quest';
+import Achievement from '../achievement/Achievement';
 
-
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  bg: {
-    backgroundImage: `url(${Image})`,
-  },
-}));
-
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    bg: {
+      backgroundImage: `url(${Image})`,
+    },
+  }),
+);
 
 const MainPage: React.FC = () => {
-  const selectedComponent = useSelector((state:RootState) => state.nav.navComponent);
+  const selectedComponent = useSelector(
+    (state: RootState) => state.nav.navComponent,
+  );
   const classes = useStyles();
   return (
     <Grid
@@ -32,10 +39,9 @@ const MainPage: React.FC = () => {
       alignItems="stretch"
     >
       <NavBar />
-      {selectedComponent === 'STORE' &&
-        <Store />}
-      {selectedComponent === 'QUEST' &&
-        <Quest />}
+      {selectedComponent === 'STORE' && <Store />}
+      {selectedComponent === 'QUEST' && <Quest />}
+      {selectedComponent === 'ACHIEVEMENT' && <Achievement />}
       <Grid
         className={classes.bg}
         container
@@ -47,7 +53,6 @@ const MainPage: React.FC = () => {
         <ExBarAvatar />
         <ExperienceBar />
       </Grid>
-
     </Grid>
   );
 };
