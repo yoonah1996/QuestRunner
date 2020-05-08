@@ -2,28 +2,13 @@
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { useSelector } from 'react-redux';
 import ItemList from './ItemList';
 import Category from './Category';
 import { RootState } from '..';
 import { serverHttp } from '../common/utils';
 import { StoreItem } from '../common/interfaces';
-
-const myItem = {
-  user: {
-    active: {
-      exp_bar: 'yellow',
-      background: 'default',
-      darkmode: false,
-    },
-  },
-  items: {
-    exp_bar: ['yellow', 'blue'],
-    background: ['mountains', 'riverside'],
-    darkmode: ['darkmode'],
-  },
-};
 
 const useStyles = makeStyles(() => ({
   main: {
