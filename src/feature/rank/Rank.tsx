@@ -6,10 +6,11 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Box, Button, Grid, AppBar, Toolbar, Typography, Modal, Paper, BottomNavigationAction, BottomNavigation,
 } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
 import { RouteComponentProps } from 'react-router';
+import { useSelector } from 'react-redux';
 import { NavigateBefore, EmojiEvents } from '@material-ui/icons';
 import axios from 'axios';
+import { RootState } from '..';
 import { serverHttp } from '../common/utils';
 import TopThree from './TopThree';
 import Topseven from './Topseven';
@@ -157,6 +158,7 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   });
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
+  const token = useSelector((state: RootState) => state.userLogin.accessToken);
 
   interface threetype {
     profilePic: string;
@@ -186,10 +188,10 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   };
 
   const handleOpen = async () => {
+    console.log(token);
     const myRanks = await axios.get(`${serverHttp}/myRank`, {
       headers: {
-        Authorization:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZWFkODQxOTAxYmE0NjI3MjM3YTkzM2UiLCJpYXQiOjE1ODg4NTMzMTQsImV4cCI6MTU4ODg1NjkxNH0.qesxCME5ZTyRspWyGPpmI1yEJVJej_c4kwKy24ZUvfw',
+        Authorization: token,
       },
     }).then((res) => res.data).catch((err) => err);
     setOpen(true);

@@ -41,7 +41,7 @@ const TopThree: React.FC<threetype> = (props) => {
 
   return (
     <div>
-      {!props.profilePic ? <img className={classes.image} src={RunnerA} alt="" /> : null }
+      <img className={classes.image} src={RunnerA} alt="" />
       {!props.username ? null : (
         <div>
           {props.username}
