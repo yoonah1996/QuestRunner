@@ -15,8 +15,8 @@ const DateRange: React.FC<IProps> = ({ changeRange }) => {
   const onSelect = (range: any) => {
     setValue(range);
     changeRange({
-      start: range.start.format('YYYY-MM-DD'),
-      end: range.end.format('YYYY-MM-DD'),
+      start: range.start.format('YYYYMMDD'),
+      end: range.end.format('YYYYMMDD'),
     });
   };
   return (
