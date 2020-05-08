@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Grid, Paper } from '@material-ui/core';
@@ -39,9 +41,19 @@ const TopThree: React.FC<threetype> = (props) => {
 
   return (
     <div>
-      {!props.profilePic ? <img className={classes.image} src={RunnerA} alt="" /> : null }
-      {!props.username ? null : <div>{props.username}님</div>}
-      {!props.motto ? null : <div>좌우명 : {props.motto}</div>}
+      <img className={classes.image} src={RunnerA} alt="" />
+      {!props.username ? null : (
+        <div>
+          {props.username}
+          님
+        </div>
+      )}
+      {!props.motto ? null : (
+        <div>
+          좌우명 :
+          {props.motto}
+        </div>
+      )}
     </div>
   );
 };

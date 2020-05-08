@@ -1,39 +1,44 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Grid } from '@material-ui/core'
+import { Grid, Avatar, Chip } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  paper: {
-    height: 140,
-    width: 100,
-  },
-  control: {
-    padding: theme.spacing(2),
-  },
-  image: {
-    height: 'auto',
-    width: 200,
-    display: 'block',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    backgroundColor: 'white',
+  root: {
+    flexGrow: 1,
+    textAlign: 'center',
+    // display: 'flex',
+    // flexDirection: 'column',
+    // justifyContent: 'space-between ',
   },
 }));
 
 interface threetype {
-    profilePic: string;
-    motto: string;
-    experience: number;
-    _id: string;
-    username: string;
+  profilePic: string;
+  motto: string;
+  experience: number;
+  _id: string;
+  username: string;
 }
-const Topseven: React.FC<threetype> = (props) => {
+
+interface totaltype {
+  rankInfo: threetype;
+  rank: number;
+}
+
+const Topseven: React.FC<totaltype> = ({ rankInfo, rank }) => {
   const classes = useStyles();
 
   return (
-    <Grid item xs={6} sm={3}>
-      {props.username}
-    </Grid>
+    <div className={classes.root}>
+      <Chip
+        avatar={<Avatar>{rank + 4}</Avatar>}
+        label={`${rankInfo.username}님`}
+        variant="outlined"
+        color="secondary"
+      />
+    </div>
   );
 };
 
