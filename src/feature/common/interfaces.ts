@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 export interface QuestItem {
-  UUID: number;
+  _id: number;
   created_at: string;
   title: string;
   contents: string;
