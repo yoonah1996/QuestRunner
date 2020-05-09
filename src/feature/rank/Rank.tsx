@@ -52,10 +52,16 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 const rankStyles = makeStyles((theme: Theme) => ({
+  back: {
+    position: 'relative',
+  },
   root: {
     flexGrow: 1,
-    position: 'relative',
+    position: 'absolute',
     top: '100px',
+  },
+  backSize: {
+    position: 'absolute',
   },
   paper0: {
     height: 640,
@@ -174,7 +180,6 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         top: '7',
       },
     }).then((res) => res.data).catch((err) => err);
-    console.log(Ranks);
     setThree(Ranks.slice(0, 3));
     setSeven(Ranks.slice(3, 7));
   };
@@ -188,14 +193,12 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   };
 
   const handleOpen = async () => {
-    console.log(token);
     const myRanks = await axios.get(`${serverHttp}/myRank`, {
       headers: {
         Authorization: token,
       },
     }).then((res) => res.data).catch((err) => err);
     setOpen(true);
-    console.log(myRanks);
     setMyrank(myRanks);
   };
 
@@ -218,55 +221,58 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Grid container className={rankClasses.root} spacing={2}>
-        <Grid item xs={12}>
-          <Grid container justify="center" spacing={7}>
-            <Grid item>
-              <div className={rankClasses.paper1}>
-                <TopThree {...three[1]} />
-              </div>
-            </Grid>
-            <Grid item>
-              <img className={rankClasses.crownImg} src={crown} alt="" />
-              <div className={rankClasses.paper0}>
-                <TopThree {...three[0]} />
-              </div>
-            </Grid>
-            <Grid item>
-              <div className={rankClasses.paper2}>
-                <TopThree {...three[2]} />
-              </div>
+      <div className={rankClasses.back}>
+        {/* <div className={rankClasses.backSize}> */}
+        <Grid container className={rankClasses.root} spacing={2}>
+          <Grid item xs={12}>
+            <Grid container justify="center" spacing={7}>
+              <Grid item>
+                <div className={rankClasses.paper1}>
+                  <TopThree {...three[1]} />
+                </div>
+              </Grid>
+              <Grid item>
+                <img className={rankClasses.crownImg} src={crown} alt="" />
+                <div className={rankClasses.paper0}>
+                  <TopThree {...three[0]} />
+                </div>
+              </Grid>
+              <Grid item>
+                <div className={rankClasses.paper2}>
+                  <TopThree {...three[2]} />
+                </div>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      <div className={rankClasses.seven}>
-        {/* <Grid container spacing={3}> */}
-        {seven.map((el, ind) => (
-          <Topseven rankInfo={el} rank={ind} />
-        ))}
-        {/* </Grid> */}
-      </div>
-      <Modal
-        open={open}
-        onClose={handleClose}
-      >
-        <div style={modalStyle} className={rankClasses.paper}>
-          <img className={classes.image} src={goodImg} alt="" />
-          <p />
-          {console.log(myrank)}
-          <div>
-            {myrank.username}
-            님의 랭킹은
-          </div>
-          <div>
-            {myrank.rank + 1}
-            위 입니다
-          </div>
-          <p />
-          <Button variant="outlined" className={classes.buttoncolor} onClick={handleClose}>닫기</Button>
+        <div className={rankClasses.seven}>
+          {/* <Grid container spacing={3}> */}
+          {seven.map((el, ind) => (
+            <Topseven rankInfo={el} rank={ind} />
+          ))}
+          {/* </Grid> */}
         </div>
-      </Modal>
+        <Modal
+          open={open}
+          onClose={handleClose}
+        >
+          <div style={modalStyle} className={rankClasses.paper}>
+            <img className={classes.image} src={goodImg} alt="" />
+            <p />
+            <div>
+              {myrank.username}
+              님의 랭킹은
+            </div>
+            <div>
+              {myrank.rank + 1}
+              위 입니다
+            </div>
+            <p />
+            <Button variant="outlined" className={classes.buttoncolor} onClick={handleClose}>닫기</Button>
+          </div>
+        </Modal>
+        {/* </div> */}
+      </div>
     </div>
   );
 };
