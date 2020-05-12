@@ -71,9 +71,9 @@ const rankStyles = makeStyles((theme: Theme) => ({
     backgroundImage: `url(${one})`,
     backgroundSize: '100px 100px',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center 320px',
+    backgroundPosition: 'center 260px',
     '& div': {
-      backgroundColor: 'white',
+      backgroundColor: 'rgba(255,255,255,0)',
     },
     '& img': {
       color: 'white',
@@ -88,9 +88,9 @@ const rankStyles = makeStyles((theme: Theme) => ({
     backgroundImage: `url(${two})`,
     backgroundSize: '100px 100px',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center 320px',
+    backgroundPosition: 'center 260px',
     '& div': {
-      backgroundColor: 'white',
+      backgroundColor: 'rgba(255,255,255,0)',
     },
   },
   paper2: {
@@ -101,10 +101,10 @@ const rankStyles = makeStyles((theme: Theme) => ({
     backgroundImage: `url(${three})`,
     backgroundSize: '100px 100px',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center 320px',
+    backgroundPosition: 'center 260px',
     backgroundColor: '#ffc400',
     '& div': {
-      backgroundColor: 'white',
+      backgroundColor: 'rgba(255,255,255,0)',
     },
   },
   control: {
