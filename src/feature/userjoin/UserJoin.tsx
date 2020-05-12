@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import {
@@ -7,7 +9,9 @@ import {
   TextField,
   Grid,
   Typography,
+  Snackbar,
 } from '@material-ui/core';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -54,12 +58,22 @@ const useStyles = makeStyles((theme) => ({
   signInButton: {
     color: 'rgba(70,70,70,0.9)',
   },
+  snackBar: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
 
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={3} variant="filled" {...props} />;
+}
 const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [error, setError] = useState({
     emailError: '',
     passwordError: '',
@@ -214,6 +228,18 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   interface Response {
     message: string;
   }
+  const handleOpenSnackbar = () => {
+    setOpenSnackbar(true);
+  };
+  const handleCloseSnackbar = (
+    event?: React.SyntheticEvent,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
 
   // eslint-disable-next-line consistent-return
   const onSubmit = async (e: React.FormEvent<Element>) => {
@@ -233,7 +259,7 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         username,
       });
       push('/userLoginPage');
-      // eslint-disable-next-line no-shadow
+      // snackBar here
     } catch (error) {
       const {
         response: {
@@ -246,100 +272,113 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
 
   const classes = useStyles();
   return (
-    <div className={classes.bg}>
-      <Container className={classes.container} component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <form className={classes.form} noValidate onSubmit={onSubmit}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="off"
-                  onChange={onChange}
-                />
-                {!isvalid.emailValid ? (
-                  <ValidText error={error.emailError} />
-                ) : null}
+    <>
+      <div className={classes.bg}>
+        <Container className={classes.container} component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign up
+            </Typography>
+            <form className={classes.form} noValidate onSubmit={onSubmit}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="off"
+                    onChange={onChange}
+                  />
+                  {!isvalid.emailValid ? (
+                    <ValidText error={error.emailError} />
+                  ) : null}
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="username"
+                    label="username"
+                    name="uarname"
+                    autoComplete="off"
+                    onChange={onChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    onChange={onChange}
+                  />
+                  {!isvalid.passwordValid ? (
+                    <ValidText error={error.passwordError} />
+                  ) : null}
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password2"
+                    label="Confirm Password"
+                    type="password"
+                    id="password2"
+                    autoComplete="confirm-password"
+                    onChange={checkValidate}
+                  />
+                  {!isvalid.password2Valid ? (
+                    <ValidText error={error.confirmPassrowdError} />
+                  ) : null}
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="username"
-                  label="username"
-                  name="uarname"
-                  autoComplete="off"
-                  onChange={onChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  onChange={onChange}
-                />
-                {!isvalid.passwordValid ? (
-                  <ValidText error={error.passwordError} />
-                ) : null}
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password2"
-                  label="Confirm Password"
-                  type="password"
-                  id="password2"
-                  autoComplete="confirm-password"
-                  onChange={checkValidate}
-                />
-                {!isvalid.password2Valid ? (
-                  <ValidText error={error.confirmPassrowdError} />
-                ) : null}
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign Up
-            </Button>
-          </form>
-          <ValidText error={error.requiredError} />
-        </div>
-        <Button
-          className={classes.signInButton}
-          onClick={() => {
-            push('/userLoginPage');
-          }}
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign Up
+              </Button>
+            </form>
+            <ValidText error={error.requiredError} />
+          </div>
+          <Button
+            className={classes.signInButton}
+            onClick={() => {
+              push('/userLoginPage');
+            }}
+          >
+            go to SignIn
+          </Button>
+        </Container>
+      </div>
+      {/* <div className={classes.snackBar}>
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={3000}
+          onClose={handleOpenSnackbar}
         >
-          go to SignIn
-        </Button>
-      </Container>
-    </div>
+          <Alert onClose={handleCloseSnackbar} severity="error">
+            {error}
+          </Alert>
+        </Snackbar>
+      </div> */}
+    </>
   );
 };
 

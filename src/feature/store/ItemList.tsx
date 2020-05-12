@@ -17,38 +17,64 @@ interface IProp {
   items: Array<StoreItem> | undefined;
   myActiveItem: StoreItem | undefined;
   myItem: StoreItem[] | undefined;
+  goToLoginPage: Function;
 }
 const useStyles = makeStyles(() => ({
   root: {
-    flexGrow: 1,
+    width: '45%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   main: {
     width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+  },
+  item: {
+    flexGrow: 1,
+    flexShrink: 1,
   },
 }));
-const ItemList: React.FC<IProp> = ({ items, myActiveItem, myItem }) => {
+
+const ItemList: React.FC<IProp> = ({
+  items,
+  myActiveItem,
+  myItem,
+  goToLoginPage,
+}) => {
   const classes = useStyles();
   const itemList = items?.map((item) => {
     if (item.item_name === myActiveItem?.item_name) {
       return (
-        <Grid key={item._id} item>
-          <Item key={item._id} item={item} state="active" />
+        <Grid key={item._id} item className={classes.item}>
+          <Item
+            key={item._id}
+            item={item}
+            state="active"
+            goToLoginPage={goToLoginPage}
+          />
         </Grid>
       );
     }
     if (myItem?.map((mitem) => mitem.item_name).includes(item.item_name)) {
       return (
-        <Grid key={item._id} item>
-          <Item key={item._id} item={item} state="purchased" />
+        <Grid key={item._id} item className={classes.item}>
+          <Item
+            key={item._id}
+            item={item}
+            state="purchased"
+            goToLoginPage={goToLoginPage}
+          />
         </Grid>
       );
     }
     return (
-      <Grid key={item._id} item>
-        <Item key={item._id} item={item} state="purchasable" />
+      <Grid key={item._id} item className={classes.item}>
+        <Item
+          key={item._id}
+          item={item}
+          state="purchasable"
+          goToLoginPage={goToLoginPage}
+        />
       </Grid>
     );
   });

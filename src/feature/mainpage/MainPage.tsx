@@ -8,6 +8,7 @@ import {
   useTheme,
 } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
+import { Route } from 'react-router';
 import { RootState } from '../index';
 import NavBar from '../navbar/NavBar';
 import ExBarAvatar from '../experiencebar/ExBarAvatar';
@@ -39,7 +40,7 @@ const MainPage: React.FC = () => {
       alignItems="stretch"
     >
       <NavBar />
-      {selectedComponent === 'STORE' && <Store />}
+      {selectedComponent === 'STORE' && <Route component={Store} />}
       {selectedComponent === 'QUEST' && <Quest />}
       {selectedComponent === 'ACHIEVEMENT' && <Achievement />}
       <Grid
