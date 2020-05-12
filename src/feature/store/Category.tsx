@@ -6,8 +6,14 @@ interface IProp {
   name: string;
 }
 
-const useStyles = makeStyles(() => ({
-  main: {},
+const useStyles = makeStyles((theme) => ({
+  main: {
+    boxShadow: theme.shadows[5],
+    backgroundColor: theme.palette.background.paper,
+    padding: '0 15px',
+    borderRadius: '5px',
+    fontWeight: 600,
+  },
 }));
 
 const Category: React.FC<IProp> = ({ name }) => {
