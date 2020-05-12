@@ -23,8 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
     bg: {
       backgroundImage: `url(${Image})`,
     },
-  }),
-);
+  }));
 
 const MainPage: React.FC = () => {
   const selectedComponent = useSelector(
@@ -39,7 +38,7 @@ const MainPage: React.FC = () => {
       justify="flex-end"
       alignItems="stretch"
     >
-      <NavBar />
+      <Route component={NavBar} />
       {selectedComponent === 'STORE' && <Route component={Store} />}
       {selectedComponent === 'QUEST' && <Quest />}
       {selectedComponent === 'ACHIEVEMENT' && <Achievement />}

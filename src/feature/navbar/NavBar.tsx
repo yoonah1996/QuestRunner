@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-shadow */
 /* eslint-disable max-len */
 import React from 'react';
@@ -17,10 +18,10 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
+import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { navActions } from './navService';
 import Image from '../../img/zolla.png';
 import MyInfo from './MyInfo';
-
 import { RootState } from '..';
 import { userLoginActions } from '../usersignin/userloginService';
 
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 type Anchor = 'right';
 
-export default function MenuAppBar() {
+const NavBar: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -116,7 +117,7 @@ export default function MenuAppBar() {
             <Button variant="outlined" color="inherit" onClick={handleMenuClick}>
               ACHIEVEMENT
             </Button>
-            <Button variant="outlined" color="inherit" onClick={handleMenuClick}>
+            <Button variant="outlined" color="inherit" onClick={() => push('/rank')}>
               RANK
             </Button>
             <Button variant="outlined" color="inherit" onClick={handleMenuClick}>
@@ -161,4 +162,6 @@ export default function MenuAppBar() {
       </AppBar>
     </div>
   );
-}
+};
+
+export default NavBar;

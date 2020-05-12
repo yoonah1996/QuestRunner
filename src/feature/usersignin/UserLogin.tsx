@@ -158,7 +158,7 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
                 <Button
                   className={classes.signUpButton}
                   onClick={() => {
-                    push('/userJoinPage');
+                    push('/join');
                   }}
                 >
                   Don't have an account? Sign Up
