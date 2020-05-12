@@ -258,7 +258,7 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         password,
         username,
       });
-      push('/userLoginPage');
+      push('/login');
       // snackBar here
     } catch (error) {
       const {
@@ -360,7 +360,7 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
           <Button
             className={classes.signInButton}
             onClick={() => {
-              push('/userLoginPage');
+              push('/login');
             }}
           >
             go to SignIn

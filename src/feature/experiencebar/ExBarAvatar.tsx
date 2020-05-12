@@ -11,7 +11,7 @@ import RunnerB from '../../img/runnerB.gif';
 const useStyles = makeStyles((theme: Theme) => createStyles({
   image: {
     height: 'auto',
-    width: 200,
+    width: 100,
   },
 }));
 
@@ -22,7 +22,7 @@ export default function MediaControlCard() {
   return (
     <Box
       position="absolute"
-      top={-250}
+      top={-130}
       left="0%"
       alignItems="flex-end"
     >

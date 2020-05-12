@@ -17,14 +17,14 @@ const App: React.FC = () => {
   // dispatch(actions.setDarkmode({ darkmode: true }));
   return (
     <Switch>
-      <Route exact path="/userJoinPage" component={UserJoin} />
-      <Route exact path="/userLoginPage" component={UserLogin} />
+      <Route exact path="/join" component={UserJoin} />
+      <Route exact path="/login" component={UserLogin} />
       <Route
         exact
-        path="/mainPage"
+        path="/main"
         render={() => {
           if (!isLogin) {
-            return <Redirect to="/userLoginPage" />;
+            return <Redirect to="/login" />;
           }
           return <MainPage />;
         }}
@@ -34,7 +34,7 @@ const App: React.FC = () => {
         path="/"
         render={() => {
           if (!isLogin) {
-            return <Redirect to="/userLoginPage" />;
+            return <Redirect to="/login" />;
           }
           return <MainPage />;
         }}
