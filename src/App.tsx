@@ -8,7 +8,6 @@ import UserJoin from './feature/userjoin/UserJoin';
 import MainPage from './feature/mainpage/MainPage';
 import Store from './feature/store/Store';
 import Rank from './feature/rank/Rank';
-import Achievement from './feature/achievement/Achievement';
 
 // 라우팅
 // Islogin
@@ -30,9 +29,7 @@ const App: React.FC = () => {
           return <MainPage />;
         }}
       />
-      <Route exact path="/store" component={Store} />
       <Route exact path="/rank" component={Rank} />
-      <Route exact path="/achieve" component={Achievement} />
       <Route
         path="/"
         render={() => {

@@ -1,9 +1,12 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 /* eslint-disable no-shadow */
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Fade } from '@material-ui/core';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { RouteComponentProps } from 'react-router';
 import ItemList from './ItemList';
 import Category from './Category';
 import { RootState } from '..';
@@ -13,17 +16,18 @@ import { StoreItem } from '../common/interfaces';
 const useStyles = makeStyles(() => ({
   main: {
     width: '100%',
+    height: '80vh',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'scroll',
   },
   hr: {
     width: '50%',
   },
 }));
 
-const Store = () => {
+const Store: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   const user = useSelector((state: RootState) => state.userLogin.user);
   const store = useSelector((state: RootState) => state.store);
   const classes = useStyles();
@@ -59,6 +63,7 @@ const Store = () => {
       setLoading(false);
     }
   };
+  const goToLoginPage = () => push('/userLoginPage');
   useEffect(() => {
     getStoreItems();
   }, []);
@@ -67,28 +72,33 @@ const Store = () => {
       {loading ? (
         <div className={classes.main}>Loading...</div>
       ) : (
-        <div className={classes.main}>
-          <Category name="background" />
-          <ItemList
-            items={data.background}
-            myActiveItem={user?.active.background}
-            myItem={user?.items.background}
-          />
-          <hr className={classes.hr} />
-          <Category name="experienceBar" />
-          <ItemList
-            items={data.exp_bar}
-            myActiveItem={user?.active.exp_bar}
-            myItem={user?.items.exp_bar}
-          />
-          <hr className={classes.hr} />
-          <Category name="darkmode" />
-          <ItemList
-            items={data.darkmode}
-            myActiveItem={user?.active.darkmode}
-            myItem={user?.items.darkmode}
-          />
-        </div>
+        <Fade in>
+          <div className={classes.main}>
+            <Category name="background" />
+            <ItemList
+              items={data.background}
+              myActiveItem={user?.active.background}
+              myItem={user?.items.background}
+              goToLoginPage={goToLoginPage}
+            />
+            <hr className={classes.hr} />
+            <Category name="experience bar" />
+            <ItemList
+              items={data.exp_bar}
+              myActiveItem={user?.active.exp_bar}
+              myItem={user?.items.exp_bar}
+              goToLoginPage={goToLoginPage}
+            />
+            <hr className={classes.hr} />
+            <Category name="dark mode" />
+            <ItemList
+              items={data.darkmode}
+              myActiveItem={user?.active.darkmode}
+              myItem={user?.items.darkmode}
+              goToLoginPage={goToLoginPage}
+            />
+          </div>
+        </Fade>
       )}
     </>
   );

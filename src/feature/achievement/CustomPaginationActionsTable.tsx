@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-underscore-dangle */
 import React, { useState } from 'react';
@@ -11,125 +12,110 @@ import {
   Paper,
   TableFooter,
   TablePagination,
-  TableHead,
 } from '@material-ui/core';
 import TablePaginationActions from './TablePaginationActions';
-import { QuestItem } from '../common/interfaces';
+import TableRowWithModal from './TableRowWithModal';
+import EnhancedTableHead from './EnhancedTableHead';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 500,
   },
   container: {
-    maxWidth: 550,
+    width: '100%',
     overflow: 'scrollY',
-    height: '70%',
+    height: '50%',
+    backgroundColor: 'rgba(255,255,255,0.5)',
+    boxShadow: theme.shadows[5],
   },
   footer: {
     width: '100%',
   },
-});
-
+  body: {
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
+}));
 interface IProps {
-  quests: QuestItem[] | undefined;
+  quests: any;
 }
-
-const columns = [
-  { id: 'title', label: 'Title', minWidth: 125 },
-  { id: 'contents', label: 'Contents', minWidth: 125 },
-  {
-    id: 'dueDate',
-    label: 'Due Date',
-    minWidth: 125,
-  },
-  {
-    id: 'completed',
-    label: 'Completed',
-    minWidth: 125,
-  },
-];
-
+function descendingComparator(a: any, b: any, orderBy: any) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+function getComparator(order: string, orderBy: any) {
+  return order === 'desc'
+    ? (a: any, b: any) => descendingComparator(a, b, orderBy)
+    : (a: any, b: any) => -descendingComparator(a, b, orderBy);
+}
+function stableSort(array: any[], comparator: Function) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
 const CustomPaginationActionsTable: React.FC<IProps> = ({ quests }) => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('title');
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, quests!.length - page * rowsPerPage);
-
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ) => {
     setPage(newPage);
   };
-
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setRowsPerPage(parseInt(event.currentTarget.value, 10));
     setPage(0);
   };
-
+  const handleRequestSort = (event: any, property: any) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
   return (
     <TableContainer component={Paper} className={classes.container}>
-      <Table
-        className={classes.table}
-        stickyHeader
-        aria-label="custom pagination table"
-      >
-        <TableHead>
-          <TableRow>
-            {columns.map((column) => (
-              <TableCell key={column.id} align="center">
-                {column.label}
-              </TableCell>
+      <Table stickyHeader aria-label="custom pagination table">
+        <EnhancedTableHead
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={handleRequestSort}
+        />
+        <TableBody className={classes.body}>
+          {stableSort(quests, getComparator(order, orderBy))
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((quest) => (
+              <TableRowWithModal key={quest._id} quest={quest} />
             ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {(rowsPerPage > 0
-            ? quests!.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage,
-              )
-            : quests!
-          ).map((quest) => (
-            <TableRow key={quest._id}>
-              <TableCell component="th" scope="row" align="center">
-                {quest.title}
-              </TableCell>
-              <TableCell style={{ width: 150 }} align="center">
-                {quest.contents}
-              </TableCell>
-              <TableCell style={{ width: 150 }} align="center">
-                {quest.due_date}
-              </TableCell>
-              <TableCell style={{ width: 150 }} align="center">
-                {quest.completed ? 'Yes' : 'No'}
-              </TableCell>
-            </TableRow>
-          ))}
-
           {emptyRows > 0 && (
             <TableRow style={{ height: 53 * emptyRows }}>
               <TableCell colSpan={6} />
             </TableRow>
           )}
         </TableBody>
-        <TableFooter>
-          <TableRow>
+        <TableFooter className={classes.footer}>
+          <TableRow className={classes.footer}>
             <TablePagination
-              className={classes.footer}
-              rowsPerPageOptions={[5, 10]}
+              rowsPerPageOptions={[5]}
               colSpan={3}
               count={quests!.length}
               rowsPerPage={rowsPerPage}
               page={page}
-              SelectProps={{
-                inputProps: { 'aria-label': '' },
-                native: true,
-              }}
               onChangePage={handleChangePage}
               onChangeRowsPerPage={handleChangeRowsPerPage}
               ActionsComponent={TablePaginationActions}
