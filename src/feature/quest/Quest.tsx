@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     margin: theme.spacing(1),
     position: 'absolute',
     top: -50,
-    left: 700,
   },
   list: {
     position: 'absolute',
@@ -110,6 +109,8 @@ export default function Quest() {
   };
 
   const handleAddQuest = () => {
+    console.log(today);
+    console.log(selectedDate);
     axios({
       method: 'post',
       url: `${serverHttp}/quest`,
@@ -119,8 +120,8 @@ export default function Quest() {
       data: {
         title,
         content,
-        createdAt: today,
-        dueDate: selectedDate,
+        created_at: today,
+        due_date: selectedDate,
       },
     })
       .then(() => {

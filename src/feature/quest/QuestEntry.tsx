@@ -20,7 +20,12 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DetailsIcon from '@material-ui/icons/Details';
 import Typography from '@material-ui/core/Typography';
+import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
 import { QuestItem } from '../common/interfaces';
+import { RootState } from '../index';
+import { serverHttp } from '../common/utils';
+import { userLoginActions } from '../usersignin/userloginService';
 
 interface IProps {
   quest: QuestItem | null
@@ -30,16 +35,63 @@ interface IProps {
 export default function QuestEntry({ quest } : IProps) {
   const [checked, setChecked] = React.useState(quest?.checked);
   const [questopen, setQuestOpen] = React.useState(false);
+  const accessToken = useSelector((state : RootState) => state.userLogin.accessToken);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
+    axios({
+      method: 'patch',
+      url: `${serverHttp}/quest`,
+      headers: {
+        Authorization: accessToken,
+      },
+      params: {
+        id: quest?._id,
+        checked: event.target.checked,
+        finalize: false,
+      },
+    })
+      .then((res) => console.log(res));
   };
+
+
   const handleClickOpen = () => {
     setQuestOpen(true);
   };
 
   const handleClose = () => {
-    console.log("click");
+    console.log('click');
     setQuestOpen(false);
+  };
+
+  const handleConfirm = () => {
+    axios({
+      method: 'patch',
+      url: `${serverHttp}/quest`,
+      headers: {
+        Authorization: accessToken,
+      },
+      params: {
+        id: quest?._id,
+        checked: true,
+        finalize: true,
+      },
+    })
+      .then((res) => console.log(res));
+  };
+
+  const handleDelete = () => {
+    axios({
+      method: 'delete',
+      url: `${serverHttp}/quest`,
+      headers: {
+        Authorization: accessToken,
+      },
+      params: {
+        id: quest?._id,
+      },
+    })
+      .then((res) => console.log(res));
   };
 
   return (
@@ -59,12 +111,12 @@ export default function QuestEntry({ quest } : IProps) {
           onChange={handleChange}
         />
         {checked && (
-        <IconButton edge="end" aria-label="delete">
+        <IconButton edge="end" aria-label="delete" onClick={handleConfirm}>
           <ConfirmationNumberIcon />
         </IconButton>
         )}
         {!checked && (
-        <IconButton edge="end" aria-label="delete">
+        <IconButton edge="end" aria-label="delete" onClick={handleDelete}>
           <DeleteIcon />
         </IconButton>
         )}

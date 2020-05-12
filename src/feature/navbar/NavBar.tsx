@@ -56,7 +56,7 @@ export default function MenuAppBar() {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [navbarText, setNavbarText] = React.useState<string | null>('MainPage');
+  const [navbarText, setNavbarText] = React.useState<string | null>('Quest');
   const [state, setState] = React.useState({
     right: false,
   });
