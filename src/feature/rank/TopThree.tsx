@@ -7,10 +7,10 @@ import { RouteComponentProps } from 'react-router';
 import { Grid, Paper } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import AWS from 'aws-sdk';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 import RunnerA from '../../img/runnerA.gif';
 
-dotenv.config();
+// dotenv.config();
 // require('dotenv').config();
 
 // const { accessKeyId, secretAccessKey, bucketName } = process.env;
@@ -51,14 +51,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     // lineHeight: '250px',
     display: 'table',
     height: '260px',
+    width: '250px',
     backgroundColor: 'rgba(255,255,255,0)',
   },
   mottos: {
     textAlign: 'center',
     display: 'table-cell',
     verticalAlign: 'middle',
-    backgroundColor: 'rgba(255,255,255,0)',
-    fontFamily: 'Bradley Hand, "맑은 고딕", cursive',
+    fontFamily: 'Georgia, Times New Roman, cursive',
+    fontStyle: 'italic',
   },
 }));
 
@@ -75,18 +76,20 @@ const TopThree: React.FC<threetype> = (props) => {
   const [value, setValue] = React.useState('');
 
   const getRankTop = async () => {
-    const params: any = {
-      Bucket: bucketName,
-      Key: props._id,
-    };
-    s3.getObject(params, (err: AWS.AWSError, data: any) => {
-      if (err) {
-        return '';
-      }
-      const blob = new Blob([data.Body], { type: data.ContentType });
-      const blobUrl = URL.createObjectURL(blob);
-      setValue(blobUrl);
-    });
+    if (props.profilePic) {
+      const params: any = {
+        Bucket: bucketName,
+        Key: props._id,
+      };
+      s3.getObject(params, (err: AWS.AWSError, data: any) => {
+        if (err) {
+          return '';
+        }
+        const blob = new Blob([data.Body], { type: data.ContentType });
+        const blobUrl = URL.createObjectURL(blob);
+        setValue(blobUrl);
+      });
+    }
   };
 
   useEffect(() => {
@@ -95,13 +98,12 @@ const TopThree: React.FC<threetype> = (props) => {
 
   return (
     <div>
-      {console.log(process.env)}
       <div className={classes.control}>
         {!props.profilePic ?
           <img className={classes.image} src={RunnerA} alt="" />
           : <img className={classes.image} src={value} alt="" />}
       </div>
-      {!props.username ? null : (
+      {!props.username ? <p /> : (
         <div className={classes.names}>
           {props.username}
           님
