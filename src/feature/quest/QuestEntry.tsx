@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 /* eslint-disable camelcase */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
@@ -28,11 +29,12 @@ import { serverHttp } from '../common/utils';
 import { userLoginActions } from '../usersignin/userloginService';
 
 interface IProps {
-  quest: QuestItem | null
+  quest: QuestItem
 }
 
 
 export default function QuestEntry({ quest } : IProps) {
+  const dispatch = useDispatch();
   const [checked, setChecked] = React.useState(quest?.checked);
   const [questopen, setQuestOpen] = React.useState(false);
   const accessToken = useSelector((state : RootState) => state.userLogin.accessToken);
@@ -51,7 +53,16 @@ export default function QuestEntry({ quest } : IProps) {
         finalize: false,
       },
     })
-      .then((res) => console.log(res));
+      .then((res) => {
+        axios.get(`${serverHttp}/userinfo`, {
+          headers: {
+            Authorization: accessToken,
+          },
+        })
+          .then((response) => {
+            dispatch(userLoginActions.setUser({ user: response.data }));
+          });
+      });
   };
 
 
@@ -77,7 +88,16 @@ export default function QuestEntry({ quest } : IProps) {
         finalize: true,
       },
     })
-      .then((res) => console.log(res));
+      .then((res) => {
+        axios.get(`${serverHttp}/userinfo`, {
+          headers: {
+            Authorization: accessToken,
+          },
+        })
+          .then((response) => {
+            dispatch(userLoginActions.setUser({ user: response.data }));
+          });
+      });
   };
 
   const handleDelete = () => {
@@ -91,7 +111,16 @@ export default function QuestEntry({ quest } : IProps) {
         id: quest?._id,
       },
     })
-      .then((res) => console.log(res));
+      .then((res) => {
+        axios.get(`${serverHttp}/userinfo`, {
+          headers: {
+            Authorization: accessToken,
+          },
+        })
+          .then((response) => {
+            dispatch(userLoginActions.setUser({ user: response.data }));
+          });
+      });
   };
 
   return (
@@ -110,6 +139,9 @@ export default function QuestEntry({ quest } : IProps) {
           checked={checked}
           onChange={handleChange}
         />
+        {
+          checked && console.log(typeof checked)
+        }
         {checked && (
         <IconButton edge="end" aria-label="delete" onClick={handleConfirm}>
           <ConfirmationNumberIcon />

@@ -1,5 +1,7 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -18,11 +20,28 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import dotenv from 'dotenv';
+import AWS from 'aws-sdk';
 import ImageUpload from './ImageUpload';
 import { RootState } from '../index';
 import { serverHttp } from '../common/utils';
 import { userLoginActions } from '../usersignin/userloginService';
 
+dotenv.config();
+// require('dotenv').config();
+
+// const { accessKeyId, secretAccessKey, bucketName } = process.env;
+// accessKeyId, secretAccessKey, bucketName 값
+
+const accessKeyId = 'AKIAJETOR3EJQUYUCD6A';
+const secretAccessKey = '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';
+const bucketName = 'qrunner-avatar';
+
+const s3 = new AWS.S3({
+  accessKeyId,
+  secretAccessKey,
+  useAccelerateEndpoint: false,
+});
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -32,11 +51,11 @@ const useStyles = makeStyles({
     maxWidth: 345,
   },
   media: {
-    height: 140,
+    height: 340,
   },
 });
 
-export default function MediaCard() {
+export default function MediaCard(props:any) {
   const classes = useStyles();
 
   const dispatch = useDispatch();
@@ -44,19 +63,38 @@ export default function MediaCard() {
   const [open, setOpen] = React.useState(false);
   const [imgOpen, setImgOpen] = React.useState(false);
 
-  const imageSrc = useSelector((state : RootState) => state.userLogin.user?.profilePic);
+  const uid = useSelector((state : RootState) => state.userLogin.user?._id);
   const userName = useSelector((state : RootState) => state.userLogin.user?.username);
   const motto = useSelector((state : RootState) => state.userLogin.user?.motto);
   const noMotto = '설정된 좌우명이 없습니다.';
   const uEmail = useSelector((state : RootState) => state.userLogin.user?.email);
   const credits = useSelector((state : RootState) => state.userLogin.user?.credits);
   const token = useSelector((state:RootState) => state.userLogin.accessToken);
-
   const [usernameEdit, setUsernameEdit] = React.useState(userName);
   const [mottoEdit, setMottoEdit] = React.useState(motto);
 
 
   const [diaOpen, setDiaOpen] = React.useState(false);
+  const [value, setValue] = React.useState('');
+
+  const getRankTop = async () => {
+    const params: any = {
+      Bucket: bucketName,
+      Key: uid,
+    };
+    s3.getObject(params, (err: AWS.AWSError, data: any) => {
+      if (err) {
+        return '';
+      }
+      const blob = new Blob([data.Body], { type: data.ContentType });
+      const blobUrl = URL.createObjectURL(blob);
+      setValue(blobUrl);
+    });
+  };
+
+  useEffect(() => {
+    getRankTop();
+  }, []);
 
   const handleDiaClick = () => {
     setDiaOpen(true);
@@ -113,7 +151,7 @@ export default function MediaCard() {
       })
         .then((response) => dispatch(userLoginActions.setUser({ user: response.data })))
         .then(() => {
-          handleClose();
+          imageClose();
           handleDiaClick();
         });
     })
@@ -128,13 +166,13 @@ export default function MediaCard() {
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image={imageSrc}
-          title="Contemplative Reptile"
+          image={value}
+          title="Profile Picture"
           onClick={imageClickOpen}
         />
         <Dialog
           open={imgOpen}
-          onClose={handleClose}
+          onClose={imageClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
@@ -143,7 +181,7 @@ export default function MediaCard() {
             <DialogContentText id="alert-dialog-description">
               설정할 이미지를 선택 & 업로드 후 닫으세요
             </DialogContentText>
-            <ImageUpload />
+            <ImageUpload getRankTop={getRankTop} />
           </DialogContent>
           <DialogActions>
             <Button onClick={imageClose} color="primary">
