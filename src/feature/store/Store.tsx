@@ -63,7 +63,7 @@ const Store: React.FC<RouteComponentProps> = ({ history: { push } }) => {
       setLoading(false);
     }
   };
-  const goToLoginPage = () => push('/userLoginPage');
+  const goToLoginPage = () => push('/login');
   useEffect(() => {
     getStoreItems();
   }, []);
@@ -77,7 +77,7 @@ const Store: React.FC<RouteComponentProps> = ({ history: { push } }) => {
             <Category name="background" />
             <ItemList
               items={data.background}
-              myActiveItem={user?.active.background}
+              myActiveItem={user?.active?.background}
               myItem={user?.items.background}
               goToLoginPage={goToLoginPage}
             />
@@ -85,7 +85,7 @@ const Store: React.FC<RouteComponentProps> = ({ history: { push } }) => {
             <Category name="experience bar" />
             <ItemList
               items={data.exp_bar}
-              myActiveItem={user?.active.exp_bar}
+              myActiveItem={user?.active?.exp_bar}
               myItem={user?.items.exp_bar}
               goToLoginPage={goToLoginPage}
             />
@@ -93,7 +93,7 @@ const Store: React.FC<RouteComponentProps> = ({ history: { push } }) => {
             <Category name="dark mode" />
             <ItemList
               items={data.darkmode}
-              myActiveItem={user?.active.darkmode}
+              myActiveItem={user?.active?.darkmode}
               myItem={user?.items.darkmode}
               goToLoginPage={goToLoginPage}
             />

@@ -108,7 +108,7 @@ const TableRowWithModal: React.FC<IProps> = ({ quest }) => {
           )}`}
         </TableCell>
         <TableCell style={{ width: 150 }} align="center">
-          {quest.completed ? (
+          {quest.checked ? (
             <Text text="Yes" color="blue" />
           ) : (
             <Text text="No" color="red" />

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
@@ -15,7 +16,6 @@ import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
 // eslint-disable-next-line no-unused-vars
 import { RouteComponentProps } from 'react-router-dom';
 import axios from 'axios';
@@ -58,14 +58,10 @@ const useStyles = makeStyles((theme) => ({
   signInButton: {
     color: 'rgba(70,70,70,0.9)',
   },
-  snackBar: {
-    width: '100%',
-    '& > * + *': {
-      marginTop: theme.spacing(2),
-    },
-  },
 }));
-
+interface Response {
+  message: string;
+}
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={3} variant="filled" {...props} />;
 }
@@ -73,7 +69,6 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [error, setError] = useState({
     emailError: '',
     passwordError: '',
@@ -85,6 +80,19 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     emailValid: false,
     password2Valid: false,
   });
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const handleOpenSnackbar = () => {
+    setOpenSnackbar(true);
+  };
+  const handleCloseSnackbar = (
+    event?: React.SyntheticEvent,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
   const checkEamil = (value: string, id: string) => {
     if (id === 'email') {
       const isValidEmail = emailRegex.test(value);
@@ -225,22 +233,6 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
       });
     }, 3000);
   };
-  interface Response {
-    message: string;
-  }
-  const handleOpenSnackbar = () => {
-    setOpenSnackbar(true);
-  };
-  const handleCloseSnackbar = (
-    event?: React.SyntheticEvent,
-    reason?: string,
-  ) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenSnackbar(false);
-  };
-
   // eslint-disable-next-line consistent-return
   const onSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
@@ -259,8 +251,12 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         username,
       });
       push('/login');
-      // snackBar here
+      handleOpenSnackbar();
     } catch (error) {
+      if (!error.response) {
+        handleOpenSnackbar();
+        return;
+      }
       const {
         response: {
           data: { message },
@@ -367,17 +363,15 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
           </Button>
         </Container>
       </div>
-      {/* <div className={classes.snackBar}>
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={3000}
-          onClose={handleOpenSnackbar}
-        >
-          <Alert onClose={handleCloseSnackbar} severity="error">
-            {error}
-          </Alert>
-        </Snackbar>
-      </div> */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success">
+          successfuly registered.
+        </Alert>
+      </Snackbar>
     </>
   );
 };

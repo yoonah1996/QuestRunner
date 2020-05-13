@@ -19,6 +19,7 @@ export interface User {
   _id: string;
   username: string;
   email: string;
+  darkmode: boolean;
   password: string;
   created_at: string;
   __v: number;

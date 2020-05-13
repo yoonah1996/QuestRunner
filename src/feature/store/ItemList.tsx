@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { makeStyles, Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import Item from './Item';
 import { StoreItem } from '../common/interfaces';
 
@@ -20,18 +20,10 @@ interface IProp {
   goToLoginPage: Function;
 }
 const useStyles = makeStyles(() => ({
-  root: {
-    width: '45%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  main: {
-    width: '100%',
-  },
-  item: {
-    flexGrow: 1,
-    flexShrink: 1,
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 100px)',
+    gridGap: '10px',
   },
 }));
 
@@ -45,47 +37,61 @@ const ItemList: React.FC<IProp> = ({
   const itemList = items?.map((item) => {
     if (item.item_name === myActiveItem?.item_name) {
       return (
-        <Grid key={item._id} item className={classes.item}>
-          <Item
-            key={item._id}
-            item={item}
-            state="active"
-            goToLoginPage={goToLoginPage}
-          />
-        </Grid>
+        <Item
+          key={item._id}
+          item={item}
+          state="active"
+          goToLoginPage={goToLoginPage}
+        />
       );
     }
     if (myItem?.map((mitem) => mitem.item_name).includes(item.item_name)) {
       return (
-        <Grid key={item._id} item className={classes.item}>
-          <Item
-            key={item._id}
-            item={item}
-            state="purchased"
-            goToLoginPage={goToLoginPage}
-          />
-        </Grid>
+        <Item
+          key={item._id}
+          item={item}
+          state="purchased"
+          goToLoginPage={goToLoginPage}
+        />
       );
     }
-    return (
-      <Grid key={item._id} item className={classes.item}>
+    // 내 active에 해당 item에 없고 아이템을 이미 구매한경우
+    if (
+      !myActiveItem?.item_name &&
+      myItem?.map((mitem) => mitem.item_name).includes(item.item_name)
+    ) {
+      return (
+        <Item
+          key={item._id}
+          item={item}
+          state="purchased"
+          goToLoginPage={goToLoginPage}
+        />
+      );
+    }
+    // 내 active에 해당 item에 없고 아이템을 구매하지 않은 경우
+    if (
+      !myActiveItem?.item_name &&
+      !myItem?.map((mitem) => mitem.item_name).includes(item.item_name)
+    ) {
+      return (
         <Item
           key={item._id}
           item={item}
           state="purchasable"
           goToLoginPage={goToLoginPage}
         />
-      </Grid>
+      );
+    }
+    return (
+      <Item
+        key={item._id}
+        item={item}
+        state="purchasable"
+        goToLoginPage={goToLoginPage}
+      />
     );
   });
-  return (
-    <Grid container className={classes.root} spacing={2}>
-      <Grid item xs={12}>
-        <Grid container justify="center" spacing={2}>
-          {itemList}
-        </Grid>
-      </Grid>
-    </Grid>
-  );
+  return <div className={classes.grid}>{itemList}</div>;
 };
 export default ItemList;

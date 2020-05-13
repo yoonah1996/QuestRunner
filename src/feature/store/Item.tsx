@@ -73,12 +73,6 @@ const useStyles = makeStyles((theme) => ({
     marging: 0,
     textAlign: 'center',
   },
-  snackBar: {
-    width: '100%',
-    '& > * + *': {
-      marginTop: theme.spacing(2),
-    },
-  },
 }));
 const getModalStyle = () => {
   const top = 50;
@@ -156,17 +150,15 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
         response: { status },
       } = error;
       if (status === 401) {
-        setOpenSnackbar(true);
         setError('로그인 유효기간이 만료되었습니다. 다시 로그인해주세요.');
+        handleOpenSnackbar();
+        setTimeout(() => goToLoginPage(), 3100);
       } else {
         setError('error occurred, please try again.');
+        handleOpenSnackbar();
       }
     } finally {
       setIsAdapt(false);
-      setTimeout(() => {
-        setOpenSnackbar(false);
-        goToLoginPage();
-      }, 3000);
     }
   };
   const activeItem = async () => {
@@ -179,7 +171,6 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
           Authorization: token,
         },
       });
-      // TODO : redux store update
       dispatch(
         userLoginActions.setUser({
           user: {
@@ -192,21 +183,24 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
         }),
       );
     } catch (error) {
+      if (!error.response) {
+        setError('error occurred');
+        setOpenSnackbar(true);
+        return;
+      }
       const {
         response: { status },
       } = error;
       if (status === 401) {
-        setOpenSnackbar(true);
         setError('로그인 유효기간이 만료되었습니다. 다시 로그인해주세요.');
+        setOpenSnackbar(true);
         setTimeout(() => goToLoginPage(), 3100);
       } else {
         setError('error occurred, please try again.');
+        setOpenSnackbar(true);
       }
     } finally {
       setIsAdapt(false);
-      setTimeout(() => {
-        setOpenSnackbar(false);
-      }, 3000);
     }
   };
   const handlePurchase = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -312,17 +306,15 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
           {isCreditEnough ? <div>not enough credit</div> : null}
         </div>
       </Modal>
-      <div className={classes.snackBar}>
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={3000}
-          onClose={handleOpenSnackbar}
-        >
-          <Alert onClose={handleCloseSnackbar} severity="error">
-            {error}
-          </Alert>
-        </Snackbar>
-      </div>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="error">
+          {error}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

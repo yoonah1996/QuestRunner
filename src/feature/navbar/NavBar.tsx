@@ -24,31 +24,33 @@ import Image from '../../img/zolla.png';
 import MyInfo from './MyInfo';
 import { RootState } from '..';
 import { userLoginActions } from '../usersignin/userloginService';
+import Darkmode from '../darkMode/Dakrmode';
 
-
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    '& > *': {
-      margin: theme.spacing(1),
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
     },
-  },
-  title: {
-    flexGrow: 1,
-  },
-  appBar: {
-    background: '#bf934b',
-  },
-  list: {
-    width: 250,
-  },
-  large: {
-    width: theme.spacing(15),
-    height: theme.spacing(15),
-  },
-}));
+    menuButton: {
+      '& > *': {
+        margin: theme.spacing(1),
+      },
+    },
+    title: {
+      flexGrow: 1,
+    },
+    appBar: {
+      background: '#bf934b',
+    },
+    list: {
+      width: 250,
+    },
+    large: {
+      width: theme.spacing(15),
+      height: theme.spacing(15),
+    },
+  }),
+);
 
 type Anchor = 'right';
 
@@ -72,12 +74,22 @@ const NavBar: React.FC<RouteComponentProps> = ({ history: { push } }) => {
 
   const handleSignOut = () => {
     dispatch(userLoginActions.setUser({ user: null }));
-    dispatch(userLoginActions.setLogin({ isLogin: false, accessToken: null, refreshToken: null }));
+    dispatch(
+      userLoginActions.setLogin({
+        isLogin: false,
+        accessToken: null,
+        refreshToken: null,
+      }),
+    );
   };
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setNavbarText(event.currentTarget.textContent);
-    dispatch(navActions.setComponent({ navComponent: event.currentTarget.textContent }));
+    dispatch(
+      navActions.setComponent({
+        navComponent: event.currentTarget.textContent,
+      }),
+    );
   };
 
   const toggleDrawer = (anchor: Anchor, open: boolean) => (
@@ -95,10 +107,7 @@ const NavBar: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   };
 
   const list = (anchor: Anchor) => (
-    <div
-      className={classes.list}
-      role="presentation"
-    >
+    <div className={classes.list} role="presentation">
       <MyInfo />
     </div>
   );
@@ -111,16 +120,33 @@ const NavBar: React.FC<RouteComponentProps> = ({ history: { push } }) => {
             {navbarText}
           </Typography>
           <div className={classes.menuButton}>
-            <Button variant="outlined" color="inherit" onClick={handleMenuClick}>
+            <Darkmode />
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={handleMenuClick}
+            >
               QUEST
             </Button>
-            <Button variant="outlined" color="inherit" onClick={handleMenuClick}>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={handleMenuClick}
+            >
               ACHIEVEMENT
             </Button>
-            <Button variant="outlined" color="inherit" onClick={() => push('/rank')}>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={() => push('/rank')}
+            >
               RANK
             </Button>
-            <Button variant="outlined" color="inherit" onClick={handleMenuClick}>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={handleMenuClick}
+            >
               STORE
             </Button>
             <IconButton
@@ -149,8 +175,14 @@ const NavBar: React.FC<RouteComponentProps> = ({ history: { push } }) => {
             >
               {(['right'] as Anchor[]).map((anchor) => (
                 <div>
-                  <MenuItem onClick={toggleDrawer(anchor, true)}>My page</MenuItem>
-                  <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
+                  <MenuItem onClick={toggleDrawer(anchor, true)}>
+                    My page
+                  </MenuItem>
+                  <Drawer
+                    anchor={anchor}
+                    open={state[anchor]}
+                    onClose={toggleDrawer(anchor, false)}
+                  >
                     {list(anchor)}
                   </Drawer>
                 </div>
