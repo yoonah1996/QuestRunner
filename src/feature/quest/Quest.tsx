@@ -108,9 +108,27 @@ export default function Quest() {
     setToast(false);
   };
 
+  const dateFormatter = (date : Date | null) => {
+    let resultString = '';
+    let monthString = '';
+    let dateString = '';
+    resultString += date!.getFullYear().toString();
+    const monthappender = date!.getMonth() + 1;
+    monthString = monthappender.toString();
+    if (monthString.length === 1) {
+      monthString = `0${monthString}`;
+    }
+    resultString += monthString;
+    dateString = date!.getDate().toString();
+    if (dateString.length === 1) {
+      dateString = `0${dateString}`;
+    }
+    resultString += dateString;
+    return resultString;
+  };
   const handleAddQuest = () => {
-    console.log(today);
-    console.log(selectedDate);
+    const fixedToday = dateFormatter(today);
+    const fixedSelectedDate = dateFormatter(selectedDate);
     axios({
       method: 'post',
       url: `${serverHttp}/quest`,
@@ -120,8 +138,8 @@ export default function Quest() {
       data: {
         title,
         content,
-        created_at: today,
-        due_date: selectedDate,
+        created_at: fixedToday,
+        due_date: fixedSelectedDate,
       },
     })
       .then(() => {
