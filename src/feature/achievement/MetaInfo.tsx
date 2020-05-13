@@ -68,11 +68,11 @@ const MetaInfo: React.FC<IProps> = ({ quests, onFilteredQuests }) => {
         return onFilteredQuests(quests);
       }
       case 'success': {
-        const successQuests = quests?.filter((quest: any) => quest.completed);
+        const successQuests = quests?.filter((quest: any) => quest.checked);
         return onFilteredQuests(successQuests);
       }
       case 'fail': {
-        const failQuests = quests?.filter((quest: any) => !quest.completed);
+        const failQuests = quests?.filter((quest: any) => !quest.checked);
         return onFilteredQuests(failQuests);
       }
       default:
@@ -96,7 +96,7 @@ const MetaInfo: React.FC<IProps> = ({ quests, onFilteredQuests }) => {
         type="button"
         className={classes.btnSuccess}
       >
-        {`Success : ${quests?.filter((quest: any) => quest.completed).length}`}
+        {`Success : ${quests?.filter((quest: any) => quest.checked).length}`}
       </button>
       {' | '}
       <button
@@ -105,7 +105,7 @@ const MetaInfo: React.FC<IProps> = ({ quests, onFilteredQuests }) => {
         type="button"
         className={classes.btnFail}
       >
-        {`Fail : ${quests?.filter((quest: any) => !quest.completed).length}`}
+        {`Fail : ${quests?.filter((quest: any) => !quest.checked).length}`}
       </button>
     </div>
   );

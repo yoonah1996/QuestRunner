@@ -20,6 +20,7 @@ import EnhancedTableHead from './EnhancedTableHead';
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 500,
+    height: '70vh',
   },
   container: {
     width: '100%',
@@ -35,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       cursor: 'pointer',
     },
+  },
+  pagination: {
+    overflow: 'hidden',
   },
 }));
 interface IProps {
@@ -55,7 +59,7 @@ function getComparator(order: string, orderBy: any) {
     : (a: any, b: any) => -descendingComparator(a, b, orderBy);
 }
 function stableSort(array: any[], comparator: Function) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
+  const stabilizedThis = array ? array.map((el, index) => [el, index]) : [];
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -69,8 +73,9 @@ const CustomPaginationActionsTable: React.FC<IProps> = ({ quests }) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('title');
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, quests!.length - page * rowsPerPage);
+  const emptyRows = quests
+    ? rowsPerPage - Math.min(rowsPerPage, quests!.length - page * rowsPerPage)
+    : 5;
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number,
@@ -108,12 +113,13 @@ const CustomPaginationActionsTable: React.FC<IProps> = ({ quests }) => {
             </TableRow>
           )}
         </TableBody>
-        <TableFooter className={classes.footer}>
-          <TableRow className={classes.footer}>
+        <TableFooter>
+          <TableRow>
             <TablePagination
+              className={classes.pagination}
               rowsPerPageOptions={[5]}
               colSpan={3}
-              count={quests!.length}
+              count={quests ? quests!.length : 0}
               rowsPerPage={rowsPerPage}
               page={page}
               onChangePage={handleChangePage}

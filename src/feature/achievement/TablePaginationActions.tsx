@@ -11,6 +11,7 @@ import { TablePaginationActionsProps } from '@material-ui/core/TablePagination/T
 const useStyles = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
+    flexGrow: 0,
     marginLeft: theme.spacing(2.5),
     width: '100%',
     textAlign: 'center',

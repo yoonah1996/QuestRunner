@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable radix */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-underscore-dangle */
@@ -16,28 +17,15 @@ interface range {
   end: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     width: '100vw',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'flex-start',
     margin: '0px',
     marginBottom: '10px',
-  },
-  date: {
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    marginRight: '10px',
-    borderRadius: '5px',
-  },
-  info: {
-    margin: '15px 0',
-    fontSize: '15px',
-    boxShadow: theme.shadows[5],
-    backgroundColor: theme.palette.background.paper,
-    padding: '0 15px',
-    borderRadius: '5px',
+    flexGrow: 1,
   },
   board: {
     display: 'flex',
@@ -60,6 +48,17 @@ const Achievement: React.FC = () => {
   const questsFromStore = useSelector(
     (state: RootState) => state.userLogin.user?.quests,
   );
+  const todoListsFromStore = useSelector(
+    (state: RootState) => state.userLogin.user?.todolist,
+  );
+  const questsFromStoreFilter = questsFromStore?.filter(
+    (quest) => quest !== null,
+  );
+  const todoListsFromStoreFilter = todoListsFromStore?.filter(
+    (todo) => todo !== null,
+  );
+  const allUserLists = questsFromStoreFilter?.concat(todoListsFromStoreFilter!);
+
   const changeRange = (checkDate: any) => {
     setRange({
       start: checkDate.start,
@@ -69,13 +68,12 @@ const Achievement: React.FC = () => {
   const getQuestFromRedux = (start: string, end: string) => {
     let filterdQuset: any[] | undefined;
     if (!start && !end) {
-      // null 처리해야함
-      filterdQuset = questsFromStore?.map((quest) => ({
+      filterdQuset = allUserLists?.map((quest) => ({
         ...quest,
         due_date: quest.due_date ? parseInt(quest.due_date.slice(0, 8)) : null,
       }));
     } else {
-      filterdQuset = questsFromStore
+      filterdQuset = allUserLists
         ?.filter((quest) => {
           if (quest.due_date === null) {
             return null;
@@ -96,7 +94,6 @@ const Achievement: React.FC = () => {
     setFiliteredQuests(filteredQuests);
   };
   useEffect(() => {
-    // get questData from redux store
     getQuestFromRedux(range.start, range.end);
   }, [range]);
   return (

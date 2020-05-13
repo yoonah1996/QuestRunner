@@ -6,7 +6,6 @@ import { userLoginActions } from './feature/usersignin/userloginService';
 import UserLogin from './feature/usersignin/UserLogin';
 import UserJoin from './feature/userjoin/UserJoin';
 import MainPage from './feature/mainpage/MainPage';
-import Store from './feature/store/Store';
 import Rank from './feature/rank/Rank';
 
 // 라우팅
