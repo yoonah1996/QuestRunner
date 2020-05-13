@@ -6,7 +6,7 @@ export interface QuestItem {
   contents: string;
   due_date: string;
   checked: boolean;
-  completed: boolean;
+  finalize: boolean;
 }
 
 export interface Active {

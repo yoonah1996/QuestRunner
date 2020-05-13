@@ -94,12 +94,16 @@ const NavBar: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     setState({ ...state, [anchor]: open });
   };
 
+  const trigger = () => {
+    toggleDrawer('right', false);
+  };
+
   const list = (anchor: Anchor) => (
     <div
       className={classes.list}
       role="presentation"
     >
-      <MyInfo />
+      <MyInfo trigger={trigger} />
     </div>
   );
 

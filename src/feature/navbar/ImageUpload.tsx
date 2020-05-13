@@ -1,11 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable max-len */
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import { userLoginActions } from '../usersignin/userloginService';
 import { serverHttp } from '../common/utils';
 import { RootState } from '../index';
 
@@ -23,7 +24,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function ImageUpload() {
+export default function ImageUpload(props : any) {
+  const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = React.useState<File | string>('fileurl');
   const [imagePreviewUrl, setImagePreviewUrl] = React.useState<string | null>();
   const token = useSelector((state: RootState) => state.userLogin.accessToken);
@@ -38,20 +40,23 @@ export default function ImageUpload() {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
   };
 
   const fileChangedHandler = (e : React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedFile(e.target.files![0]!);
+    if (!/\.(gif|jpg|jpeg|png)$/i.test(e.target.files![0]!.name)) {
+      alert(`gif, jpg, png 파일만 선택해 주세요.\n\n현재 파일 : ${e.target.files![0]!.name}`);
+    } else {
+      setSelectedFile(e.target.files![0]!);
 
-    const reader = new FileReader();
+      const reader = new FileReader();
 
-    reader.onloadend = () => {
-      setImagePreviewUrl(reader.result?.toString());
-    };
+      reader.onloadend = () => {
+        setImagePreviewUrl(reader.result?.toString());
+      };
 
-    reader.readAsDataURL(e.target.files![0]!);
+      reader.readAsDataURL(e.target.files![0]!);
+    }
   };
 
   const submit = () => {
@@ -67,6 +72,7 @@ export default function ImageUpload() {
     })
       .then((response) => {
         handleClick();
+        props.getRankTop();
       })
       .catch((response) => {
         // handle error
