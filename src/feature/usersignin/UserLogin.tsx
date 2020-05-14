@@ -21,14 +21,11 @@ import ValidText from '../userjoin/ValidText';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
-    // margin: '100px',
+    marginTop: theme.spacing(25),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.5)',
-    width: '100%',
-    height: '100%',
     padding: '10%',
   },
   drawerPaper: {
@@ -42,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   signUp: {
-    marginTop: '10px',
+    marginTop: theme.spacing(2),
   },
   signUpButton: {
     color: 'rgba(70,70,70,0.9)',
@@ -62,18 +59,21 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   });
 
   const changeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError({...error, clickError: '' });
     setValues({ ...form, [e.target.id]: e.target.value });
-    const isValidEmail = emailRegex.test(form.email);
-    if (!isValidEmail) {
-      setError({
-        ...error,
-        emailError: 'email is not valid',
-      });
-    } else {
-      setError({
-        ...error,
-        emailError: '',
-      });
+    const isValidEmail = emailRegex.test(e.target.value);
+    if (e.target.id === 'email') {
+      if (!isValidEmail) {
+        setError({
+          ...error,
+          emailError: 'email is not valid',
+        });
+      } else {
+        setError({
+          ...error,
+          emailError: '',
+        });
+      }
     }
   };
 
@@ -107,6 +107,10 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         .then(() => axios.get(`${serverHttp}/items/storeItems`).then((response) => dispatch(storeActions.setStore({ background: response.data.background, exp_bar: response.data.exp_bar, darkmode: response.data.darkmode }))))
         .then(() => push('/mainPage'))
         .catch((err) => {
+          setError({
+            ...error,
+            clickError: 'please fill this form',
+          });
         });
     }
   };
