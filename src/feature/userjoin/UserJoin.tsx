@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-shadow */
@@ -79,6 +80,7 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     passwordValid: false,
     emailValid: false,
     password2Valid: false,
+    usernameValid: false,
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const handleOpenSnackbar = () => {
@@ -233,7 +235,6 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
       });
     }, 3000);
   };
-  // eslint-disable-next-line consistent-return
   const onSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
     if (
@@ -244,6 +245,10 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
       validAlert('please fill this form');
       return null;
     }
+    if (username === '') {
+      validAlert('please fill username');
+      return null;
+    }
     try {
       await axios.post<Response>(`${serverHttp}/user`, {
         email,
@@ -251,11 +256,10 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         username,
       });
       push('/login');
-      handleOpenSnackbar();
     } catch (error) {
       if (!error.response) {
         handleOpenSnackbar();
-        return;
+        return null;
       }
       const {
         response: {
@@ -265,7 +269,6 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
       validAlert(message);
     }
   };
-
   const classes = useStyles();
   return (
     <>
@@ -368,8 +371,8 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
       >
-        <Alert onClose={handleCloseSnackbar} severity="success">
-          successfuly registered.
+        <Alert onClose={handleCloseSnackbar} severity="error">
+          error occuerd, please try again.
         </Alert>
       </Snackbar>
     </>

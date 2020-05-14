@@ -124,7 +124,7 @@ const NavBar: React.FC<RouteComponentProps> = ({ history: { push } }) => {
             {navbarText}
           </Typography>
           <div className={classes.menuButton}>
-            <Darkmode />
+            <Darkmode goToLoginPage={push} />
             <Button
               variant="outlined"
               color="inherit"

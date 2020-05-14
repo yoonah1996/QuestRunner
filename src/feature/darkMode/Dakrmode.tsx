@@ -1,10 +1,20 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-shadow */
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-unneeded-ternary */
-import React from 'react';
-import { Switch, makeStyles } from '@material-ui/core';
+import React, { useState } from 'react';
+import { Switch, makeStyles, Snackbar } from '@material-ui/core';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { useSelector, useDispatch } from 'react-redux';
+import Axios from 'axios';
 import { userLoginActions } from '../usersignin/userloginService';
 import { RootState } from '..';
+import { serverHttp } from '../common/utils';
+
+interface IProp {
+  goToLoginPage: Function;
+}
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -27,39 +37,101 @@ const useStyles = makeStyles(() => ({
     textTransform: 'uppercase',
   },
 }));
-
-const Darkmode = () => {
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={3} variant="filled" {...props} />;
+}
+const Darkmode: React.FC<IProp> = ({ goToLoginPage }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const user = useSelector((state: RootState) => state.userLogin.user);
-  const isactive = user?.active.darkmode?._id ? true : false;
+  const token = useSelector((state: RootState) => state.userLogin.accessToken);
   const dakrmode = user?.darkmode;
+  const isactive = user?.active.darkmode?._id ? true : false;
+
+  // const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [error, setError] = useState('');
+  // const handleOpenSnackbar = () => {
+  //   setOpenSnackbar(true);
+  // };
+  // const handleCloseSnackbar = (
+  //   event?: React.SyntheticEvent,
+  //   reason?: string,
+  // ) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
+  //   setOpenSnackbar(false);
+  // };
+  const changeDakrmode = async () => {
+    await Axios.post(`${serverHttp}`, null, {
+      params: {
+        dark: !dakrmode,
+      },
+      headers: {
+        Authorization: token,
+      },
+    });
+  };
+
   const handleChange = () => {
-    dispatch(
-      userLoginActions.setUser({
-        user: {
-          ...user,
-          darkmode: !dakrmode,
-        },
-      }),
-    );
+    try {
+      // TODO : apply darkmode api
+      changeDakrmode();
+      dispatch(
+        userLoginActions.setUser({
+          user: {
+            ...user,
+            darkmode: !dakrmode,
+          },
+        }),
+      );
+    } catch (error) {
+      if (!error.response) {
+        setError('error occurred, please try again.');
+        // handleOpenSnackbar();
+        return;
+      }
+      const {
+        response: { status },
+      } = error;
+      if (status === 401) {
+        setError('로그인 유효기간이 만료되었습니다. 다시 로그인해주세요.');
+        setTimeout(() => goToLoginPage('/login'), 3100);
+        // handleOpenSnackbar();
+      } else {
+        setError('error occurred, please try again.');
+        // handleOpenSnackbar();
+      }
+    }
   };
   return (
-    <div className={classes.root}>
-      <span className={classes.text}>darkmode</span>
-      {isactive ? (
-        <Switch
-          className={classes.switch}
-          checked={dakrmode}
-          onChange={handleChange}
-          color="primary"
-          name="checkedB"
-          inputProps={{ 'aria-label': 'primary checkbox' }}
-        />
-      ) : (
-        <Switch disabled className={classes.disableSwitch} />
-      )}
-    </div>
+    <>
+      <div className={classes.root}>
+        <span className={classes.text}>darkmode</span>
+        {isactive ? (
+          <Switch
+            className={classes.switch}
+            checked={user?.darkmode}
+            onChange={handleChange}
+            color="primary"
+            name="checkedB"
+            inputProps={{ 'aria-label': 'primary checkbox' }}
+          />
+        ) : (
+          <Switch disabled className={classes.disableSwitch} />
+        )}
+      </div>
+      {/* <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="error">
+          {error}
+        </Alert>
+      </Snackbar> */}
+    </>
   );
 };
 
