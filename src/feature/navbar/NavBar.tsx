@@ -26,31 +26,29 @@ import { RootState } from '..';
 import { userLoginActions } from '../usersignin/userloginService';
 import Darkmode from '../darkMode/Dakrmode';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    '& > *': {
+      margin: theme.spacing(1),
     },
-    menuButton: {
-      '& > *': {
-        margin: theme.spacing(1),
-      },
-    },
-    title: {
-      flexGrow: 1,
-    },
-    appBar: {
-      background: '#bf934b',
-    },
-    list: {
-      width: 250,
-    },
-    large: {
-      width: theme.spacing(15),
-      height: theme.spacing(15),
-    },
-  }),
-);
+  },
+  title: {
+    flexGrow: 1,
+  },
+  appBar: {
+    background: '#bf934b',
+  },
+  list: {
+    width: 250,
+  },
+  large: {
+    width: theme.spacing(15),
+    height: theme.spacing(15),
+  },
+}));
 
 type Anchor = 'right';
 
@@ -59,7 +57,7 @@ const NavBar: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [navbarText, setNavbarText] = React.useState<string | null>('Quest');
+  const [navbarText, setNavbarText] = React.useState<string | null>('QUEST');
   const [state, setState] = React.useState({
     right: false,
   });
@@ -81,6 +79,7 @@ const NavBar: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         refreshToken: null,
       }),
     );
+    dispatch(navActions.setComponent({ navComponent: 'QUEST' }));
   };
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
