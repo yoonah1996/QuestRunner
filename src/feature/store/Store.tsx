@@ -20,7 +20,8 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    overflow: 'scroll',
+    overflowY: 'scroll',
+    overflowX: 'hidden',
   },
   hr: {
     width: '50%',

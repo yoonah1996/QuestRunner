@@ -19,13 +19,11 @@ import goodImg from '../../img/good.png';
 import one from '../../img/one.png';
 import two from '../../img/two.png';
 import three from '../../img/three.png';
+import Img from '../../img/rgana.jpg';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
     flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
   },
   menuroot: {
     width: 140,
@@ -49,11 +47,18 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
+  appBar: {
+    background: '#bf934b',
+  },
 }));
 
 const rankStyles = makeStyles((theme: Theme) => ({
   back: {
     position: 'relative',
+    width: '100vw',
+    height: '100vh',
+    backgroundSize: 'cover',
+    backgroundImage: `url(${Img})`,
   },
   root: {
     flexGrow: 1,
@@ -71,7 +76,7 @@ const rankStyles = makeStyles((theme: Theme) => ({
     backgroundImage: `url(${one})`,
     backgroundSize: '100px 100px',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center 260px',
+    backgroundPosition: 'center 300px',
     '& div': {
       backgroundColor: 'rgba(255,255,255,0)',
     },
@@ -88,7 +93,7 @@ const rankStyles = makeStyles((theme: Theme) => ({
     backgroundImage: `url(${two})`,
     backgroundSize: '100px 100px',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center 260px',
+    backgroundPosition: 'center 300px',
     '& div': {
       backgroundColor: 'rgba(255,255,255,0)',
     },
@@ -101,7 +106,7 @@ const rankStyles = makeStyles((theme: Theme) => ({
     backgroundImage: `url(${three})`,
     backgroundSize: '100px 100px',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center 260px',
+    backgroundPosition: 'center 300px',
     backgroundColor: '#ffc400',
     '& div': {
       backgroundColor: 'rgba(255,255,255,0)',
@@ -115,7 +120,7 @@ const rankStyles = makeStyles((theme: Theme) => ({
     marginLeft: 'auto',
     marginRight: 'auto',
     height: 'auto',
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255,255,255,0)',
     width: 60,
   },
   seven: {
@@ -208,7 +213,7 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.root}>
             Top 7 List

@@ -13,7 +13,7 @@ import { RootState } from '../index';
 import NavBar from '../navbar/NavBar';
 import ExBarAvatar from '../experiencebar/ExBarAvatar';
 import ExperienceBar from '../experiencebar/ExperienceBar';
-import Image from '../../img/rgana.jpg';
+import Image from '../../img/penmon.jpg';
 import Store from '../store/Store';
 import Quest from '../quest/Quest';
 import Achievement from '../achievement/Achievement';

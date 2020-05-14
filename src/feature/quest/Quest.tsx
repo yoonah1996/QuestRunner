@@ -12,6 +12,9 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
 import List from '@material-ui/core/List';
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import Icon from '@material-ui/core/Icon';
@@ -31,6 +34,7 @@ import QuestEntry from './QuestEntry';
 import { RootState } from '../index';
 import { serverHttp } from '../common/utils';
 import { userLoginActions } from '../usersignin/userloginService';
+import aeyong from '../../img/20200513_225601.jpg';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -93,6 +97,8 @@ export default function Quest() {
   };
 
   const handleClose = () => {
+    setTitle('');
+    setContent('');
     setOpen(false);
   };
 
@@ -231,6 +237,20 @@ export default function Quest() {
           퀘스트등록완료!
         </Alert>
       </Snackbar>
+      {quests!.length === 0 && (
+        <Card className={classes.root}>
+          <CardActionArea>
+            <CardMedia
+              component="img"
+              alt="NO QUEST"
+              height="100%"
+              image={aeyong}
+              title="NO QUEST"
+            />
+          </CardActionArea>
+        </Card>
+      )}
+      {quests!.length > 0 && (
       <div className={classes.root}>
         <div className={classes.demo}>
           <List>
@@ -243,6 +263,7 @@ export default function Quest() {
           </List>
         </div>
       </div>
+    )}
     </div>
   );
 }
