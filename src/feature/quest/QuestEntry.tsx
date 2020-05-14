@@ -71,7 +71,6 @@ export default function QuestEntry({ quest } : IProps) {
   };
 
   const handleClose = () => {
-    console.log('click');
     setQuestOpen(false);
   };
 
@@ -139,9 +138,6 @@ export default function QuestEntry({ quest } : IProps) {
           checked={checked}
           onChange={handleChange}
         />
-        {
-          checked && console.log(typeof checked)
-        }
         {checked && (
         <IconButton edge="end" aria-label="delete" onClick={handleConfirm}>
           <ConfirmationNumberIcon />

@@ -37,6 +37,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     alignItems: 'center',
     '& span': {
       width: '100%',
+      color: 'white',
+      textShadow: '-1px -1px 0 #000, 1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000',
     },
   },
 }));

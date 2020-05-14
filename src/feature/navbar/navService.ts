@@ -11,7 +11,7 @@ type navState = {
 }
 
 const initialState : navState = {
-  navComponent: 'QUESTLIST',
+  navComponent: 'QUEST',
 };
 
 const actionPrefix = 'NAV';

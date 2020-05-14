@@ -7,6 +7,7 @@ export interface QuestItem {
   due_date: string;
   checked: boolean;
   finalize: boolean;
+  data: string;
 }
 
 export interface Active {
