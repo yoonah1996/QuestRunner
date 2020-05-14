@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
     height: 0,
     paddingTop: '56.25%', // 16:9,
     marginTop: '30',
+    // border: '1px solid black',
   },
   paper: {
     position: 'absolute',
@@ -72,6 +73,10 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     marging: 0,
     textAlign: 'center',
+    backgroundColor: theme.palette.background.paper,
+  },
+  info: {
+    fontSize: '8px',
   },
 }));
 const getModalStyle = () => {
@@ -146,6 +151,11 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
         }),
       );
     } catch (error) {
+      if (!error.response) {
+        setError('error occurred, please try again.');
+        handleOpenSnackbar();
+        return;
+      }
       const {
         response: { status },
       } = error;
@@ -184,7 +194,7 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
       );
     } catch (error) {
       if (!error.response) {
-        setError('error occurred');
+        setError('error occurred, please try again.');
         setOpenSnackbar(true);
         return;
       }
@@ -227,10 +237,7 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
     <>
       <div className={classes.main}>
         <Card className={classes.root}>
-          <CardMedia
-            className={classes.media}
-            image="/static/images/cards/paella.jpg"
-          />
+          <CardMedia className={classes.media} image={item.image} />
           <CardContent className={classes.cardContent}>
             <Typography variant="body2" color="textSecondary" component="h5">
               {item.item_name}
@@ -255,7 +262,7 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
                 color="primary"
                 onClick={onClick}
               >
-                구매가능
+                구매
               </Button>
             )}
           </CardContent>
@@ -303,7 +310,9 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
           <Button color="secondary" id="cancel" onClick={handlePurchase}>
             No
           </Button>
-          {isCreditEnough ? <div>not enough credit</div> : null}
+          {isCreditEnough ? (
+            <div className={classes.info}>크레딧이 부족합니다!</div>
+          ) : null}
         </div>
       </Modal>
       <Snackbar
