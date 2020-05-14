@@ -18,21 +18,16 @@ import TableRowWithModal from './TableRowWithModal';
 import EnhancedTableHead from './EnhancedTableHead';
 
 const useStyles = makeStyles((theme) => ({
-  table: {
-    minWidth: 500,
-    height: '70vh',
-  },
   container: {
+    maxHeight: 400,
     width: '100%',
     overflow: 'scrollY',
-    height: '50%',
+    // height: '80%',
     backgroundColor: 'rgba(255,255,255,0.5)',
     boxShadow: theme.shadows[5],
   },
-  footer: {
-    width: '100%',
-  },
   body: {
+    height: '50vh',
     '&:hover': {
       cursor: 'pointer',
     },

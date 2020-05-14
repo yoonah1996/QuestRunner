@@ -36,7 +36,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Achievement: React.FC = () => {
-  const classes = useStyles();
   const [range, setRange] = useState<range>({
     start: '',
     end: '',
@@ -45,19 +44,19 @@ const Achievement: React.FC = () => {
   const [filiteredQuests, setFiliteredQuests] = useState<
     QuestItem[] | undefined
   >([]);
-  const questsFromStore = useSelector(
-    (state: RootState) => state.userLogin.user?.quests,
-  );
-  const todoListsFromStore = useSelector(
-    (state: RootState) => state.userLogin.user?.todolist,
-  );
+  const user = useSelector((state: RootState) => state.userLogin.user);
+  const questsFromStore = user?.quests;
+  const todoListsFromStore = user?.todolist;
+
+  const classes = useStyles();
+
   const questsFromStoreFilter = questsFromStore?.filter(
     (quest) => quest !== null,
   );
   const todoListsFromStoreFilter = todoListsFromStore?.filter(
     (todo) => todo !== null,
   );
-  const allUserLists = questsFromStoreFilter?.concat(todoListsFromStoreFilter!);
+  let allUserLists = questsFromStoreFilter?.concat(todoListsFromStoreFilter!);
 
   const changeRange = (checkDate: any) => {
     setRange({
@@ -68,6 +67,7 @@ const Achievement: React.FC = () => {
   const getQuestFromRedux = (start: string, end: string) => {
     let filterdQuset: any[] | undefined;
     if (!start && !end) {
+      allUserLists = questsFromStoreFilter?.concat(todoListsFromStoreFilter!);
       filterdQuset = allUserLists?.map((quest) => ({
         ...quest,
         due_date: quest.due_date ? parseInt(quest.due_date.slice(0, 8)) : null,
