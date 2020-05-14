@@ -6,7 +6,10 @@ import {
   TableRow,
   TableCell,
   TableSortLabel,
+  makeStyles,
 } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { RootState } from '..';
 
 const headCells = [
   {
@@ -39,7 +42,22 @@ interface IProp {
   orderBy: any;
   onRequestSort: Function;
 }
+// 색깔은 논의하기
+const useStyles = makeStyles((theme) => ({
+  tableHead: (darkmode: any) => ({
+    backgroundColor: darkmode.dark ? '#888888' : theme.palette.background.paper,
+    color: darkmode.dark ? '#e0e0e0' : 'black',
+  }),
+}));
+
 const EnhancedTableHead: React.FC<IProp> = (props) => {
+  const dark = useSelector(
+    (state: RootState) => state.userLogin.user?.darkmode,
+  );
+  const darkmode = {
+    dark,
+  };
+  const classes = useStyles(darkmode);
   const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property: any) => (event: any) => {
     onRequestSort(event, property);
@@ -49,6 +67,7 @@ const EnhancedTableHead: React.FC<IProp> = (props) => {
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
+            className={classes.tableHead}
             key={headCell.id}
             align="center"
             sortDirection={orderBy === headCell.id ? order : false}
