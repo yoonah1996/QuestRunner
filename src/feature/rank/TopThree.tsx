@@ -9,7 +9,6 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import AWS from 'aws-sdk';
 // import dotenv from 'dotenv';
 import RunnerA from '../../img/runnerA.gif';
-
 // dotenv.config();
 // require('dotenv').config();
 
@@ -35,8 +34,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'white !important',
   },
   image: {
-    height: 230,
-    width: 200,
+    height: 260,
+    width: 250,
     display: 'block',
     marginLeft: 'auto',
     marginRight: 'auto',
@@ -44,22 +43,34 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   names: {
     textAlign: 'center',
+    fontFamily: 'Gamja Flower, cursive',
     backgroundColor: 'rgba(255,255,255,0)',
-  },
-  mottosback: {
-    // textAlign: 'center',
-    // lineHeight: '250px',
-    display: 'table',
-    height: '260px',
+    fontSize: '25px',
+    textOverflow: 'ellipsis',
     width: '250px',
-    backgroundColor: 'rgba(255,255,255,0)',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+  },
+  mottoback: {
+    display: 'table',
+    position: 'absolute',
+    height: '50px',
+    width: '250px',
+    bottom: '0px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
   mottos: {
     textAlign: 'center',
     display: 'table-cell',
-    verticalAlign: 'middle',
-    fontFamily: 'Georgia, Times New Roman, cursive',
-    fontStyle: 'italic',
+    verticalAlign: 'sub',
+    fontFamily: 'Caveat, Nanum Brush Script, cursive',
+    fontSize: '25px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    width: '250px',
   },
 }));
 
@@ -109,7 +120,7 @@ const TopThree: React.FC<threetype> = (props) => {
           님
         </div>
       )}
-      <div className={classes.mottosback}>
+      <div className={classes.mottoback}>
         {!props.motto ? null : (
           <div className={classes.mottos}>
             좌우명 :
