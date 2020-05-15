@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable max-len */
 import React from 'react';
 import {
@@ -8,21 +9,15 @@ import { Box, Grid } from '@material-ui/core';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { RootState } from '../index';
 
-// backgroundColor은 state에서 받아와서 적용시키도록바꿀것!!
-
-
-const BorderLinearProgress = withStyles({
-  root: {
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  exroot: {
     height: 20,
     backgroundColor: lighten('#FFFAFA', 0.1),
   },
-  bar: {
+  exbar: (eBC: any) => ({
     borderRadius: 0,
-    backgroundColor: '#ffff00',
-  },
-})(LinearProgress);
-
-const useStyles = makeStyles((theme: Theme) => createStyles({
+    backgroundColor: eBC.expBarColor,
+  }),
   root: {
     flexGrow: 1,
   },
@@ -45,8 +40,11 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 export default function CustomizedProgressBars() {
   const exp = useSelector((state: RootState) => state.userLogin.user?.experience);
-  // const expBarColor = useSelector((state: RootState) => state.userLogin.user?.active.experiencebar.image);
-  const classes = useStyles();
+  const expBarColor = useSelector((state: RootState) => state.userLogin.user?.active!.exp_bar!.data!);
+  const eBC = {
+    expBarColor,
+  };
+  const classes = useStyles(eBC);
   const level = Math.floor(exp! / 100);
   const expVal = (exp! % 100);
   return (
@@ -66,7 +64,11 @@ export default function CustomizedProgressBars() {
                 {` ${level.toString()}`}
               </span>
             </div>
-            <BorderLinearProgress
+            <LinearProgress
+              classes={{
+                root: classes.exroot,
+                bar: classes.exbar,
+              }}
               variant="determinate"
               color="secondary"
               value={expVal}

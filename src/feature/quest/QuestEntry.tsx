@@ -29,13 +29,14 @@ import { serverHttp } from '../common/utils';
 import { userLoginActions } from '../usersignin/userloginService';
 
 interface IProps {
-  quest: QuestItem
+  quest: QuestItem;
 }
 
 
 export default function QuestEntry({ quest } : IProps) {
   const dispatch = useDispatch();
   const [checked, setChecked] = React.useState(quest?.checked);
+  console.log(checked);
   const [questopen, setQuestOpen] = React.useState(false);
   const accessToken = useSelector((state : RootState) => state.userLogin.accessToken);
 
