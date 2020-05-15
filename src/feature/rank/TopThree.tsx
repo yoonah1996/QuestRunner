@@ -4,7 +4,9 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { Grid, Paper } from '@material-ui/core';
+import {
+  Grid, Paper, Popover, Typography,
+} from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import AWS from 'aws-sdk';
 // import dotenv from 'dotenv';
@@ -55,22 +57,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'table',
     position: 'absolute',
     height: '50px',
-    width: '250px',
     bottom: '0px',
+    overflow: 'hidden',
+  },
+  mottos: {
+    textAlign: 'center',
+    fontFamily: 'Caveat, Nanum Brush Script, cursive',
+    fontSize: '25px',
+    width: '250px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-  mottos: {
-    textAlign: 'center',
-    display: 'table-cell',
-    verticalAlign: 'sub',
-    fontFamily: 'Caveat, Nanum Brush Script, cursive',
-    fontSize: '25px',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    width: '250px',
+  popover: {
+    pointerEvents: 'none',
+  },
+  paper: {
+    padding: theme.spacing(1),
+  },
+  mottolength: {
+    width: '500px',
   },
 }));
 
@@ -85,8 +91,20 @@ interface threetype {
 const TopThree: React.FC<threetype> = (props) => {
   const classes = useStyles();
   const [value, setValue] = React.useState('');
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const getRankTop = async () => {
+  const handlePopoverOpen = (event:any) => {
+    console.log(event.currentTarget);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
+  const getRankTop = () => {
     if (props.profilePic) {
       const params: any = {
         Bucket: bucketName,
@@ -122,12 +140,37 @@ const TopThree: React.FC<threetype> = (props) => {
       )}
       <div className={classes.mottoback}>
         {!props.motto ? null : (
-          <div className={classes.mottos}>
+          <div
+            className={classes.mottos}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          >
             좌우명 :
             {props.motto}
           </div>
         )}
       </div>
+      <Popover
+        id="mouse-over-popover"
+        className={classes.popover}
+        classes={{
+          paper: classes.paper,
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        onClose={handlePopoverClose}
+        disableRestoreFocus
+      >
+        <Typography className={classes.mottolength}>{props.motto}</Typography>
+      </Popover>
     </div>
   );
 };

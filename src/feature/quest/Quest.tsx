@@ -1,4 +1,5 @@
 /* eslint-disable function-paren-newline */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/no-this-in-sfc */
 /* eslint-disable react/jsx-props-no-spreading */
@@ -39,6 +40,7 @@ import { serverHttp } from '../common/utils';
 import { userLoginActions } from '../usersignin/userloginService';
 import aeyong from '../../img/20200513_225601.jpg';
 import { QuestItem } from '../common/interfaces';
+import ValidText from '../userjoin/ValidText';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -84,6 +86,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function Quest() {
   const dispatch = useDispatch();
+  const [btnDisable, setDisable] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [toast, setToast] = React.useState(false);
   const [title, setTitle] = React.useState<string | null>('');
@@ -154,6 +157,7 @@ export default function Quest() {
   const handleAddQuest = () => {
     const fixedToday = dateFormatter(today);
     const fixedSelectedDate = dateFormatter(selectedDate);
+    setDisable(true);
     axios({
       method: 'post',
       url: `${serverHttp}/quest`,
@@ -176,6 +180,7 @@ export default function Quest() {
           })
           .then((response) => {
             dispatch(userLoginActions.setUser({ user: response.data }));
+            setDisable(false);
             handleToastClick();
             handleClose();
           });
@@ -197,7 +202,7 @@ export default function Quest() {
     <div className={classes.main}>
       <Button
         variant="contained"
-        color={dark ? 'primary' : 'secondary'}
+        color={dark ? 'primary' : 'default'}
         className={classes.button}
         startIcon={<AddIcon />}
         onClick={handleClickOpen}
@@ -219,15 +224,21 @@ export default function Quest() {
             justify="center"
             alignItems="stretch"
           >
-            <TextField
-              autoFocus
-              margin="dense"
-              id="title"
-              label="Title"
-              type="text"
-              value={title}
-              onChange={handleTitleChange}
-            />
+            <Grid item xs={12}>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="title"
+                label="Title"
+                type="text"
+                value={title}
+                onChange={handleTitleChange}
+                color="secondary"
+              />
+              {title?.length === 0 && (
+                <ValidText error="퀘스트 제목이 필요합니다." />
+              )}
+            </Grid>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
                 disableToolbar
@@ -244,24 +255,36 @@ export default function Quest() {
                 }}
               />
             </MuiPickersUtilsProvider>
-            <TextField
-              id="outlined-multiline-static"
-              label="Quest Content"
-              multiline
-              rows={6}
-              variant="outlined"
-              value={content}
-              onChange={handleContentChange}
-            />
+            <Grid item xs={12}>
+              <TextField
+                id="outlined-multiline-static"
+                label="Quest Content"
+                multiline
+                rows={6}
+                variant="outlined"
+                value={content}
+                onChange={handleContentChange}
+                color="secondary"
+              />
+              {content?.length === 0 && (
+                <ValidText error="퀘스트 내용이 필요합니다." />
+              )}
+            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions className={classes.dark}>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          <Button onClick={handleAddQuest} color="primary">
-            Add
-          </Button>
+          {title?.length! > 0 && content?.length! > 0 && (
+            <Button
+              disabled={btnDisable}
+              onClick={handleAddQuest}
+              color="secondary"
+            >
+              Add
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
       <Snackbar open={toast} autoHideDuration={6000} onClose={handleToastClose}>
@@ -270,12 +293,12 @@ export default function Quest() {
         </Alert>
       </Snackbar>
       {quests!.length === 0 && (
-        <Card className={classes.root}>
+        <Card onClick={handleClickOpen} className={classes.root}>
           <CardActionArea>
             <CardMedia
               component="img"
               alt="NO QUEST"
-              height="100%"
+              style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
               image={aeyong}
               title="NO QUEST"
             />
@@ -288,7 +311,7 @@ export default function Quest() {
             <List>
               {quests?.map((val) => (
                 <div>
-                  <QuestEntry quest={val} />
+                  <QuestEntry quest={val} key={val._id} />
                   <Divider variant="inset" component="li" />
                 </div>
               ))}

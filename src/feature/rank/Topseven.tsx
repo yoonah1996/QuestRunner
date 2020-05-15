@@ -8,9 +8,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
     textAlign: 'center',
+    fontSize: '35px',
     // display: 'flex',
     // flexDirection: 'column',
     // justifyContent: 'space-between ',
+  },
+  seven: {
+    backgroundColor: 'white',
+    color: 'black',
+    '& div': {
+      verticalAlign: 'super',
+    },
+    // top: '50%'
   },
 }));
 
@@ -37,6 +46,7 @@ const Topseven: React.FC<totaltype> = ({ rankInfo, rank }) => {
         label={`${rankInfo.username}님`}
         variant="outlined"
         color="secondary"
+        className={classes.seven}
       />
     </div>
   );
