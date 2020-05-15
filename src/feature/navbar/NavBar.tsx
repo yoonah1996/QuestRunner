@@ -1,3 +1,6 @@
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable no-unused-vars */
+/* eslint-disable function-paren-newline */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-shadow */
 /* eslint-disable max-len */
@@ -13,7 +16,7 @@ import Menu from '@material-ui/core/Menu';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -26,34 +29,41 @@ import { RootState } from '..';
 import { userLoginActions } from '../usersignin/userloginService';
 import Darkmode from '../darkMode/Dakrmode';
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    '& > *': {
-      margin: theme.spacing(1),
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
     },
-  },
-  title: {
-    flexGrow: 1,
-  },
-  appBar: {
-    background: '#bf934b',
-  },
-  list: {
-    width: 250,
-  },
-  large: {
-    width: theme.spacing(15),
-    height: theme.spacing(15),
-  },
-}));
+    menuButton: {
+      '& > *': {
+        margin: theme.spacing(1),
+      },
+    },
+    title: {
+      flexGrow: 1,
+    },
+    appBar: (darkmode: any) => ({
+      backgroundColor: darkmode.dark ? '#888888' : '#bf934b',
+    }),
+    list: (darkmode: any) => ({
+      width: 250,
+    }),
+    large: {
+      width: theme.spacing(15),
+      height: theme.spacing(15),
+    },
+    dark: (darkmode: any) => ({
+      backgroundColor: darkmode.dark
+        ? '#888888'
+        : theme.palette.background.paper,
+      color: darkmode.dark ? '#e0e0e0' : 'black',
+    }),
+  }),
+);
 
 type Anchor = 'right';
 
 const NavBar: React.FC<RouteComponentProps> = ({ history: { push } }) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -61,7 +71,13 @@ const NavBar: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   const [state, setState] = React.useState({
     right: false,
   });
-
+  const dark = useSelector(
+    (state: RootState) => state.userLogin.user?.darkmode,
+  );
+  const darkmode = {
+    dark,
+  };
+  const classes = useStyles(darkmode);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };

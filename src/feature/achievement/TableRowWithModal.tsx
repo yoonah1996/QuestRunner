@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable radix */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable react/prop-types */
+/* eslint-disable-next-line object-curly-newline */
 import React, { useState } from 'react';
-// eslint-disable-next-line object-curly-newline
 import {
   TableRow,
   TableCell,
@@ -12,7 +13,9 @@ import {
   makeStyles,
   Fade,
 } from '@material-ui/core';
+import { useSelector } from 'react-redux';
 import Text from './Text';
+import { RootState } from '..';
 
 const getModalStyle = () => {
   const top = 50;
@@ -20,6 +23,7 @@ const getModalStyle = () => {
   return {
     outline: 'none',
     backgroundColor: 'black',
+    borderRadius: '5px',
     color: 'white',
     top: `${top}%`,
     left: `${left}%`,
@@ -35,19 +39,24 @@ const useStyles = makeStyles((theme) => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    textAlign: 'center',
   },
+  row: (darkmode: any) => ({
+    backgroundColor: darkmode.dark
+      ? 'rgba(136,136,136,0.5)'
+      : 'rgba(241,227,203,0.5)',
+    transition: 'background-color .5s',
+    '&:hover': {
+      backgroundColor: darkmode.dark
+        ? 'rgba(136,136,136,0.9)'
+        : 'rgba(241,227,203,0.7)',
+    },
+  }),
   modal: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '5px',
-  },
-  row: {
-    transition: 'background-color .5s',
-    '&:hover': {
-      backgroundColor: 'rgba(241,227,203,0.5)',
-    },
+    textAlign: 'center',
   },
   ul: {
     listStyle: 'none',
@@ -65,6 +74,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '5px',
     padding: '10px',
   },
+  cell: (darkmode: any) => ({
+    color: darkmode.dark ? '#e0e0e0' : 'black',
+  }),
 }));
 
 interface IProps {
@@ -73,8 +85,14 @@ interface IProps {
 
 const TableRowWithModal: React.FC<IProps> = ({ quest }) => {
   const [open, setOpen] = useState(false);
+  const dark = useSelector(
+    (state: RootState) => state.userLogin.user?.darkmode,
+  );
+  const darkmode = {
+    dark,
+  };
   const [modalStyle] = useState(getModalStyle);
-  const classes = useStyles();
+  const classes = useStyles(darkmode);
   const subStringDate = (start: number, end: number) =>
     String(quest.due_date).substring(start, end);
   const handleOpen = () => {
@@ -91,17 +109,31 @@ const TableRowWithModal: React.FC<IProps> = ({ quest }) => {
         className={classes.row}
         tabIndex={-1}
       >
-        <TableCell component="th" scope="row" align="center" padding="none">
+        <TableCell
+          component="th"
+          scope="row"
+          align="center"
+          padding="none"
+          className={classes.cell}
+        >
           {quest.title.length > 10
             ? `${quest.contents.substring(0, 10)}...`
             : quest.title}
         </TableCell>
-        <TableCell style={{ width: 150 }} align="center">
+        <TableCell
+          style={{ width: 150 }}
+          align="center"
+          className={classes.cell}
+        >
           {quest.contents.length > 10
             ? `${quest.contents.substring(0, 10)}...`
             : quest.contents}
         </TableCell>
-        <TableCell style={{ width: 150 }} align="center">
+        <TableCell
+          style={{ width: 150 }}
+          align="center"
+          className={classes.cell}
+        >
           {`${subStringDate(0, 4)}/${subStringDate(4, 6)}/${subStringDate(
             6,
             8,
@@ -123,7 +155,7 @@ const TableRowWithModal: React.FC<IProps> = ({ quest }) => {
         className={classes.modal}
       >
         <Fade in={open}>
-          <div style={modalStyle} className={classes.paper}>
+          <div className={classes.paper} style={modalStyle}>
             <h3 id="simple-modal-title">{quest.title}</h3>
             <ul className={classes.ul}>
               <li className={classes.mainInfo}>

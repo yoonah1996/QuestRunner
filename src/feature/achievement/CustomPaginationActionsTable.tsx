@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 400,
     width: '100%',
     overflow: 'scrollY',
-    // height: '80%',
     backgroundColor: 'rgba(255,255,255,0.5)',
     boxShadow: theme.shadows[5],
   },

@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     height: 0,
     paddingTop: '56.25%', // 16:9,
     marginTop: '30',
-    // border: '1px solid black',
+    borderBottom: '1px solid #e0e0e0',
   },
   paper: {
     position: 'absolute',
@@ -69,15 +69,18 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cardContent: {
+  cardContent: (darkmode: any) => ({
     padding: 0,
     marging: 0,
     textAlign: 'center',
-    backgroundColor: theme.palette.background.paper,
-  },
+    backgroundColor: darkmode.dark ? '#888888' : theme.palette.background.paper,
+  }),
   info: {
     fontSize: '8px',
   },
+  itemName: (darkmode: any) => ({
+    color: darkmode.dark ? '#e0e0e0' : 'black',
+  }),
 }));
 const getModalStyle = () => {
   const top = 50;
@@ -85,6 +88,7 @@ const getModalStyle = () => {
   return {
     outline: 'none',
     backgroundColor: 'black',
+    borderRadius: '5px',
     color: 'white',
     top: `${top}%`,
     left: `${left}%`,
@@ -92,7 +96,6 @@ const getModalStyle = () => {
   };
 };
 const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const token = useSelector((state: RootState) => state.userLogin.accessToken);
   const user = useSelector((state: RootState) => state.userLogin.user);
@@ -105,6 +108,11 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
   const [error, setError] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
+  const dark = user?.darkmode;
+  const darkmode = {
+    dark,
+  };
+  const classes = useStyles(darkmode);
   const handleOpen = (targetItem: string | null) => {
     setTarget(targetItem);
     setOpen(true);
@@ -239,7 +247,12 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
         <Card className={classes.root}>
           <CardMedia className={classes.media} image={item.image} />
           <CardContent className={classes.cardContent}>
-            <Typography variant="body2" color="textSecondary" component="h5">
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              component="h5"
+              className={classes.itemName}
+            >
               {item.item_name}
             </Typography>
             {state === 'active' ? (
