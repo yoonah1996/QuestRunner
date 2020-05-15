@@ -53,7 +53,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 const rankStyles = makeStyles((theme: Theme) => ({
   back: {
-    position: 'relative',
+    // position: 'relative',
+    height: '100%',
   },
   root: {
     flexGrow: 1,
@@ -120,12 +121,14 @@ const rankStyles = makeStyles((theme: Theme) => ({
   },
   seven: {
     position: 'fixed',
-    bottom: '5px',
+    bottom: '0px',
     width: '100%',
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
+    backgroundColor: '#bf934b',
+    height: '50px',
   },
   paper: {
     position: 'absolute',
@@ -155,7 +158,7 @@ const getModalStyle = () => {
 const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   const classes = useStyles();
   const rankClasses = rankStyles();
-  const [value, setValue] = React.useState('');
+  const [test, settest] = React.useState('');
   const [three, setThree] = React.useState([]);
   const [seven, setSeven] = React.useState([]);
   const [myrank, setMyrank] = React.useState({
@@ -174,35 +177,36 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     username: string;
   }
 
-  const getRankTop = async () => {
-    const Ranks = await axios.get(`${serverHttp}/rank`, {
+  const getRankTop = () => {
+    console.log("랭크 탑");
+    axios.get(`${serverHttp}/rank`, {
       params: {
         top: '7',
       },
-    }).then((res) => res.data).catch((err) => err);
-    setThree(Ranks.slice(0, 3));
-    setSeven(Ranks.slice(3, 7));
+    }).then((res) => {
+      setThree(res.data.slice(0, 3));
+      setSeven(res.data.slice(3, 7));
+    });
   };
 
   useEffect(() => {
     getRankTop();
-  }, []);
+    console.log("유즈이펙트");
+  }, [test]);
 
-  const handleChange = (event: string) => {
-    setValue(event);
-  };
-
-  const handleOpen = async () => {
-    const myRanks = await axios.get(`${serverHttp}/myRank`, {
+  const handleOpen = () => {
+    axios.get(`${serverHttp}/myRank`, {
       headers: {
         Authorization: token,
       },
-    }).then((res) => res.data).catch((err) => err);
-    setOpen(true);
-    setMyrank(myRanks);
+    }).then((res) => {
+      setOpen(true);
+      setMyrank(res.data);
+    }).catch((err) => err);
   };
 
   const handleClose = () => {
+    console.log("핸들클로즈");
     setOpen(false);
   };
 
@@ -214,9 +218,9 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
             Top 7 List
           </Typography>
           <Box color="text.primary">
-            <BottomNavigation value={value} className={classes.menuroot}>
-              <BottomNavigationAction label="My Rank" value="myrank" onChange={() => { handleChange('myrank'); }} onClick={handleOpen} icon={<EmojiEvents className={classes.menucolor} />} className={classes.menucolor} />
-              <BottomNavigationAction label="Back" value="back" onChange={() => { handleChange('back'); }} onClick={() => { push('/mainPage'); }} icon={<NavigateBefore className={classes.menucolor} />} className={classes.menucolor} />
+            <BottomNavigation showLabels className={classes.menuroot}>
+              <BottomNavigationAction label="My Rank" onClick={handleOpen} icon={<EmojiEvents className={classes.menucolor} />} className={classes.menucolor} />
+              <BottomNavigationAction label="Back" onClick={() => { push('/mainPage'); }} icon={<NavigateBefore className={classes.menucolor} />} className={classes.menucolor} />
             </BottomNavigation>
           </Box>
         </Toolbar>
