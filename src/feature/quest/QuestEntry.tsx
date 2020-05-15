@@ -32,14 +32,38 @@ interface IProps {
   quest: QuestItem;
 }
 
+const useStyles = makeStyles((theme) => ({
+  darkReverse: (darkmode: any) => ({
+    backgroundColor: darkmode.dark ? theme.palette.background.paper : '#e0e0e0',
+    color: darkmode.dark ? '#888888' : theme.palette.background.paper,
+  }),
+  dark: (darkmode: any) => ({
+    backgroundColor: darkmode.dark ? '#888888' : theme.palette.background.paper,
+    color: darkmode.dark ? '#e0e0e0' : 'black',
+  }),
+  darkModeFont: (darkmode: any) => ({
+    color: darkmode.dark ? '#e0e0e0' : '#9e9e9e',
+  }),
+  deepDarkFont: (darkmode: any) => ({
+    color: darkmode.dark ? '#bdbdbd' : 'black',
+  }),
+}));
 
-export default function QuestEntry({ quest } : IProps) {
+export default function QuestEntry({ quest }: IProps) {
   const dispatch = useDispatch();
   const [checked, setChecked] = React.useState(quest?.checked);
   console.log(checked);
   const [questopen, setQuestOpen] = React.useState(false);
-  const accessToken = useSelector((state : RootState) => state.userLogin.accessToken);
-
+  const accessToken = useSelector(
+    (state: RootState) => state.userLogin.accessToken,
+  );
+  const dark = useSelector(
+    (state: RootState) => state.userLogin.user?.darkmode,
+  );
+  const darkmode = {
+    dark,
+  };
+  const classes = useStyles(darkmode);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
     axios({
@@ -53,19 +77,18 @@ export default function QuestEntry({ quest } : IProps) {
         checked: event.target.checked,
         finalize: false,
       },
-    })
-      .then((res) => {
-        axios.get(`${serverHttp}/userinfo`, {
+    }).then((res) => {
+      axios
+        .get(`${serverHttp}/userinfo`, {
           headers: {
             Authorization: accessToken,
           },
         })
-          .then((response) => {
-            dispatch(userLoginActions.setUser({ user: response.data }));
-          });
-      });
+        .then((response) => {
+          dispatch(userLoginActions.setUser({ user: response.data }));
+        });
+    });
   };
-
 
   const handleClickOpen = () => {
     setQuestOpen(true);
@@ -87,17 +110,17 @@ export default function QuestEntry({ quest } : IProps) {
         checked: true,
         finalize: true,
       },
-    })
-      .then((res) => {
-        axios.get(`${serverHttp}/userinfo`, {
+    }).then((res) => {
+      axios
+        .get(`${serverHttp}/userinfo`, {
           headers: {
             Authorization: accessToken,
           },
         })
-          .then((response) => {
-            dispatch(userLoginActions.setUser({ user: response.data }));
-          });
-      });
+        .then((response) => {
+          dispatch(userLoginActions.setUser({ user: response.data }));
+        });
+    });
   };
 
   const handleDelete = () => {
@@ -110,69 +133,99 @@ export default function QuestEntry({ quest } : IProps) {
       params: {
         id: quest?._id,
       },
-    })
-      .then((res) => {
-        axios.get(`${serverHttp}/userinfo`, {
+    }).then((res) => {
+      axios
+        .get(`${serverHttp}/userinfo`, {
           headers: {
             Authorization: accessToken,
           },
         })
-          .then((response) => {
-            dispatch(userLoginActions.setUser({ user: response.data }));
-          });
-      });
+        .then((response) => {
+          dispatch(userLoginActions.setUser({ user: response.data }));
+        });
+    });
   };
 
   return (
     <ListItem>
       <ListItemAvatar>
-        <Avatar onClick={handleClickOpen}>
+        <Avatar onClick={handleClickOpen} className={classes.darkReverse}>
           <DetailsIcon />
         </Avatar>
       </ListItemAvatar>
-      <ListItemText
-        primary={quest?.title}
-      />
+      <ListItemText primary={quest?.title} />
       <ListItemSecondaryAction>
         <Checkbox
           edge="end"
           checked={checked}
           onChange={handleChange}
+          className={classes.darkModeFont}
         />
         {checked && (
-        <IconButton edge="end" aria-label="delete" onClick={handleConfirm}>
-          <ConfirmationNumberIcon />
-        </IconButton>
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            onClick={handleConfirm}
+            className={classes.darkModeFont}
+          >
+            <ConfirmationNumberIcon />
+          </IconButton>
         )}
         {!checked && (
-        <IconButton edge="end" aria-label="delete" onClick={handleDelete}>
-          <DeleteIcon />
-        </IconButton>
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            onClick={handleDelete}
+            className={classes.darkModeFont}
+          >
+            <DeleteIcon />
+          </IconButton>
         )}
       </ListItemSecondaryAction>
-      <Dialog open={questopen} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">{quest?.title}</DialogTitle>
-        <DialogContent>
+      <Dialog
+        open={questopen}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title" className={classes.dark}>
+          {quest?.title}
+        </DialogTitle>
+        <DialogContent className={classes.dark}>
           <Typography gutterBottom variant="h5" component="h2">
             Created Date
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            className={classes.deepDarkFont}
+          >
             {quest?.created_at}
           </Typography>
           <Typography gutterBottom variant="h5" component="h2">
             Due Date
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            className={classes.deepDarkFont}
+          >
             {quest?.due_date}
           </Typography>
           <Typography gutterBottom variant="h5" component="h2">
             Content
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            className={classes.deepDarkFont}
+          >
             {quest?.contents}
           </Typography>
         </DialogContent>
-        <DialogActions>
+        <DialogActions className={classes.dark}>
           <Button onClick={handleClose} color="primary">
             Close
           </Button>

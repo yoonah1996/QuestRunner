@@ -155,6 +155,7 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
               ...user?.items,
               [item.category]: [...user?.items[item.category], item],
             },
+            credits: user!.credits - item.price,
           },
         }),
       );

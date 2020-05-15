@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    // padding: theme.spacing(2, 4, 3),
   },
   row: (darkmode: any) => ({
     backgroundColor: darkmode.dark
@@ -58,23 +58,33 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '5px',
     textAlign: 'center',
   },
-  ul: {
+  ul: (darkmode: any) => ({
     listStyle: 'none',
     textAlign: 'center',
     padding: '0px',
     margin: '0px',
-  },
-  subInfo: {
+    backgroundColor: darkmode.dark ? '#888888' : theme.palette.background.paper,
+    color: darkmode.dark ? '#e0e0e0' : 'black',
+  }),
+  subInfo: (darkmode: any) => ({
     textAlign: 'right',
     fontSize: '8px',
-    marginTop: '3px',
-  },
-  mainInfo: {
+    // marginTop: '3px',
+    backgroundColor: darkmode.dark ? '#888888' : theme.palette.background.paper,
+    color: darkmode.dark ? '#e0e0e0' : 'black',
+  }),
+  mainInfo: (darkmode: any) => ({
     border: '1px solid white',
     borderRadius: '5px',
-    padding: '10px',
-  },
+    // padding: '10px',
+    backgroundColor: darkmode.dark ? '#888888' : theme.palette.background.paper,
+    color: darkmode.dark ? '#e0e0e0' : 'black',
+  }),
   cell: (darkmode: any) => ({
+    color: darkmode.dark ? '#e0e0e0' : 'black',
+  }),
+  dark: (darkmode: any) => ({
+    backgroundColor: darkmode.dark ? '#888888' : theme.palette.background.paper,
     color: darkmode.dark ? '#e0e0e0' : 'black',
   }),
 }));
@@ -156,15 +166,19 @@ const TableRowWithModal: React.FC<IProps> = ({ quest }) => {
       >
         <Fade in={open}>
           <div className={classes.paper} style={modalStyle}>
-            <h3 id="simple-modal-title">{quest.title}</h3>
+            <h3 id="simple-modal-title" className={classes.dark}>
+              {quest.title}
+            </h3>
             <ul className={classes.ul}>
               <li className={classes.mainInfo}>
-                <div id="simple-modal-description">{quest.contents}</div>
+                <div id="simple-modal-description" className={classes.dark}>
+                  {quest.contents}
+                </div>
               </li>
               <li className={classes.subInfo}>
-                <div>
+                <div className={classes.dark}>
                   {`Due Date : ${subStringDate(0, 8)} / Completed : ${
-                    quest.completed ? 'Yes' : 'No'
+                    quest.checked ? 'Yes' : 'No'
                   }`}
                 </div>
               </li>

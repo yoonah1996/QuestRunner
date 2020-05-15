@@ -12,7 +12,6 @@ import {
   Grid,
   Typography,
   Snackbar,
-  Fade,
 } from '@material-ui/core';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -64,7 +63,6 @@ const useStyles = makeStyles((theme) => ({
 interface Response {
   message: string;
 }
-interface IProps {}
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={3} variant="filled" {...props} />;
 }
@@ -205,7 +203,6 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     checkPassword2(value, id);
   };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(process.env.accessKeyId);
     const setName = `set${initToUpper(e.target.id)}`;
     const {
       target: { value },
@@ -258,7 +255,7 @@ const UserJoin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         password,
         username,
       });
-      push('/login');
+      push('/login', { success: true });
     } catch (error) {
       if (!error.response) {
         handleOpenSnackbar();
