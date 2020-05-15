@@ -42,7 +42,6 @@ interface IProp {
   orderBy: any;
   onRequestSort: Function;
 }
-// 색깔은 논의하기
 const useStyles = makeStyles((theme) => ({
   tableHead: (darkmode: any) => ({
     backgroundColor: darkmode.dark ? '#888888' : theme.palette.background.paper,

@@ -2,7 +2,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -46,33 +46,61 @@ function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const useStyles = makeStyles({
-  root: {
-    maxWidth: 345,
-  },
-  media: {
-    height: 340,
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      maxWidth: 345,
+    },
+    media: (darkmode: any) => ({
+      height: 340,
+      backgroundColor: darkmode.dark ? '#888888' : 'white',
+    }),
+    content: (darkmode: any) => ({
+      backgroundColor: darkmode.dark ? '#888888' : 'white',
+      color: darkmode.dark ? '#e0e0e0' : 'black',
+    }),
+    editInfo: (darkmode: any) => ({
+      backgroundColor: darkmode.dark ? '#888888' : 'white',
+    }),
+    btnEditInfo: (darkmode: any) => ({
+      color: darkmode.dark ? '#e0e0e0' : 'primary',
+    }),
+    dark: (darkmode: any) => ({
+      backgroundColor: darkmode.dark
+        ? '#888888'
+        : theme.palette.background.paper,
+      color: darkmode.dark ? '#e0e0e0' : 'black',
+    }),
+  }),
+);
 
-export default function MediaCard(props:any) {
-  const classes = useStyles();
+export default function MediaCard(props: any) {
+  const dark = useSelector(
+    (state: RootState) => state.userLogin.user?.darkmode,
+  );
+  const darkmode = {
+    dark,
+  };
+  const classes = useStyles(darkmode);
 
   const dispatch = useDispatch();
 
   const [open, setOpen] = React.useState(false);
   const [imgOpen, setImgOpen] = React.useState(false);
 
-  const uid = useSelector((state : RootState) => state.userLogin.user?._id);
-  const userName = useSelector((state : RootState) => state.userLogin.user?.username);
-  const motto = useSelector((state : RootState) => state.userLogin.user?.motto);
+  const uid = useSelector((state: RootState) => state.userLogin.user?._id);
+  const userName = useSelector(
+    (state: RootState) => state.userLogin.user?.username,
+  );
+  const motto = useSelector((state: RootState) => state.userLogin.user?.motto);
   const noMotto = '설정된 좌우명이 없습니다.';
-  const uEmail = useSelector((state : RootState) => state.userLogin.user?.email);
-  const credits = useSelector((state : RootState) => state.userLogin.user?.credits);
-  const token = useSelector((state:RootState) => state.userLogin.accessToken);
+  const uEmail = useSelector((state: RootState) => state.userLogin.user?.email);
+  const credits = useSelector(
+    (state: RootState) => state.userLogin.user?.credits,
+  );
+  const token = useSelector((state: RootState) => state.userLogin.accessToken);
   const [usernameEdit, setUsernameEdit] = React.useState(userName);
   const [mottoEdit, setMottoEdit] = React.useState(motto);
-
 
   const [diaOpen, setDiaOpen] = React.useState(false);
   const [value, setValue] = React.useState('');
@@ -143,20 +171,24 @@ export default function MediaCard(props:any) {
         motto: mottoEdit,
         username: usernameEdit,
       },
-    }).then(() => {
-      axios.get(`${serverHttp}/userinfo`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-        .then((response) => dispatch(userLoginActions.setUser({ user: response.data })))
-        .then(() => {
-          imageClose();
-          handleDiaClick();
-        });
     })
+      .then(() => {
+        axios
+          .get(`${serverHttp}/userinfo`, {
+            headers: {
+              Authorization: token,
+            },
+          })
+          .then((response) =>
+            dispatch(userLoginActions.setUser({ user: response.data })),
+          )
+          .then(() => {
+            imageClose();
+            handleDiaClick();
+          });
+      })
       .catch((response) => {
-      // handle error
+        // handle error
         console.log(response);
       });
   };
@@ -176,20 +208,22 @@ export default function MediaCard(props:any) {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">Want to change your avatar?</DialogTitle>
-          <DialogContent>
+          <DialogTitle id="alert-dialog-title" className={classes.dark}>
+            Want to change your avatar?
+          </DialogTitle>
+          <DialogContent className={classes.dark}>
             <DialogContentText id="alert-dialog-description">
               설정할 이미지를 선택 & 업로드 후 닫으세요
             </DialogContentText>
             <ImageUpload getRankTop={getRankTop} />
           </DialogContent>
-          <DialogActions>
+          <DialogActions className={classes.dark}>
             <Button onClick={imageClose} color="primary">
               Close
             </Button>
           </DialogActions>
         </Dialog>
-        <CardContent>
+        <CardContent className={classes.content}>
           <Typography gutterBottom variant="h3" component="h2">
             {userName}
           </Typography>
@@ -213,13 +247,24 @@ export default function MediaCard(props:any) {
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <Button size="small" color="primary" onClick={handleClickOpen}>
+      <CardActions className={classes.editInfo}>
+        <Button
+          size="small"
+          color="primary"
+          onClick={handleClickOpen}
+          className={classes.btnEditInfo}
+        >
           Edit Info
         </Button>
-        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Edit Info</DialogTitle>
-          <DialogContent>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title" className={classes.dark}>
+            Edit Info
+          </DialogTitle>
+          <DialogContent className={classes.dark}>
             <TextField
               autoFocus
               margin="dense"
@@ -240,7 +285,7 @@ export default function MediaCard(props:any) {
               fullWidth
             />
           </DialogContent>
-          <DialogActions>
+          <DialogActions className={classes.dark}>
             <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
@@ -249,7 +294,11 @@ export default function MediaCard(props:any) {
             </Button>
           </DialogActions>
         </Dialog>
-        <Snackbar open={diaOpen} autoHideDuration={6000} onClose={handleDiaClose}>
+        <Snackbar
+          open={diaOpen}
+          autoHideDuration={6000}
+          onClose={handleDiaClose}
+        >
           <Alert onClose={handleDiaClose} severity="success">
             정보변경완료!
           </Alert>
