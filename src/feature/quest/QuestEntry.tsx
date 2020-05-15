@@ -13,7 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Checkbox from '@material-ui/core/Checkbox';
 import DeleteIcon from '@material-ui/icons/Delete';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import ConfirmationNumberIcon from '@material-ui/icons/ConfirmationNumber';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Dialog from '@material-ui/core/Dialog';
@@ -39,6 +39,7 @@ export default function QuestEntry({ quest } : IProps) {
   console.log(checked);
   const [questopen, setQuestOpen] = React.useState(false);
   const accessToken = useSelector((state : RootState) => state.userLogin.accessToken);
+  const [btnDis, setDis] = React.useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
@@ -76,6 +77,7 @@ export default function QuestEntry({ quest } : IProps) {
   };
 
   const handleConfirm = () => {
+    setDis(true);
     axios({
       method: 'patch',
       url: `${serverHttp}/quest`,
@@ -96,6 +98,7 @@ export default function QuestEntry({ quest } : IProps) {
         })
           .then((response) => {
             dispatch(userLoginActions.setUser({ user: response.data }));
+            setDis(false);
           });
       });
   };
@@ -140,8 +143,8 @@ export default function QuestEntry({ quest } : IProps) {
           onChange={handleChange}
         />
         {checked && (
-        <IconButton edge="end" aria-label="delete" onClick={handleConfirm}>
-          <ConfirmationNumberIcon />
+        <IconButton disabled={btnDis} edge="end" aria-label="delete" onClick={handleConfirm}>
+          <DoneAllIcon />
         </IconButton>
         )}
         {!checked && (
