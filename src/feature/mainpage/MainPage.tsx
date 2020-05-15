@@ -13,23 +13,27 @@ import { RootState } from '../index';
 import NavBar from '../navbar/NavBar';
 import ExBarAvatar from '../experiencebar/ExBarAvatar';
 import ExperienceBar from '../experiencebar/ExperienceBar';
-import Image from '../../img/penmon.jpg';
 import Store from '../store/Store';
 import Quest from '../quest/Quest';
 import Achievement from '../achievement/Achievement';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    bg: {
-      backgroundImage: `url(${Image})`,
-    },
+    bg: (imgObj: any) => ({
+      backgroundImage: `url(${imgObj.image})`,
+      backgroundSize: 'cover',
+    }),
   }));
 
 const MainPage: React.FC = () => {
   const selectedComponent = useSelector(
     (state: RootState) => state.nav.navComponent,
   );
-  const classes = useStyles();
+  const image = useSelector((state: RootState) => state.userLogin.user?.active.background.image);
+  const imgObj = {
+    image,
+  };
+  const classes = useStyles(imgObj);
   return (
     <Grid
       className={classes.bg}
@@ -43,7 +47,6 @@ const MainPage: React.FC = () => {
       {selectedComponent === 'QUEST' && <Quest />}
       {selectedComponent === 'ACHIEVEMENT' && <Achievement />}
       <Grid
-        className={classes.bg}
         container
         direction="column"
         justify="flex-end"

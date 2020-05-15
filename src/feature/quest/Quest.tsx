@@ -1,5 +1,7 @@
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable react/no-this-in-sfc */
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useEffect } from 'react';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -35,6 +37,7 @@ import { RootState } from '../index';
 import { serverHttp } from '../common/utils';
 import { userLoginActions } from '../usersignin/userloginService';
 import aeyong from '../../img/20200513_225601.jpg';
+import { QuestItem } from '../common/interfaces';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -75,7 +78,9 @@ export default function Quest() {
   const [content, setContent] = React.useState<string | null>('');
   const today = new Date();
   const accessToken = useSelector((state : RootState) => state.userLogin.accessToken);
-  const quests = useSelector((state : RootState) => state.userLogin.user?.quests);
+  // const [quests, setQuests] = React.useState<Array<QuestItem>>([]);
+  const quests = useSelector((state: RootState)=> state.userLogin.user?.quests);
+
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(
     today,
   );

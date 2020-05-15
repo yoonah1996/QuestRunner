@@ -7,7 +7,6 @@ export interface QuestItem {
   due_date: string;
   checked: boolean;
   finalize: boolean;
-  data: string;
 }
 
 export interface Active {
@@ -42,6 +41,7 @@ export interface StoreItem {
   created_at: string;
   price: number;
   __v: number;
+  data: string;
 }
 
 export interface Items {
