@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/no-this-in-sfc */
@@ -45,36 +46,43 @@ function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  button: {
-    backgroundColor: '#bf934b',
-    margin: theme.spacing(1),
-    position: 'absolute',
-    top: -50,
-  },
-  list: {
-    position: 'absolute',
-    top: 250,
-  },
-  root: {
-    flexGrow: 1,
-    maxWidth: 500,
-  },
-  card: {
-    maxWidth: 400,
-  },
-  demo: {
-    backgroundColor: theme.palette.background.paper,
-  },
-  main: {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 300,
-  },
-}));
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    button: {
+      margin: theme.spacing(1),
+      position: 'absolute',
+      top: -50,
+    },
+    list: {
+      position: 'absolute',
+      top: 250,
+    },
+    root: {
+      flexGrow: 1,
+      maxWidth: 500,
+    },
+    demo: (darkmode: any) => ({
+      backgroundColor: darkmode.dark
+        ? '#888888'
+        : theme.palette.background.paper,
+      color: darkmode.dark ? '#e0e0e0' : 'black',
+    }),
+    main: {
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      top: 300,
+    },
+    dark: (darkmode: any) => ({
+      backgroundColor: darkmode.dark
+        ? '#888888'
+        : theme.palette.background.paper,
+      color: darkmode.dark ? '#e0e0e0' : 'black',
+    }),
+  }),
+);
 
 export default function Quest() {
   const dispatch = useDispatch();
@@ -84,13 +92,15 @@ export default function Quest() {
   const [title, setTitle] = React.useState<string | null>('');
   const [content, setContent] = React.useState<string | null>('');
   const today = new Date();
-  const accessToken = useSelector((state : RootState) => state.userLogin.accessToken);
-  // const [quests, setQuests] = React.useState<Array<QuestItem>>([]);
-  const quests = useSelector((state: RootState) => state.userLogin.user?.quests);
-
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(
-    today,
+  const accessToken = useSelector(
+    (state: RootState) => state.userLogin.accessToken,
   );
+  // const [quests, setQuests] = React.useState<Array<QuestItem>>([]);
+  const quests = useSelector(
+    (state: RootState) => state.userLogin.user?.quests,
+  );
+
+  const [selectedDate, setSelectedDate] = React.useState<Date | null>(today);
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
@@ -126,7 +136,7 @@ export default function Quest() {
     setToast(false);
   };
 
-  const dateFormatter = (date : Date | null) => {
+  const dateFormatter = (date: Date | null) => {
     let resultString = '';
     let monthString = '';
     let dateString = '';
@@ -162,11 +172,12 @@ export default function Quest() {
       },
     })
       .then(() => {
-        axios.get(`${serverHttp}/userinfo`, {
-          headers: {
-            Authorization: accessToken,
-          },
-        })
+        axios
+          .get(`${serverHttp}/userinfo`, {
+            headers: {
+              Authorization: accessToken,
+            },
+          })
           .then((response) => {
             dispatch(userLoginActions.setUser({ user: response.data }));
             setDisable(false);
@@ -179,22 +190,34 @@ export default function Quest() {
         console.log(response);
       });
   };
-  const classes = useStyles();
+  const dark = useSelector(
+    (state: RootState) => state.userLogin.user?.darkmode,
+  );
+  const darkmode = {
+    dark,
+  };
+  const classes = useStyles(darkmode);
 
   return (
     <div className={classes.main}>
       <Button
         variant="contained"
-        color="default"
+        color={dark ? 'primary' : 'default'}
         className={classes.button}
         startIcon={<AddIcon />}
         onClick={handleClickOpen}
       >
         ADD
       </Button>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Quest Register</DialogTitle>
-        <DialogContent>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title" className={classes.dark}>
+          Quest Register
+        </DialogTitle>
+        <DialogContent className={classes.dark}>
           <Grid
             container
             direction="column"
@@ -212,7 +235,9 @@ export default function Quest() {
                 onChange={handleTitleChange}
                 color="secondary"
               />
-              {title?.length === 0 && <ValidText error="퀘스트 제목이 필요합니다." />}
+              {title?.length === 0 && (
+                <ValidText error="퀘스트 제목이 필요합니다." />
+              )}
             </Grid>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
@@ -241,19 +266,24 @@ export default function Quest() {
                 onChange={handleContentChange}
                 color="secondary"
               />
-              {content?.length === 0 && <ValidText error="퀘스트 내용이 필요합니다." />}
+              {content?.length === 0 && (
+                <ValidText error="퀘스트 내용이 필요합니다." />
+              )}
             </Grid>
-
           </Grid>
         </DialogContent>
-        <DialogActions>
+        <DialogActions className={classes.dark}>
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
           {title?.length! > 0 && content?.length! > 0 && (
-          <Button disabled={btnDisable} onClick={handleAddQuest} color="secondary">
-            Add
-          </Button>
+            <Button
+              disabled={btnDisable}
+              onClick={handleAddQuest}
+              color="secondary"
+            >
+              Add
+            </Button>
           )}
         </DialogActions>
       </Dialog>
@@ -263,7 +293,7 @@ export default function Quest() {
         </Alert>
       </Snackbar>
       {quests!.length === 0 && (
-        <Card onClick={handleClickOpen} className={classes.card}>
+        <Card onClick={handleClickOpen} className={classes.root}>
           <CardActionArea>
             <CardMedia
               component="img"
@@ -276,19 +306,19 @@ export default function Quest() {
         </Card>
       )}
       {quests!.length > 0 && (
-      <div className={classes.root}>
-        <div className={classes.demo}>
-          <List>
-            {quests?.map((val) => (
-              <div>
-                <QuestEntry quest={val} key={val._id} />
-                <Divider variant="inset" component="li" />
-              </div>
-            ))}
-          </List>
+        <div className={classes.root}>
+          <div className={classes.demo}>
+            <List>
+              {quests?.map((val) => (
+                <div>
+                  <QuestEntry quest={val} key={val._id} />
+                  <Divider variant="inset" component="li" />
+                </div>
+              ))}
+            </List>
+          </div>
         </div>
-      </div>
-    )}
+      )}
     </div>
   );
 }

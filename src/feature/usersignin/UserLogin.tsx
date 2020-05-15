@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -12,6 +12,8 @@ import Container from '@material-ui/core/Container';
 import { RouteComponentProps } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import Image from '../../img/penmon.jpg';
 import { RootState } from '..';
 import { userLoginActions } from './userloginService';
@@ -46,7 +48,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={3} variant="filled" {...props} />;
+}
+
+const UserLogin: React.FC<RouteComponentProps> = ({
+  history: { push },
+  location,
+}) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [form, setValues] = useState({
@@ -57,7 +66,8 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     emailError: '',
     clickError: '',
   });
-
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const success: any = location.state;
   const changeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError({ ...error, clickError: '' });
     setValues({ ...form, [e.target.id]: e.target.value });
@@ -80,7 +90,11 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   const submitClick = (e: React.FormEvent<Element>) => {
     e.preventDefault();
     // eslint-disable-next-line no-empty
-    if (form.email.length === 0 || form.password.length === 0 || error.emailError.length !== 0) {
+    if (
+      form.email.length === 0 ||
+      form.password.length === 0 ||
+      error.emailError.length !== 0
+    ) {
       setError({
         ...error,
         clickError: 'please fill this form',
@@ -92,19 +106,37 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
           password: form.password,
         })
         .then((response) => {
-          dispatch(userLoginActions.setLogin({ isLogin: true, accessToken: response.data.accessToken, refreshToken: response.data.refreshToken }));
+          dispatch(
+            userLoginActions.setLogin({
+              isLogin: true,
+              accessToken: response.data.accessToken,
+              refreshToken: response.data.refreshToken,
+            }),
+          );
           return response.data;
         })
         .then((token) => {
-          axios.get(`${serverHttp}/userinfo`, {
-            headers: {
-              Authorization:
-                token.accessToken,
-            },
-          })
-            .then((response) => dispatch(userLoginActions.setUser({ user: response.data })));
+          axios
+            .get(`${serverHttp}/userinfo`, {
+              headers: {
+                Authorization: token.accessToken,
+              },
+            })
+            .then((response) =>
+              dispatch(userLoginActions.setUser({ user: response.data })),
+            );
         })
-        .then(() => axios.get(`${serverHttp}/items/storeItems`).then((response) => dispatch(storeActions.setStore({ background: response.data.background, exp_bar: response.data.exp_bar, darkmode: response.data.darkmode }))))
+        .then(() =>
+          axios.get(`${serverHttp}/items/storeItems`).then((response) =>
+            dispatch(
+              storeActions.setStore({
+                background: response.data.background,
+                exp_bar: response.data.exp_bar,
+                darkmode: response.data.darkmode,
+              }),
+            ),
+          ),
+        )
         .then(() => {
           setTimeout(() => push('/mainPage'), 1000);
         })
@@ -116,7 +148,15 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
         });
     }
   };
+  const handleCloseSnackbarFromLogin = () => {
+    setOpenSnackbar(false);
+  };
 
+  useEffect(() => {
+    if (success?.success === true) {
+      setOpenSnackbar(true);
+    }
+  }, []);
   return (
     <div className={classes.drawerPaper}>
       <Container component="main" maxWidth="xs">
@@ -153,7 +193,7 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
               type="submit"
               fullWidth
               variant="contained"
-            // color="text.disabled"
+              // color="text.disabled"
             >
               Sign In
             </Button>
@@ -174,6 +214,15 @@ const UserLogin: React.FC<RouteComponentProps> = ({ history: { push } }) => {
           </form>
         </div>
       </Container>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbarFromLogin}
+      >
+        <Alert onClose={handleCloseSnackbarFromLogin} severity="success">
+          successfuly registered. login please.
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

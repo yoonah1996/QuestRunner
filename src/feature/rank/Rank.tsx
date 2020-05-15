@@ -1,10 +1,23 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable function-paren-newline */
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
 /* eslint-disable max-len */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
-  Box, Button, Grid, AppBar, Toolbar, Typography, Modal, Paper, BottomNavigationAction, BottomNavigation,
+  Box,
+  Button,
+  Grid,
+  AppBar,
+  Toolbar,
+  Typography,
+  Modal,
+  Paper,
+  BottomNavigationAction,
+  BottomNavigation,
 } from '@material-ui/core';
 import { RouteComponentProps } from 'react-router';
 import { useSelector } from 'react-redux';
@@ -20,36 +33,38 @@ import one from '../../img/one.png';
 import two from '../../img/two.png';
 import three from '../../img/three.png';
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  root: {
-    flexGrow: 1,
-  },
-  menuroot: {
-    width: 140,
-    backgroundColor: 'rgba(255,255,255,0)',
-    color: 'white',
-  },
-  menucolor: {
-    color: 'white',
-    '& span': {
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    menuroot: {
+      width: 140,
+      backgroundColor: 'rgba(255,255,255,0)',
       color: 'white',
     },
-  },
-  buttoncolor: {
-    backgroundColor: 'rgba(255,255,255,0)',
-    color: 'white',
-  },
-  image: {
-    height: 'auto',
-    width: 150,
-    display: 'block',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
-  appBar: {
-    background: '#bf934b',
-  },
-}));
+    menucolor: {
+      color: 'white',
+      '& span': {
+        color: 'white',
+      },
+    },
+    buttoncolor: {
+      backgroundColor: 'rgba(255,255,255,0)',
+      color: 'white',
+    },
+    image: {
+      height: 'auto',
+      width: 150,
+      display: 'block',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+    appBar: (darkmode: any) => ({
+      background: darkmode.dark ? '#888888' : '#bf934b',
+    }),
+  }),
+);
 
 const rankStyles = makeStyles((theme: Theme) => ({
   back: {
@@ -156,7 +171,13 @@ const getModalStyle = () => {
 };
 
 const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
-  const classes = useStyles();
+  const dark = useSelector(
+    (state: RootState) => state.userLogin.user?.darkmode,
+  );
+  const darkmode = {
+    dark,
+  };
+  const classes = useStyles(darkmode);
   const rankClasses = rankStyles();
   const [test, settest] = React.useState('');
   const [three, setThree] = React.useState([]);
@@ -178,35 +199,37 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   }
 
   const getRankTop = () => {
-    console.log("랭크 탑");
-    axios.get(`${serverHttp}/rank`, {
-      params: {
-        top: '7',
-      },
-    }).then((res) => {
-      setThree(res.data.slice(0, 3));
-      setSeven(res.data.slice(3, 7));
-    });
+    axios
+      .get(`${serverHttp}/rank`, {
+        params: {
+          top: '7',
+        },
+      })
+      .then((res) => {
+        setThree(res.data.slice(0, 3));
+        setSeven(res.data.slice(3, 7));
+      });
   };
 
   useEffect(() => {
     getRankTop();
-    console.log("유즈이펙트");
   }, [test]);
 
   const handleOpen = () => {
-    axios.get(`${serverHttp}/myRank`, {
-      headers: {
-        Authorization: token,
-      },
-    }).then((res) => {
-      setOpen(true);
-      setMyrank(res.data);
-    }).catch((err) => err);
+    axios
+      .get(`${serverHttp}/myRank`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        setOpen(true);
+        setMyrank(res.data);
+      })
+      .catch((err) => err);
   };
 
   const handleClose = () => {
-    console.log("핸들클로즈");
     setOpen(false);
   };
 
@@ -219,8 +242,20 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
           </Typography>
           <Box color="text.primary">
             <BottomNavigation showLabels className={classes.menuroot}>
-              <BottomNavigationAction label="My Rank" onClick={handleOpen} icon={<EmojiEvents className={classes.menucolor} />} className={classes.menucolor} />
-              <BottomNavigationAction label="Back" onClick={() => { push('/mainPage'); }} icon={<NavigateBefore className={classes.menucolor} />} className={classes.menucolor} />
+              <BottomNavigationAction
+                label="My Rank"
+                onClick={handleOpen}
+                icon={<EmojiEvents className={classes.menucolor} />}
+                className={classes.menucolor}
+              />
+              <BottomNavigationAction
+                label="Back"
+                onClick={() => {
+                  push('/mainPage');
+                }}
+                icon={<NavigateBefore className={classes.menucolor} />}
+                className={classes.menucolor}
+              />
             </BottomNavigation>
           </Box>
         </Toolbar>
@@ -256,10 +291,7 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
           ))}
           {/* </Grid> */}
         </div>
-        <Modal
-          open={open}
-          onClose={handleClose}
-        >
+        <Modal open={open} onClose={handleClose}>
           <div style={modalStyle} className={rankClasses.paper}>
             <img className={classes.image} src={goodImg} alt="" />
             <p />
@@ -267,12 +299,15 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
               {myrank.username}
               님의 랭킹은
             </div>
-            <div>
-              {myrank.rank + 1}
-              위 입니다
-            </div>
+            <div>{myrank.rank + 1}위 입니다</div>
             <p />
-            <Button variant="outlined" className={classes.buttoncolor} onClick={handleClose}>닫기</Button>
+            <Button
+              variant="outlined"
+              className={classes.buttoncolor}
+              onClick={handleClose}
+            >
+              닫기
+            </Button>
           </div>
         </Modal>
         {/* </div> */}
