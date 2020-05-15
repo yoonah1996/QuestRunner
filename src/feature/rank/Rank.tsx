@@ -19,7 +19,6 @@ import goodImg from '../../img/good.png';
 import one from '../../img/one.png';
 import two from '../../img/two.png';
 import three from '../../img/three.png';
-import Img from '../../img/rgana.jpg';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -55,10 +54,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 const rankStyles = makeStyles((theme: Theme) => ({
   back: {
     position: 'relative',
-    width: '100vw',
-    height: '100vh',
-    backgroundSize: 'cover',
-    backgroundImage: `url(${Img})`,
   },
   root: {
     flexGrow: 1,
@@ -220,8 +215,8 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
           </Typography>
           <Box color="text.primary">
             <BottomNavigation value={value} className={classes.menuroot}>
-              <BottomNavigationAction label="My Rank" value="myrank" onMouseOver={() => { handleChange('myrank'); }} onClick={handleOpen} icon={<EmojiEvents className={classes.menucolor} />} className={classes.menucolor} />
-              <BottomNavigationAction label="Back" value="back" onMouseOver={() => { handleChange('back'); }} onClick={() => { push('/mainPage'); }} icon={<NavigateBefore className={classes.menucolor} />} className={classes.menucolor} />
+              <BottomNavigationAction label="My Rank" value="myrank" onChange={() => { handleChange('myrank'); }} onClick={handleOpen} icon={<EmojiEvents className={classes.menucolor} />} className={classes.menucolor} />
+              <BottomNavigationAction label="Back" value="back" onChange={() => { handleChange('back'); }} onClick={() => { push('/mainPage'); }} icon={<NavigateBefore className={classes.menucolor} />} className={classes.menucolor} />
             </BottomNavigation>
           </Box>
         </Toolbar>
