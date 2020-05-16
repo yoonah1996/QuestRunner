@@ -2,7 +2,7 @@
 /* eslint-disable radix */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-underscore-dangle */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 import { Fade } from '@material-ui/core';
@@ -45,6 +45,7 @@ const Achievement: React.FC = () => {
     QuestItem[] | undefined
   >([]);
   const user = useSelector((state: RootState) => state.userLogin.user);
+
   const questsFromStore = user?.quests;
   const todoListsFromStore = user?.todolist;
 
@@ -64,38 +65,69 @@ const Achievement: React.FC = () => {
       end: checkDate.end,
     });
   };
-  const getQuestFromRedux = (start: string, end: string) => {
-    let filterdQuset: any[] | undefined;
-    if (!start && !end) {
-      allUserLists = questsFromStoreFilter?.concat(todoListsFromStoreFilter!);
-      filterdQuset = allUserLists?.map((quest) => ({
-        ...quest,
-        due_date: quest.due_date ? parseInt(quest.due_date.slice(0, 8)) : null,
-      }));
-    } else {
-      filterdQuset = allUserLists
-        ?.filter((quest) => {
-          if (quest.due_date === null) {
-            return null;
-          }
-          const date = parseInt(quest.due_date.slice(0, 8));
-          return parseInt(start) <= date && date <= parseInt(end);
-        })
-        .map((quest: any) => ({
+  const getQuestFromRedux = useCallback(
+    (start: string, end: string) => {
+      let filterdQuset: any[] | undefined;
+      if (!start && !end) {
+        allUserLists = questsFromStoreFilter?.concat(todoListsFromStoreFilter!);
+        filterdQuset = allUserLists?.map((quest) => ({
           ...quest,
           due_date: quest.due_date
             ? parseInt(quest.due_date.slice(0, 8))
             : null,
         }));
-    }
-    return setQuests(filterdQuset);
-  };
+      } else {
+        filterdQuset = allUserLists
+          ?.filter((quest) => {
+            if (quest.due_date === null) {
+              return null;
+            }
+            const date = parseInt(quest.due_date.slice(0, 8));
+            return parseInt(start) <= date && date <= parseInt(end);
+          })
+          .map((quest: any) => ({
+            ...quest,
+            due_date: quest.due_date
+              ? parseInt(quest.due_date.slice(0, 8))
+              : null,
+          }));
+      }
+      return setQuests(filterdQuset);
+    },
+    [range],
+  );
+  // const getQuestFromRedux = (start: string, end: string) => {
+  //   let filterdQuset: any[] | undefined;
+  //   if (!start && !end) {
+  //     allUserLists = questsFromStoreFilter?.concat(todoListsFromStoreFilter!);
+  //     filterdQuset = allUserLists?.map((quest) => ({
+  //       ...quest,
+  //       due_date: quest.due_date ? parseInt(quest.due_date.slice(0, 8)) : null,
+  //     }));
+  //   } else {
+  //     filterdQuset = allUserLists
+  //       ?.filter((quest) => {
+  //         if (quest.due_date === null) {
+  //           return null;
+  //         }
+  //         const date = parseInt(quest.due_date.slice(0, 8));
+  //         return parseInt(start) <= date && date <= parseInt(end);
+  //       })
+  //       .map((quest: any) => ({
+  //         ...quest,
+  //         due_date: quest.due_date
+  //           ? parseInt(quest.due_date.slice(0, 8))
+  //           : null,
+  //       }));
+  //   }
+  //   return setQuests(filterdQuset);
+  // };
   const onFilteredQuests = (filteredQuests: any) => {
     setFiliteredQuests(filteredQuests);
   };
   useEffect(() => {
     getQuestFromRedux(range.start, range.end);
-  }, [range]);
+  }, [getQuestFromRedux, range.end, range.start]);
   return (
     <Fade in>
       <div className={classes.root}>
