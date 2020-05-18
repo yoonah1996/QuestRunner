@@ -198,6 +198,9 @@ const NavBar: React.FC<RouteComponentProps> = ({ history: { push } }) => {
                     My page
                   </MenuItem>
                   <Drawer
+                    classes={{
+                      paperAnchorRight: classes.dark,
+                    }}
                     anchor={anchor}
                     open={state[anchor]}
                     onClose={toggleDrawer(anchor, false)}
