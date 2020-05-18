@@ -31,7 +31,8 @@ import crown from '../../img/crown.png';
 import goodImg from '../../img/good.png';
 import one from '../../img/one.png';
 import two from '../../img/two.png';
-import three from '../../img/three.png';
+import threeImg from '../../img/three.png';
+import Image from '../../img/starrs.jpg';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,6 +71,9 @@ const rankStyles = makeStyles((theme: Theme) => ({
   back: {
     // position: 'relative',
     height: '100%',
+    width: '100vw',
+    backgroundSize: 'cover',
+    backgroundImage: `url(${Image})`,
   },
   root: {
     flexGrow: 1,
@@ -92,7 +96,7 @@ const rankStyles = makeStyles((theme: Theme) => ({
       backgroundColor: 'rgba(255,255,255,0)',
     },
     '& img': {
-      color: 'white',
+      color: 'rgba(255,255,255,0)',
     },
   },
   paper1: {
@@ -114,7 +118,7 @@ const rankStyles = makeStyles((theme: Theme) => ({
     width: 250,
     position: 'relative',
     top: '250px',
-    backgroundImage: `url(${three})`,
+    backgroundImage: `url(${threeImg})`,
     backgroundSize: '100px 100px',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center 300px',
@@ -213,7 +217,7 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
 
   useEffect(() => {
     getRankTop();
-  }, [test]);
+  }, []);
 
   const handleOpen = () => {
     axios

@@ -8,18 +8,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
     textAlign: 'center',
-    fontSize: '35px',
-    // display: 'flex',
-    // flexDirection: 'column',
-    // justifyContent: 'space-between ',
+    padding: 10,
   },
   seven: {
     backgroundColor: 'white',
     color: 'black',
-    '& div': {
-      verticalAlign: 'super',
-    },
-    // top: '50%'
+    verticalAlign: 'middle',
   },
 }));
 
