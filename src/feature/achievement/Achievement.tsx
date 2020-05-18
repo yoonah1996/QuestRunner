@@ -127,7 +127,7 @@ const Achievement: React.FC = () => {
   };
   useEffect(() => {
     getQuestFromRedux(range.start, range.end);
-  }, [getQuestFromRedux, range.end, range.start]);
+  }, [range.end, range.start]);
   return (
     <Fade in>
       <div className={classes.root}>

@@ -21,6 +21,7 @@ import {
   Button,
   Snackbar,
   createStyles,
+  Fade,
 } from '@material-ui/core';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import axios from 'axios';
@@ -295,17 +296,19 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
             className={classes.modal}
             container={() => rootRef.current}
           >
-            <span className={classes.paper}>
-              <h3 id="simple-modal-title">{item.category}</h3>
-              <p id="simple-modal-description">{item.item_name}</p>
-              <p>적용하시겠습니까?</p>
-              <Button color="primary" id="adaptItem" onClick={adaptItem}>
-                Yes
-              </Button>
-              <Button color="secondary" id="cancel" onClick={handleClose}>
-                No
-              </Button>
-            </span>
+            <Fade in={isAdapt}>
+              <div className={classes.paper}>
+                <h3 id="simple-modal-title">{item.category}</h3>
+                <p id="simple-modal-description">{item.item_name}</p>
+                <p>적용하시겠습니까?</p>
+                <Button color="primary" id="adaptItem" onClick={adaptItem}>
+                  Yes
+                </Button>
+                <Button color="secondary" id="cancel" onClick={handleClose}>
+                  No
+                </Button>
+              </div>
+            </Fade>
           </Modal>
         </div>
         <div className={classes.modalRoot}>
@@ -317,24 +320,26 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
             className={classes.modal}
             container={() => rootRef.current}
           >
-            <div className={classes.paper}>
-              <h3 id="simple-modal-title">{item.category}</h3>
-              <p id="simple-modal-description">{item.item_name}</p>
-              <h5>
-                <span>price : </span>
-                {item.price}
-              </h5>
-              <p>구매 하시겠습니까?</p>
-              <Button color="primary" id="purchase" onClick={handlePurchase}>
-                Yes
-              </Button>
-              <Button color="secondary" id="cancel" onClick={handlePurchase}>
-                No
-              </Button>
-              {isCreditEnough ? (
-                <div className={classes.info}>크레딧이 부족합니다!</div>
-              ) : null}
-            </div>
+            <Fade in={open}>
+              <div className={classes.paper}>
+                <h3 id="simple-modal-title">{item.category}</h3>
+                <p id="simple-modal-description">{item.item_name}</p>
+                <h5>
+                  <span>price : </span>
+                  {item.price}
+                </h5>
+                <p>구매 하시겠습니까?</p>
+                <Button color="primary" id="purchase" onClick={handlePurchase}>
+                  Yes
+                </Button>
+                <Button color="secondary" id="cancel" onClick={handlePurchase}>
+                  No
+                </Button>
+                {isCreditEnough ? (
+                  <div className={classes.info}>크레딧이 부족합니다!</div>
+                ) : null}
+              </div>
+            </Fade>
           </Modal>
         </div>
       </div>

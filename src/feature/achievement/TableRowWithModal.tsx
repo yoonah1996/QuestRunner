@@ -13,6 +13,7 @@ import {
   Modal,
   makeStyles,
   createStyles,
+  Fade,
 } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import Text from './Text';
@@ -174,25 +175,27 @@ const TableRowWithModal: React.FC<IProps> = ({ quest }) => {
           className={classes.modal}
           container={() => rootRef.current}
         >
-          <div className={classes.paper}>
-            <h3 id="simple-modal-title" className={classes.dark}>
-              {quest.title}
-            </h3>
-            <ul className={classes.ul}>
-              <li className={classes.mainInfo}>
-                <div id="simple-modal-description" className={classes.dark}>
-                  {quest.contents}
-                </div>
-              </li>
-              <li className={classes.subInfo}>
-                <div className={classes.dark}>
-                  {`Due Date : ${subStringDate(0, 8)} / Completed : ${
-                    quest.checked ? 'Yes' : 'No'
-                  }`}
-                </div>
-              </li>
-            </ul>
-          </div>
+          <Fade in={open}>
+            <div className={classes.paper}>
+              <h3 id="simple-modal-title" className={classes.dark}>
+                {quest.title}
+              </h3>
+              <ul className={classes.ul}>
+                <li className={classes.mainInfo}>
+                  <div id="simple-modal-description" className={classes.dark}>
+                    {quest.contents}
+                  </div>
+                </li>
+                <li className={classes.subInfo}>
+                  <div className={classes.dark}>
+                    {`Due Date : ${subStringDate(0, 8)} / Completed : ${
+                      quest.checked ? 'Yes' : 'No'
+                    }`}
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </Fade>
         </Modal>
       </div>
     </>
