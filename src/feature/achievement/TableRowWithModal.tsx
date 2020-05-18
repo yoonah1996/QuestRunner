@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable radix */
@@ -5,89 +6,96 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable react/prop-types */
 /* eslint-disable-next-line object-curly-newline */
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   TableRow,
   TableCell,
   Modal,
   makeStyles,
+  createStyles,
   Fade,
 } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import Text from './Text';
 import { RootState } from '..';
 
-const getModalStyle = () => {
-  const top = 50;
-  const left = 50;
-  return {
-    outline: 'none',
-    backgroundColor: 'black',
-    borderRadius: '5px',
-    color: 'white',
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-};
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    // padding: theme.spacing(2, 4, 3),
-  },
-  row: (darkmode: any) => ({
-    backgroundColor: darkmode.dark
-      ? 'rgba(136,136,136,0.5)'
-      : 'rgba(241,227,203,0.5)',
-    transition: 'background-color .5s',
-    '&:hover': {
-      backgroundColor: darkmode.dark
-        ? 'rgba(136,136,136,0.9)'
-        : 'rgba(241,227,203,0.7)',
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      transform: 'translateZ(0)',
+      '@media all and (-ms-high-contrast: none)': {
+        display: 'none',
+      },
     },
+    paper: (darkmode: any) => ({
+      position: 'absolute',
+      width: 400,
+      backgroundColor: darkmode.dark
+        ? '#888888'
+        : theme.palette.background.paper,
+      color: darkmode.dark ? '#e0e0e0' : 'black',
+      borderRadius: '5px',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+      outlineStyle: 'none',
+    }),
+    row: (darkmode: any) => ({
+      backgroundColor: darkmode.dark
+        ? 'rgba(136,136,136,0.5)'
+        : 'rgba(241,227,203,0.5)',
+      transition: 'background-color .5s',
+      '&:hover': {
+        backgroundColor: darkmode.dark
+          ? 'rgba(136,136,136,0.9)'
+          : 'rgba(241,227,203,0.7)',
+      },
+    }),
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: '5px',
+      textAlign: 'center',
+    },
+    ul: (darkmode: any) => ({
+      listStyle: 'none',
+      textAlign: 'center',
+      padding: '0px',
+      margin: '0px',
+      backgroundColor: darkmode.dark
+        ? '#888888'
+        : theme.palette.background.paper,
+      color: darkmode.dark ? '#e0e0e0' : 'black',
+    }),
+    subInfo: (darkmode: any) => ({
+      textAlign: 'right',
+      fontSize: '8px',
+      margin: '10px 0px',
+      backgroundColor: darkmode.dark
+        ? '#888888'
+        : theme.palette.background.paper,
+      color: darkmode.dark ? '#e0e0e0' : 'black',
+    }),
+    mainInfo: (darkmode: any) => ({
+      border: darkmode.dark ? '1px solid white' : '1px solid #888888',
+      padding: '10px 0',
+      backgroundColor: darkmode.dark
+        ? '#888888'
+        : theme.palette.background.paper,
+      color: darkmode.dark ? '#e0e0e0' : 'black',
+    }),
+    cell: (darkmode: any) => ({
+      color: darkmode.dark ? '#e0e0e0' : 'black',
+    }),
+    dark: (darkmode: any) => ({
+      backgroundColor: darkmode.dark
+        ? '#888888'
+        : theme.palette.background.paper,
+      color: darkmode.dark ? '#e0e0e0' : 'black',
+    }),
   }),
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '5px',
-    textAlign: 'center',
-  },
-  ul: (darkmode: any) => ({
-    listStyle: 'none',
-    textAlign: 'center',
-    padding: '0px',
-    margin: '0px',
-    backgroundColor: darkmode.dark ? '#888888' : theme.palette.background.paper,
-    color: darkmode.dark ? '#e0e0e0' : 'black',
-  }),
-  subInfo: (darkmode: any) => ({
-    textAlign: 'right',
-    fontSize: '8px',
-    // marginTop: '3px',
-    backgroundColor: darkmode.dark ? '#888888' : theme.palette.background.paper,
-    color: darkmode.dark ? '#e0e0e0' : 'black',
-  }),
-  mainInfo: (darkmode: any) => ({
-    border: '1px solid white',
-    borderRadius: '5px',
-    // padding: '10px',
-    backgroundColor: darkmode.dark ? '#888888' : theme.palette.background.paper,
-    color: darkmode.dark ? '#e0e0e0' : 'black',
-  }),
-  cell: (darkmode: any) => ({
-    color: darkmode.dark ? '#e0e0e0' : 'black',
-  }),
-  dark: (darkmode: any) => ({
-    backgroundColor: darkmode.dark ? '#888888' : theme.palette.background.paper,
-    color: darkmode.dark ? '#e0e0e0' : 'black',
-  }),
-}));
+);
 
 interface IProps {
   quest: any;
@@ -95,13 +103,14 @@ interface IProps {
 
 const TableRowWithModal: React.FC<IProps> = ({ quest }) => {
   const [open, setOpen] = useState(false);
+
+  const rootRef = useRef(null);
   const dark = useSelector(
     (state: RootState) => state.userLogin.user?.darkmode,
   );
   const darkmode = {
     dark,
   };
-  const [modalStyle] = useState(getModalStyle);
   const classes = useStyles(darkmode);
   const subStringDate = (start: number, end: number) =>
     String(quest.due_date).substring(start, end);
@@ -157,35 +166,38 @@ const TableRowWithModal: React.FC<IProps> = ({ quest }) => {
           )}
         </TableCell>
       </TableRow>
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        open={open}
-        onClose={handleClose}
-        className={classes.modal}
-      >
-        <Fade in={open}>
-          <div className={classes.paper} style={modalStyle}>
-            <h3 id="simple-modal-title" className={classes.dark}>
-              {quest.title}
-            </h3>
-            <ul className={classes.ul}>
-              <li className={classes.mainInfo}>
-                <div id="simple-modal-description" className={classes.dark}>
-                  {quest.contents}
-                </div>
-              </li>
-              <li className={classes.subInfo}>
-                <div className={classes.dark}>
-                  {`Due Date : ${subStringDate(0, 8)} / Completed : ${
-                    quest.checked ? 'Yes' : 'No'
-                  }`}
-                </div>
-              </li>
-            </ul>
-          </div>
-        </Fade>
-      </Modal>
+      <div className={classes.root}>
+        <Modal
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          open={open}
+          onClose={handleClose}
+          className={classes.modal}
+          container={() => rootRef.current}
+        >
+          <Fade in={open}>
+            <div className={classes.paper}>
+              <h3 id="simple-modal-title" className={classes.dark}>
+                {quest.title}
+              </h3>
+              <ul className={classes.ul}>
+                <li className={classes.mainInfo}>
+                  <div id="simple-modal-description" className={classes.dark}>
+                    {quest.contents}
+                  </div>
+                </li>
+                <li className={classes.subInfo}>
+                  <div className={classes.dark}>
+                    {`Due Date : ${subStringDate(0, 8)} / Completed : ${
+                      quest.checked ? 'Yes' : 'No'
+                    }`}
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </Fade>
+        </Modal>
+      </div>
     </>
   );
 };

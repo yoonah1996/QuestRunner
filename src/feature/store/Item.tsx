@@ -1,3 +1,5 @@
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable function-paren-newline */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable key-spacing */
 /* eslint-disable no-shadow */
@@ -8,7 +10,7 @@
 /* eslint-disable func-names */
 /* eslint-disable react/no-find-dom-node */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   makeStyles,
   Card,
@@ -17,8 +19,9 @@ import {
   Typography,
   Modal,
   Button,
-  Fade,
   Snackbar,
+  createStyles,
+  Fade,
 } from '@material-ui/core';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import axios from 'axios';
@@ -42,67 +45,69 @@ interface IProp {
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={3} variant="filled" {...props} />;
 }
-const useStyles = makeStyles((theme) => ({
-  main: {
-    padding: 5,
-  },
-  root: {
-    width: 100,
-  },
-  media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9,
-    marginTop: '30',
-    borderBottom: '1px solid #e0e0e0',
-  },
-  paper: {
-    position: 'absolute',
-    width: 200,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    textAlign: 'center',
-  },
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cardContent: (darkmode: any) => ({
-    padding: 0,
-    marging: 0,
-    textAlign: 'center',
-    backgroundColor: darkmode.dark ? '#888888' : theme.palette.background.paper,
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      width: 100,
+    },
+    media: {
+      height: 0,
+      paddingTop: '56.25%', // 16:9,
+      marginTop: '30',
+      borderBottom: '1px solid #e0e0e0',
+    },
+    paper: (darkmode: any) => ({
+      position: 'absolute',
+      width: 200,
+      backgroundColor: darkmode.dark
+        ? '#888888'
+        : theme.palette.background.paper,
+      color: darkmode.dark ? '#e0e0e0' : 'black',
+      borderRadius: '5px',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+      outlineStyle: 'none',
+      textAlign: 'center',
+      display: 'inline',
+    }),
+    modalRoot: {
+      flexGrow: 1,
+      transform: 'translateZ(0)',
+      '@media all and (-ms-high-contrast: none)': {
+        display: 'none',
+      },
+    },
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    cardContent: (darkmode: any) => ({
+      padding: 0,
+      marging: 0,
+      textAlign: 'center',
+      backgroundColor: darkmode.dark
+        ? '#888888'
+        : theme.palette.background.paper,
+    }),
+    info: {
+      fontSize: '8px',
+    },
+    itemName: (darkmode: any) => ({
+      color: darkmode.dark ? '#e0e0e0' : 'black',
+    }),
   }),
-  info: {
-    fontSize: '8px',
-  },
-  itemName: (darkmode: any) => ({
-    color: darkmode.dark ? '#e0e0e0' : 'black',
-  }),
-}));
-const getModalStyle = () => {
-  const top = 50;
-  const left = 50;
-  return {
-    outline: 'none',
-    backgroundColor: 'black',
-    borderRadius: '5px',
-    color: 'white',
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-};
+);
+
 const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
   const dispatch = useDispatch();
   const token = useSelector((state: RootState) => state.userLogin.accessToken);
   const user = useSelector((state: RootState) => state.userLogin.user);
 
+  const rootRef = useRef(null);
+
   const [open, setOpen] = useState(false);
-  const [modalStyle] = useState(getModalStyle);
-  const [target, setTarget] = useState<string | null>('');
+  const [, setTarget] = useState<string | null>('');
   const [isCreditEnough, setIsCreditEnough] = useState(false);
   const [isAdapt, setIsAdapt] = useState(false);
   const [error, setError] = useState('');
@@ -244,7 +249,7 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
   const openAdaptModal = () => setIsAdapt(true);
   return (
     <>
-      <div className={classes.main}>
+      <div>
         <Card className={classes.root}>
           <CardMedia className={classes.media} image={item.image} />
           <CardContent className={classes.cardContent}>
@@ -281,54 +286,63 @@ const Item: React.FC<IProp> = ({ item, state, goToLoginPage }) => {
             )}
           </CardContent>
         </Card>
-      </div>
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        open={isAdapt}
-        onClose={handleClose}
-        className={classes.modal}
-      >
-        <Fade in={isAdapt}>
-          <div style={modalStyle} className={classes.paper}>
-            <h3 id="simple-modal-title">{item.category}</h3>
-            <p id="simple-modal-description">{item.item_name}</p>
-            <p>적용하시겠습니까?</p>
-            <Button color="primary" id="adaptItem" onClick={adaptItem}>
-              Yes
-            </Button>
-            <Button color="secondary" id="cancel" onClick={handleClose}>
-              No
-            </Button>
-          </div>
-        </Fade>
-      </Modal>
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        open={open}
-        onClose={handleClose}
-        className={classes.modal}
-      >
-        <div style={modalStyle} className={classes.paper}>
-          <h3 id="simple-modal-title">{item.category}</h3>
-          <p id="simple-modal-description">{item.item_name}</p>
-          <h5>
-            <span>price : </span>
-            {item.price}
-          </h5>
-          <p>구매 하시겠습니까?</p>
-          <Button color="primary" id="purchase" onClick={handlePurchase}>
-            Yes
-          </Button>
-          <Button color="secondary" id="cancel" onClick={handlePurchase}>
-            No
-          </Button>
-          {isCreditEnough ? (
-            <div className={classes.info}>크레딧이 부족합니다!</div>
-          ) : null}
+
+        <div className={classes.modalRoot}>
+          <Modal
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            open={isAdapt}
+            onClose={handleClose}
+            className={classes.modal}
+            container={() => rootRef.current}
+          >
+            <Fade in={isAdapt}>
+              <div className={classes.paper}>
+                <h3 id="simple-modal-title">{item.category}</h3>
+                <p id="simple-modal-description">{item.item_name}</p>
+                <p>적용하시겠습니까?</p>
+                <Button color="primary" id="adaptItem" onClick={adaptItem}>
+                  Yes
+                </Button>
+                <Button color="secondary" id="cancel" onClick={handleClose}>
+                  No
+                </Button>
+              </div>
+            </Fade>
+          </Modal>
         </div>
-      </Modal>
+        <div className={classes.modalRoot}>
+          <Modal
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            open={open}
+            onClose={handleClose}
+            className={classes.modal}
+            container={() => rootRef.current}
+          >
+            <Fade in={open}>
+              <div className={classes.paper}>
+                <h3 id="simple-modal-title">{item.category}</h3>
+                <p id="simple-modal-description">{item.item_name}</p>
+                <h5>
+                  <span>price : </span>
+                  {item.price}
+                </h5>
+                <p>구매 하시겠습니까?</p>
+                <Button color="primary" id="purchase" onClick={handlePurchase}>
+                  Yes
+                </Button>
+                <Button color="secondary" id="cancel" onClick={handlePurchase}>
+                  No
+                </Button>
+                {isCreditEnough ? (
+                  <div className={classes.info}>크레딧이 부족합니다!</div>
+                ) : null}
+              </div>
+            </Fade>
+          </Modal>
+        </div>
+      </div>
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
