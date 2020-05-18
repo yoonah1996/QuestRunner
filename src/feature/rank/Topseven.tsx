@@ -10,18 +10,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
     textAlign: 'center',
-    fontSize: '35px',
-    // display: 'flex',
-    // flexDirection: 'column',
-    // justifyContent: 'space-between ',
+    padding: 10,
   },
   seven: {
     backgroundColor: theme.palette.background.paper,
     color: 'black',
-    '& div': {
-      verticalAlign: 'super',
-    },
-    // top: '50%'
+    verticalAlign: 'middle',
   },
 }));
 

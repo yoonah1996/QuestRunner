@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'block',
     marginLeft: 'auto',
     marginRight: 'auto',
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255,255,255,0)',
   },
   names: {
     textAlign: 'center',
@@ -76,7 +76,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(1),
   },
   mottolength: {
-    width: '500px',
+    width: 'auto',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
 }));
 
@@ -91,18 +94,25 @@ interface threetype {
 const TopThree: React.FC<threetype> = (props) => {
   const classes = useStyles();
   const [value, setValue] = React.useState('');
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [mottoEl, setmottoEll] = React.useState(null);
+  const [nameEl, setnameEl] = React.useState(null);
 
-  const handlePopoverOpen = (event:any) => {
-    console.log(event.currentTarget);
-    setAnchorEl(event.currentTarget);
+  const handlePopoverOpen = (event: any) => {
+    setmottoEll(event.currentTarget);
+  };
+
+  const namehandlePopoverOpen = (event: any) => {
+    setnameEl(event.currentTarget);
   };
 
   const handlePopoverClose = () => {
-    setAnchorEl(null);
+    setmottoEll(null);
+    setnameEl(null);
+
   };
 
-  const open = Boolean(anchorEl);
+  const open = Boolean(mottoEl);
+  const nameopen = Boolean(nameEl);
 
   const getRankTop = () => {
     if (props.profilePic) {
@@ -133,10 +143,39 @@ const TopThree: React.FC<threetype> = (props) => {
           : <img className={classes.image} src={value} alt="" />}
       </div>
       {!props.username ? <p /> : (
-        <div className={classes.names}>
-          {props.username}
-          님
-        </div>
+        <>
+          <div
+            className={classes.names}
+            onMouseEnter={namehandlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          >
+            {props.username}
+            님
+          </div>
+          <Popover
+            id="mouse-over-popover"
+            className={classes.popover}
+            classes={{
+              paper: classes.paper,
+            }}
+            open={nameopen}
+            anchorEl={nameEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            onClose={handlePopoverClose}
+            disableRestoreFocus
+          >
+            <Typography className={classes.mottolength}>
+              {props.username}
+            </Typography>
+          </Popover>
+        </>
       )}
       <div className={classes.mottoback}>
         {!props.motto ? null : (
@@ -157,7 +196,7 @@ const TopThree: React.FC<threetype> = (props) => {
           paper: classes.paper,
         }}
         open={open}
-        anchorEl={anchorEl}
+        anchorEl={mottoEl}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
@@ -169,7 +208,9 @@ const TopThree: React.FC<threetype> = (props) => {
         onClose={handlePopoverClose}
         disableRestoreFocus
       >
-        <Typography className={classes.mottolength}>{props.motto}</Typography>
+        <Typography className={classes.mottolength}>
+          {props.motto}
+        </Typography>
       </Popover>
     </div>
   );
