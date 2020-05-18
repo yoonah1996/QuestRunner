@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '0 15px',
     borderRadius: '5px',
     fontWeight: 600,
+    marginBottom: '10px',
   },
 }));
 

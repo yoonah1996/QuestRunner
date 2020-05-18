@@ -48,9 +48,10 @@ function Alert(props: AlertProps) {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
+    root: (darkmode: any) => ({
       maxWidth: 345,
-    },
+      backgroundColor: darkmode.dark ? '#888888' : 'white',
+    }),
     media: (darkmode: any) => ({
       height: 340,
       backgroundColor: darkmode.dark ? '#888888' : 'white',

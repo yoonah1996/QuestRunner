@@ -46,42 +46,47 @@ function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    button: {
-      margin: theme.spacing(1),
-      position: 'absolute',
-      top: -50,
-    },
-    list: {
-      position: 'absolute',
-      top: 250,
-    },
-    root: {
-      flexGrow: 1,
-      maxWidth: 500,
-    },
-    demo: (darkmode: any) => ({
-      backgroundColor: darkmode.dark
-        ? '#888888'
-        : theme.palette.background.paper,
-      color: darkmode.dark ? '#e0e0e0' : 'black',
-    }),
-    main: {
-      width: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'absolute',
-      top: 300,
-    },
-    dark: (darkmode: any) => ({
-      backgroundColor: darkmode.dark
-        ? '#888888'
-        : theme.palette.background.paper,
-      color: darkmode.dark ? '#e0e0e0' : 'black',
-    }),
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  button: {
+    width: '20vw',
+    margin: theme.spacing(0),
+    position: 'absolute',
+    top: -90,
+  },
+  root: {
+    flexGrow: 1,
+    width: '30vw',
+    position: 'absolute',
+    top: -50,
+    overflowY: 'scroll',
+    maxHeight: '50vh',
+  },
+  card: {
+    width: '20vw',
+    position: 'absolute',
+    top: -50,
+  },
+  demo: (darkmode: any) => ({
+    backgroundColor: darkmode.dark
+      ? '#888888'
+      : theme.palette.background.paper,
+    color: darkmode.dark ? '#e0e0e0' : 'black',
   }),
+  main: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 300,
+  },
+  dark: (darkmode: any) => ({
+    backgroundColor: darkmode.dark
+      ? '#888888'
+      : theme.palette.background.paper,
+    color: darkmode.dark ? '#e0e0e0' : 'black',
+  }),
+}),
 );
 
 export default function Quest() {
@@ -204,10 +209,11 @@ export default function Quest() {
         variant="contained"
         color={dark ? 'primary' : 'default'}
         className={classes.button}
+        disabled={quests?.length! > 9}
         startIcon={<AddIcon />}
         onClick={handleClickOpen}
       >
-        ADD
+        {quests?.length! > 9 ? '할 수 있을만큼만!' : 'ADD'}
       </Button>
       <Dialog
         open={open}
@@ -293,7 +299,7 @@ export default function Quest() {
         </Alert>
       </Snackbar>
       {quests!.length === 0 && (
-        <Card onClick={handleClickOpen} className={classes.root}>
+        <Card onClick={handleClickOpen} className={classes.card}>
           <CardActionArea>
             <CardMedia
               component="img"

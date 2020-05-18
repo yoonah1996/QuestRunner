@@ -48,35 +48,30 @@ const Darkmode: React.FC<IProp> = ({ goToLoginPage }) => {
   const dakrmode = user?.darkmode;
   const isactive = user?.active.darkmode?._id ? true : false;
 
-  // const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [error, setError] = useState('');
-  // const handleOpenSnackbar = () => {
-  //   setOpenSnackbar(true);
-  // };
-  // const handleCloseSnackbar = (
-  //   event?: React.SyntheticEvent,
-  //   reason?: string,
-  // ) => {
-  //   if (reason === 'clickaway') {
-  //     return;
-  //   }
-  //   setOpenSnackbar(false);
-  // };
-  const changeDakrmode = async () => {
-    await Axios.post(`${serverHttp}`, null, {
-      params: {
-        dark: !dakrmode,
-      },
-      headers: {
-        Authorization: token,
-      },
-    });
+  const handleOpenSnackbar = () => {
+    setOpenSnackbar(true);
   };
-
-  const handleChange = () => {
+  const handleCloseSnackbar = (
+    event?: React.SyntheticEvent,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+  const changeDakrmode = async () => {
     try {
-      // TODO : apply darkmode api
-      changeDakrmode();
+      await Axios.post(`${serverHttp}`, null, {
+        params: {
+          dark: !dakrmode,
+        },
+        headers: {
+          Authorization: token,
+        },
+      });
       dispatch(
         userLoginActions.setUser({
           user: {
@@ -88,7 +83,7 @@ const Darkmode: React.FC<IProp> = ({ goToLoginPage }) => {
     } catch (error) {
       if (!error.response) {
         setError('error occurred, please try again.');
-        // handleOpenSnackbar();
+        handleOpenSnackbar();
         return;
       }
       const {
@@ -97,12 +92,16 @@ const Darkmode: React.FC<IProp> = ({ goToLoginPage }) => {
       if (status === 401) {
         setError('로그인 유효기간이 만료되었습니다. 다시 로그인해주세요.');
         setTimeout(() => goToLoginPage('/login'), 3100);
-        // handleOpenSnackbar();
+        handleOpenSnackbar();
       } else {
         setError('error occurred, please try again.');
-        // handleOpenSnackbar();
+        handleOpenSnackbar();
       }
     }
+  };
+
+  const handleChange = () => {
+    changeDakrmode();
   };
   return (
     <>
@@ -121,16 +120,16 @@ const Darkmode: React.FC<IProp> = ({ goToLoginPage }) => {
           <Switch disabled className={classes.disableSwitch} />
         )}
       </div>
-      {/* <Snackbar
+      <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert onClose={handleCloseSnackbar} severity="error">
           {error}
         </Alert>
-      </Snackbar> */}
+      </Snackbar>
     </>
   );
 };

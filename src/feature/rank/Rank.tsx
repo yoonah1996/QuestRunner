@@ -84,14 +84,14 @@ const rankStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
   },
   paper0: {
-    height: 640,
-    width: 250,
+    height: '70vh',
+    width: '15vw',
     position: 'relative',
     backgroundColor: '#ffc400',
     backgroundImage: `url(${one})`,
-    backgroundSize: '100px 100px',
+    backgroundSize: '5vw 10vh',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center 300px',
+    backgroundPosition: 'center 30vh',
     '& div': {
       backgroundColor: 'rgba(255,255,255,0)',
     },
@@ -100,28 +100,28 @@ const rankStyles = makeStyles((theme: Theme) => ({
     },
   },
   paper1: {
-    height: 520,
-    width: 250,
+    height: '60vh',
+    width: '15vw',
     position: 'relative',
-    top: '180px',
+    top: '19%',
     backgroundColor: '#ffc400',
     backgroundImage: `url(${two})`,
-    backgroundSize: '100px 100px',
+    backgroundSize: '5vw 10vh',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center 300px',
+    backgroundPosition: 'center 30vh',
     '& div': {
       backgroundColor: 'rgba(255,255,255,0)',
     },
   },
   paper2: {
-    height: 450,
-    width: 250,
+    height: '50vh',
+    width: '15vw',
     position: 'relative',
-    top: '250px',
+    top: '32.5%',
     backgroundImage: `url(${threeImg})`,
-    backgroundSize: '100px 100px',
+    backgroundSize: '5vw 10vh',
     backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center 300px',
+    backgroundPosition: 'center 30vh',
     backgroundColor: '#ffc400',
     '& div': {
       backgroundColor: 'rgba(255,255,255,0)',
@@ -136,9 +136,9 @@ const rankStyles = makeStyles((theme: Theme) => ({
     marginRight: 'auto',
     height: 'auto',
     backgroundColor: 'rgba(255,255,255,0)',
-    width: 60,
+    width: '2vw',
   },
-  seven: {
+  seven: (darkmode: any) => ({
     position: 'fixed',
     bottom: '0px',
     width: '100%',
@@ -146,9 +146,9 @@ const rankStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: '#bf934b',
+    backgroundColor: darkmode.dark ? '#888888' : '#bf934b',
     height: '50px',
-  },
+  }),
   paper: {
     position: 'absolute',
     width: 300,
@@ -182,7 +182,7 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     dark,
   };
   const classes = useStyles(darkmode);
-  const rankClasses = rankStyles();
+  const rankClasses = rankStyles(darkmode);
   const [test, settest] = React.useState('');
   const [three, setThree] = React.useState([]);
   const [seven, setSeven] = React.useState([]);

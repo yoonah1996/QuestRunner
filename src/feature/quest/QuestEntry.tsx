@@ -192,12 +192,9 @@ export default function QuestEntry({ quest }: IProps) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title" className={classes.dark}>
-          {quest?.title}
-        </DialogTitle>
         <DialogContent className={classes.dark}>
           <Typography gutterBottom variant="h5" component="h2">
-            Created Date
+            Quest Title
           </Typography>
           <Typography
             variant="body2"
@@ -205,18 +202,7 @@ export default function QuestEntry({ quest }: IProps) {
             component="p"
             className={classes.deepDarkFont}
           >
-            {quest?.created_at}
-          </Typography>
-          <Typography gutterBottom variant="h5" component="h2">
-            Due Date
-          </Typography>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            component="p"
-            className={classes.deepDarkFont}
-          >
-            {quest?.due_date}
+            {quest?.title}
           </Typography>
           <Typography gutterBottom variant="h5" component="h2">
             Content
@@ -228,6 +214,17 @@ export default function QuestEntry({ quest }: IProps) {
             className={classes.deepDarkFont}
           >
             {quest?.contents}
+          </Typography>
+          <Typography gutterBottom variant="h5" component="h2">
+            Due Date
+          </Typography>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            className={classes.deepDarkFont}
+          >
+            {quest?.due_date}
           </Typography>
         </DialogContent>
         <DialogActions className={classes.dark}>
