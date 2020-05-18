@@ -134,7 +134,7 @@ const rankStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'rgba(255,255,255,0)',
     width: '2vw',
   },
-  seven: {
+  seven: (darkmode: any) => ({
     position: 'fixed',
     bottom: '0px',
     width: '100%',
@@ -142,9 +142,9 @@ const rankStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: '#bf934b',
+    backgroundColor: darkmode.dark ? '#888888' : '#bf934b',
     height: '50px',
-  },
+  }),
   paper: {
     position: 'absolute',
     width: 300,
@@ -178,7 +178,7 @@ const Rank: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     dark,
   };
   const classes = useStyles(darkmode);
-  const rankClasses = rankStyles();
+  const rankClasses = rankStyles(darkmode);
   const [test, settest] = React.useState('');
   const [three, setThree] = React.useState([]);
   const [seven, setSeven] = React.useState([]);

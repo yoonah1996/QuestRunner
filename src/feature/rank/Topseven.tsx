@@ -3,6 +3,8 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Avatar, Chip } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { RootState } from '..';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -14,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     // justifyContent: 'space-between ',
   },
   seven: {
-    backgroundColor: 'white',
+    backgroundColor: theme.palette.background.paper,
     color: 'black',
     '& div': {
       verticalAlign: 'super',
@@ -37,7 +39,13 @@ interface totaltype {
 }
 
 const Topseven: React.FC<totaltype> = ({ rankInfo, rank }) => {
-  const classes = useStyles();
+  const dark = useSelector(
+    (state: RootState) => state.userLogin.user?.darkmode,
+  );
+  const darkmode = {
+    dark,
+  };
+  const classes = useStyles(darkmode);
 
   return (
     <div className={classes.root}>
@@ -45,7 +53,7 @@ const Topseven: React.FC<totaltype> = ({ rankInfo, rank }) => {
         avatar={<Avatar>{rank + 4}</Avatar>}
         label={`${rankInfo.username}님`}
         variant="outlined"
-        color="secondary"
+        color={dark ? 'primary' : 'secondary'}
         className={classes.seven}
       />
     </div>

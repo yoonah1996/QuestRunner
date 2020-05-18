@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-shadow */
 /* eslint-disable camelcase */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { makeStyles, Fade } from '@material-ui/core';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -32,13 +32,14 @@ const Store: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   const user = useSelector((state: RootState) => state.userLogin.user);
   const store = useSelector((state: RootState) => state.store);
   const classes = useStyles();
+  const rootRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({
     background: [] as StoreItem[] | undefined,
     exp_bar: [] as StoreItem[] | undefined,
     darkmode: [] as StoreItem[] | undefined,
   });
-  const getStoreItems = async () => {
+  const getStoreItems = useCallback(async () => {
     try {
       const { background, exp_bar, darkmode } = store;
       if (background.length > 0 && darkmode.length > 0 && exp_bar.length > 0) {
@@ -63,18 +64,18 @@ const Store: React.FC<RouteComponentProps> = ({ history: { push } }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [store]);
   const goToLoginPage = () => push('/login');
   useEffect(() => {
     getStoreItems();
-  }, []);
+  }, [getStoreItems]);
   return (
     <>
       {loading ? (
         <div className={classes.main}>Loading...</div>
       ) : (
         <Fade in>
-          <div className={classes.main}>
+          <div className={classes.main} ref={rootRef}>
             <Category name="background" />
             <ItemList
               items={data.background}
