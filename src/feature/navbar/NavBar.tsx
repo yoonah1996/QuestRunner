@@ -73,7 +73,7 @@ const NavBar: React.FC<RouteComponentProps> = ({ history: { push } }) => {
   });
   const dark = useSelector(
     (state: RootState) => state.userLogin.user?.darkmode,
-  );
+);
   const darkmode = {
     dark,
   };
